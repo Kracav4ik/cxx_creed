@@ -12,6 +12,16 @@ set(EXE_SOURCES
         dlc/ParserDLC.h
         dlc/WithDLC.h
 
+        dlc/lexers/ExactLexer.cpp
+        dlc/lexers/ExactLexer.h
+        dlc/lexers/IdentifierLexer.cpp
+        dlc/lexers/IdentifierLexer.h
+        dlc/lexers/IntegerLexer.cpp
+        dlc/lexers/IntegerLexer.h
+        dlc/lexers/RegexpLexer.cpp
+        dlc/lexers/RegexpLexer.h
+        dlc/lexers/NewlineLexer.cpp
+        dlc/lexers/NewlineLexer.h
         dlc/lexers/WhitespaceLexer.cpp
         dlc/lexers/WhitespaceLexer.h
 
