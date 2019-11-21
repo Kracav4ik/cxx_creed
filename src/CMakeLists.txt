@@ -12,6 +12,9 @@ set(EXE_SOURCES
         dlc/ParserDLC.h
         dlc/WithDLC.h
 
+        dlc/lexers/WhitespaceLexer.cpp
+        dlc/lexers/WhitespaceLexer.h
+
         interpreter/Interpreter.cpp
         interpreter/Interpreter.h
 

@@ -15,7 +15,6 @@ int main() {
     pack.install(lexer, parser, interpreter);
 
     std::string text = read_file("../src/main.cpp");
-    std::cout << "----------\n" << text << "\n----------" << std::endl;
 
     lexer.set_text(text);
     interpreter.run();

@@ -14,7 +14,9 @@ public:
     Token next_token();
 
 private:
+    std::string consume(size_t amount);
+    std::string_view current_text() const;
+
     std::string _text;
     size_t _pos = 0;
 };
-
