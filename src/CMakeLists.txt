@@ -2,6 +2,9 @@ set(EXE_NAME cxx_creed)
 
 set(EXE_SOURCES
         main.cpp
+)
+
+set(LIB_SOURCES
         util.cpp
         util.h
 
@@ -45,3 +48,5 @@ set(EXE_SOURCES
 )
 
 add_executable(${EXE_NAME} ${EXE_SOURCES})
+add_library(creed_common STATIC ${LIB_SOURCES})
+target_link_libraries(cxx_creed creed_common)

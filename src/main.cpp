@@ -4,8 +4,6 @@
 #include "dlc/ExpansionPack.h"
 #include "util.h"
 
-#include <iostream>
-
 int main() {
     Lexer lexer;
     Parser parser(lexer);

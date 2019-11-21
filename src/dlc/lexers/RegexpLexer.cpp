@@ -19,4 +19,4 @@ ConsumeResult RegexpLexer::try_consume(std::string_view text) {
     return {_type, text.substr(0, size)};
 }
 
-RegexpLexer::RegexpLexer(std::string type, std::string regexp) : _type(std::move(type)), _regex(std::move(regexp)) {}
+RegexpLexer::RegexpLexer(std::string type, const std::string& regexp) : _type(std::move(type)), _regex(regexp) {}
