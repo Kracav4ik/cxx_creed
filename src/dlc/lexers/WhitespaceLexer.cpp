@@ -2,7 +2,7 @@
 
 #include <cctype>
 
-ConsumeResult WhitespaceLexer::try_consume(std::string_view text) {
+ConsumeResult WhitespaceLexer::try_consume(std::string_view text) const {
     size_t pos = 0;
     while (pos < text.size() && isspace(text[pos]) && text[pos] != '\n') {
         ++pos;

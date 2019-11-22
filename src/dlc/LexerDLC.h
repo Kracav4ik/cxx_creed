@@ -14,5 +14,5 @@ struct ConsumeResult {
 
 struct LexerDLC {
     virtual ~LexerDLC() = default;
-    virtual ConsumeResult try_consume(std::string_view text) = 0;
+    virtual ConsumeResult try_consume(std::string_view text) const = 0;
 };

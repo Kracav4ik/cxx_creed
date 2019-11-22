@@ -1,6 +1,6 @@
 #include "NewlineLexer.h"
 
-ConsumeResult NewlineLexer::try_consume(std::string_view text) {
+ConsumeResult NewlineLexer::try_consume(std::string_view text) const {
     size_t size = 0;
     if (!text.empty() && text[0] == '\n') {
         size = 1;

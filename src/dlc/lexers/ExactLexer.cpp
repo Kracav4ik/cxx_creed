@@ -2,7 +2,7 @@
 
 #include <utility>
 
-ConsumeResult ExactLexer::try_consume(std::string_view text) {
+ConsumeResult ExactLexer::try_consume(std::string_view text) const {
     size_t size = 0;
     if (text.substr(0, _token.size()) == _token) {
         size = _token.size();

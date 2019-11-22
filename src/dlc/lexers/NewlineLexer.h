@@ -3,5 +3,5 @@
 
 class NewlineLexer : public LexerDLC {
 public:
-    ConsumeResult try_consume(std::string_view text) override;
+    ConsumeResult try_consume(std::string_view text) const override;
 };

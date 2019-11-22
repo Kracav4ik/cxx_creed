@@ -6,7 +6,7 @@
 
 using svmatch = std::match_results<std::string_view::const_iterator>;
 
-ConsumeResult RegexpLexer::try_consume(std::string_view text) {
+ConsumeResult RegexpLexer::try_consume(std::string_view text) const {
     size_t size = 0;
     svmatch match;
 

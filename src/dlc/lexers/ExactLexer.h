@@ -5,7 +5,7 @@
 class ExactLexer : public LexerDLC {
 public:
     ExactLexer(std::string type, std::string token);
-    ConsumeResult try_consume(std::string_view text) override;
+    ConsumeResult try_consume(std::string_view text) const override;
 
 private:
     std::string _type;
