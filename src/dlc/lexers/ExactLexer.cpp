@@ -8,7 +8,7 @@ ConsumeResult ExactLexer::try_consume(std::string_view text) {
         size = _token.size();
     }
 
-    return {_type, text.substr(0, size)};
+    return {_type, text.substr(0, size), true};
 }
 
 ExactLexer::ExactLexer(std::string type, std::string token) : _type(std::move(type)), _token(std::move(token)) {}

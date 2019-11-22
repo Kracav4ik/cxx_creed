@@ -9,10 +9,10 @@ public:
     using DLC = T;
 
     void add_dlc(std::shared_ptr<DLC> dlc) {
-        _dlcList.push_back(std::move(dlc));
+        _dlc_list.push_back(std::move(dlc));
     }
 
 protected:
-    std::vector<std::shared_ptr<DLC>> _dlcList;
+    std::vector<std::shared_ptr<DLC>> _dlc_list;
 };
 

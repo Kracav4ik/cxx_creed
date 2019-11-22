@@ -6,6 +6,7 @@
 struct ConsumeResult {
     std::string type;
     std::string_view text;
+    bool is_exact = false;
 
     size_t consumed_size() const { return text.size(); }
     bool is_consumed() const { return !text.empty(); }

@@ -1,6 +1,17 @@
 #include "Lexer.h"
 #include "lexer/Token.h"
 
+
+bool better_consume(const ConsumeResult& new_result, const ConsumeResult& old_result) {
+    if (new_result.consumed_size() > old_result.consumed_size()) {
+        return true;
+    }
+    if (new_result.consumed_size() == old_result.consumed_size()) {
+        return new_result.is_exact;
+    }
+    return false;
+}
+
 void Lexer::set_text(std::string text) {
     _text = std::move(text);
     _pos = 0;
@@ -13,10 +24,10 @@ Token Lexer::next_token() {
 
     auto text = current_text();
     ConsumeResult max_consume;
-    for (const auto& lexer : _dlcList) {
-        auto consumeResult = lexer->try_consume(text);
-        if (consumeResult.is_consumed() && consumeResult.consumed_size() > max_consume.consumed_size()) {
-            max_consume = std::move(consumeResult);
+    for (const auto& lexer : _dlc_list) {
+        auto consume_result = lexer->try_consume(text);
+        if (consume_result.is_consumed() && better_consume(consume_result, max_consume)) {
+            max_consume = std::move(consume_result);
         }
     }
     if (max_consume.is_consumed()) {
