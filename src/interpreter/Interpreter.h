@@ -1,12 +1,12 @@
 #pragma once
 
-#include "parser/EventVisitor.h"
+#include "parser/EventVisitorAdapter.h"
 #include "dlc/InterpreterDLC.h"
 #include "dlc/WithDLC.h"
 
 class Parser;
 
-class Interpreter : public WithDLC<InterpreterDLC>, EventVisitor {
+class Interpreter : public WithDLC<InterpreterDLC>, EventVisitorAdapter {
 public:
     explicit Interpreter(Parser& parser);
 
@@ -21,6 +21,6 @@ private:
     void visitBeginMainDecl(BeginMainDeclEvent& event) override;
     void visitEndMainDecl(EndMainDeclEvent& event) override;
 
-    bool _isRunning = false;
+    bool _is_running = false;
     Parser& _parser;
 };

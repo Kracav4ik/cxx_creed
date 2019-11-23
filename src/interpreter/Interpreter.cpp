@@ -12,8 +12,8 @@
 Interpreter::Interpreter(Parser& parser)  : _parser(parser) {}
 
 void Interpreter::run() {
-    _isRunning = true;
-    while (_isRunning) {
+    _is_running = true;
+    while (_is_running) {
         auto event = _parser.next_event();
         event->visit(*this);
     }
@@ -28,7 +28,7 @@ void Interpreter::visitUnknownTokenType(UnknownTokenTypeEvent& event) {
 }
 
 void Interpreter::visitEOF(EOFEvent& event) {
-    _isRunning = false;
+    _is_running = false;
 }
 
 void Interpreter::visitReturnStmt(ReturnStmtEvent& event) {

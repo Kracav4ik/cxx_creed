@@ -12,11 +12,11 @@ class EventVisitor {
 public:
     virtual ~EventVisitor() = default;
 
-    virtual void visitUnknownToken(UnknownTokenEvent& event) {}
-    virtual void visitUnknownTokenType(UnknownTokenTypeEvent& event) {}
-    virtual void visitEOF(EOFEvent& event) {}
-    virtual void visitReturnStmt(ReturnStmtEvent& event) {}
-    virtual void visitParseError(ParseErrorEvent& event) {}
-    virtual void visitBeginMainDecl(BeginMainDeclEvent& event) {}
-    virtual void visitEndMainDecl(EndMainDeclEvent& event) {}
+    virtual void visitUnknownToken(UnknownTokenEvent& event) = 0;
+    virtual void visitUnknownTokenType(UnknownTokenTypeEvent& event) = 0;
+    virtual void visitEOF(EOFEvent& event) = 0;
+    virtual void visitReturnStmt(ReturnStmtEvent& event) = 0;
+    virtual void visitParseError(ParseErrorEvent& event) = 0;
+    virtual void visitBeginMainDecl(BeginMainDeclEvent& event) = 0;
+    virtual void visitEndMainDecl(EndMainDeclEvent& event) = 0;
 };

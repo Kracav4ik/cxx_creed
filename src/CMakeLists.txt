@@ -43,6 +43,7 @@ set(LIB_SOURCES
         parser/EOFEvent.cpp
         parser/EOFEvent.h
         parser/EventVisitor.h
+        parser/EventVisitorAdapter.h
         parser/ParseErrorEvent.cpp
         parser/ParseErrorEvent.h
         parser/Parser.cpp
