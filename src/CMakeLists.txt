@@ -15,12 +15,16 @@ set(LIB_SOURCES
         dlc/ParserDLC.h
         dlc/WithDLC.h
 
+        dlc/lexers/BlockCommentLexer.cpp
+        dlc/lexers/BlockCommentLexer.h
         dlc/lexers/ExactLexer.cpp
         dlc/lexers/ExactLexer.h
         dlc/lexers/IdentifierLexer.cpp
         dlc/lexers/IdentifierLexer.h
         dlc/lexers/IntegerLexer.cpp
         dlc/lexers/IntegerLexer.h
+        dlc/lexers/LineCommentLexer.cpp
+        dlc/lexers/LineCommentLexer.h
         dlc/lexers/RegexpLexer.cpp
         dlc/lexers/RegexpLexer.h
         dlc/lexers/NewlineLexer.cpp

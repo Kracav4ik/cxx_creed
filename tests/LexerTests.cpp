@@ -6,62 +6,92 @@
 #include "dlc/lexers/NewlineLexer.h"
 #include "dlc/lexers/RegexpLexer.h"
 #include "dlc/lexers/WhitespaceLexer.h"
+#include "dlc/lexers/LineCommentLexer.h"
+#include "dlc/lexers/BlockCommentLexer.h"
 
+#define EXPECT_TOKEN(TOKEN, TEXT) EXPECT_EQ(std::string{(TOKEN).text}, (TEXT))
 
 TEST(ExactLexerTest, exact_lexer) {
     ExactLexer lexer("EXACTTEST", "test");
-    EXPECT_EQ(lexer.try_consume("").text, "");
-    EXPECT_EQ(lexer.try_consume("testtest").text, "test");
-    EXPECT_EQ(lexer.try_consume("est").text, "");
-    EXPECT_EQ(lexer.try_consume(" test").text, "");
+    EXPECT_TOKEN(lexer.try_consume(""), "");
+    EXPECT_TOKEN(lexer.try_consume("testtest"), "test");
+    EXPECT_TOKEN(lexer.try_consume("est"), "");
+    EXPECT_TOKEN(lexer.try_consume(" test"), "");
 }
 
 TEST(ExactLexerTest, exact_lexer_no_regexp) {
     ExactLexer lexer("EXACTTEST", ".+");
-    EXPECT_EQ(lexer.try_consume("m").text, "");
-    EXPECT_EQ(lexer.try_consume(".").text, "");
-    EXPECT_EQ(lexer.try_consume(".+").text, ".+");
+    EXPECT_TOKEN(lexer.try_consume("m"), "");
+    EXPECT_TOKEN(lexer.try_consume("."), "");
+    EXPECT_TOKEN(lexer.try_consume(".+"), ".+");
 }
 
 TEST(IdentifierLexerTest, identifier_lexer) {
     IdentifierLexer lexer;
-    EXPECT_EQ(lexer.try_consume("").text, "");
-    EXPECT_EQ(lexer.try_consume("test").text, "test");
-    EXPECT_EQ(lexer.try_consume("_tesT12 test").text, "_tesT12");
-    EXPECT_EQ(lexer.try_consume("test,test").text, "test");
-    EXPECT_EQ(lexer.try_consume("0test").text, "");
+    EXPECT_TOKEN(lexer.try_consume(""), "");
+    EXPECT_TOKEN(lexer.try_consume("test"), "test");
+    EXPECT_TOKEN(lexer.try_consume("_tesT12 test"), "_tesT12");
+    EXPECT_TOKEN(lexer.try_consume("test,test"), "test");
+    EXPECT_TOKEN(lexer.try_consume("0test"), "");
 }
 
 TEST(IntegerLexerTest, integer_lexer) {
     IntegerLexer lexer;
-    EXPECT_EQ(lexer.try_consume("").text, "");
-    EXPECT_EQ(lexer.try_consume("test").text, "");
-    EXPECT_EQ(lexer.try_consume("234_test").text, "234");
-    EXPECT_EQ(lexer.try_consume("12+34").text, "12");
+    EXPECT_TOKEN(lexer.try_consume(""), "");
+    EXPECT_TOKEN(lexer.try_consume("test"), "");
+    EXPECT_TOKEN(lexer.try_consume("234_test"), "234");
+    EXPECT_TOKEN(lexer.try_consume("12+34"), "12");
 }
 
 TEST(NewlineLexerTest, newline_lexer) {
     NewlineLexer lexer;
-    EXPECT_EQ(lexer.try_consume("").text, "");
-    EXPECT_EQ(lexer.try_consume("te\nst").text, "");
-    EXPECT_EQ(lexer.try_consume("\n234_test").text, "\n");
-    EXPECT_EQ(lexer.try_consume("\n\n\n").text, "\n");
-    EXPECT_EQ(lexer.try_consume(" \n").text, "");
+    EXPECT_TOKEN(lexer.try_consume(""), "");
+    EXPECT_TOKEN(lexer.try_consume("te\nst"), "");
+    EXPECT_TOKEN(lexer.try_consume("\n234_test"), "\n");
+    EXPECT_TOKEN(lexer.try_consume("\n\n\n"), "\n");
+    EXPECT_TOKEN(lexer.try_consume(" \n"), "");
 }
 
 TEST(RegexpLexerTest, regexp_lexer) {
     RegexpLexer lexer("REGTEST", "abc?[def]+");
-    EXPECT_EQ(lexer.try_consume("").text, "");
-    EXPECT_EQ(lexer.try_consume("abd").text, "abd");
-    EXPECT_EQ(lexer.try_consume("abce").text, "abce");
-    EXPECT_EQ(lexer.try_consume("abcabcd").text, "");
-    EXPECT_EQ(lexer.try_consume("abc").text, "");
+    EXPECT_TOKEN(lexer.try_consume(""), "");
+    EXPECT_TOKEN(lexer.try_consume("abd"), "abd");
+    EXPECT_TOKEN(lexer.try_consume("abce"), "abce");
+    EXPECT_TOKEN(lexer.try_consume("abcabcd"), "");
+    EXPECT_TOKEN(lexer.try_consume("abc"), "");
 }
 
 TEST(WhitespaceLexerTest, whitespace_lexer) {
     WhitespaceLexer lexer;
-    EXPECT_EQ(lexer.try_consume("").text, "");
-    EXPECT_EQ(lexer.try_consume("test      ").text, "");
-    EXPECT_EQ(lexer.try_consume("              234_test").text, "              ");
-    EXPECT_EQ(lexer.try_consume(" \t \r \f \v \n ").text, " \t \r \f \v ");
+    EXPECT_TOKEN(lexer.try_consume(""), "");
+    EXPECT_TOKEN(lexer.try_consume("test      "), "");
+    EXPECT_TOKEN(lexer.try_consume("              234_test"), "              ");
+    EXPECT_TOKEN(lexer.try_consume(" \t \r \f \v \n "), " \t \r \f \v ");
+}
+
+TEST(LineCommentLexerTest, comment_lexer) {
+    LineCommentLexer lexer;
+    EXPECT_TOKEN(lexer.try_consume(""), "");
+    EXPECT_TOKEN(lexer.try_consume("//\n"), "//\n");
+    EXPECT_TOKEN(lexer.try_consume("// abc \n"), "// abc \n");
+    EXPECT_TOKEN(lexer.try_consume("// abc"), "// abc");
+    EXPECT_TOKEN(lexer.try_consume("// abc \n ced \n"), "// abc \n");
+
+    EXPECT_TOKEN(lexer.try_consume("// /*   */ \n"), "// /*   */ \n");
+    EXPECT_TOKEN(lexer.try_consume("// abc /* ced \n def */ feg \n"), "// abc /* ced \n");
+    EXPECT_TOKEN(lexer.try_consume("/*//    */ \n"), "");
+    EXPECT_TOKEN(lexer.try_consume("/* abc \n // ced \n def */ \n"), "");
+}
+
+TEST(BlockCommentLexerTest, comment_lexer) {
+    BlockCommentLexer lexer;
+    EXPECT_TOKEN(lexer.try_consume(""), "");
+    EXPECT_TOKEN(lexer.try_consume("// \n"), "");
+
+    EXPECT_TOKEN(lexer.try_consume("/* abc */"), "/* abc */");
+    EXPECT_TOKEN(lexer.try_consume("/* abc */ /* ced */"), "/* abc */");
+    EXPECT_TOKEN(lexer.try_consume("/* abc \n ced \n def */ \n"), "/* abc \n ced \n def */");
+
+    EXPECT_TOKEN(lexer.try_consume("// /*   */ \n"), "");
+    EXPECT_TOKEN(lexer.try_consume("/* abc \n // ced \n def */ \n"), "/* abc \n // ced \n def */");
 }

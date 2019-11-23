@@ -4,6 +4,9 @@
 #include "dlc/ExpansionPack.h"
 #include "util.h"
 
+/*
+ * Interpreter entry point
+ */
 int main() {
     Lexer lexer;
     Parser parser(lexer);
@@ -12,6 +15,7 @@ int main() {
     ExpansionPack pack;
     pack.install(lexer, parser, interpreter);
 
+    // TODO: read from command line
     std::string text = read_file("../src/main.cpp");
 
     lexer.set_text(text);

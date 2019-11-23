@@ -40,7 +40,7 @@ Token Lexer::next_token() {
 void Lexer::skip_whitespace() {
     auto state = get_state();
     Token token = next_token();
-    while (token.type == "WHITESPACE" || token.type == "NEWLINE") {
+    while (token.type == "WHITESPACE" || token.type == "NEWLINE" || token.type == "COMMENT") {
         state.assign(_pos);
         token = next_token();
     }
