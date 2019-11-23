@@ -58,15 +58,19 @@ class ReturnStage : public Stage {
 public:
     std::unique_ptr<ASTEvent> try_eat(Lexer& lexer) override {
         auto state = lexer.get_state();
+        std::string value;
         for (auto token_type : {"RETURN", "INTEGER", "SEMICOLON"}) {
             auto token = eat_token(token_type, lexer);
-            if (!token.valid() || (token.type == "INTEGER" && token.text != "0")) {
+            if (!token.valid()) {
                 return eat_error(lexer, state);
+            }
+            if (token.type == "INTEGER") {
+                value = token.text;
             }
         }
         state.drop();
         _completed = true;
-        return std::make_unique<ReturnStmtEvent>();
+        return std::make_unique<ReturnStmtEvent>(std::move(value));
     }
 };
 

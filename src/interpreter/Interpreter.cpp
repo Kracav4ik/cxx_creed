@@ -32,7 +32,7 @@ void Interpreter::visitEOF(EOFEvent& event) {
 }
 
 void Interpreter::visitReturnStmt(ReturnStmtEvent& event) {
-    std::cerr << "return statement" << std::endl;
+    std::cerr << "return value `" << event.value << "`" << std::endl;
 }
 
 void Interpreter::visitParseError(ParseErrorEvent& event) {
@@ -40,9 +40,7 @@ void Interpreter::visitParseError(ParseErrorEvent& event) {
 }
 
 void Interpreter::visitBeginMainDecl(BeginMainDeclEvent& event) {
-    std::cerr << "beginning of main()" << std::endl;
 }
 
 void Interpreter::visitEndMainDecl(EndMainDeclEvent& event) {
-    std::cerr << "end of main()" << std::endl;
 }
