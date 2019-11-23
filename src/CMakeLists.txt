@@ -32,6 +32,8 @@ set(LIB_SOURCES
         dlc/lexers/WhitespaceLexer.cpp
         dlc/lexers/WhitespaceLexer.h
 
+        interpreter/Evaluator.cpp
+        interpreter/Evaluator.h
         interpreter/Interpreter.cpp
         interpreter/Interpreter.h
         interpreter/InterpreterBase.cpp
@@ -41,10 +43,17 @@ set(LIB_SOURCES
         lexer/Lexer.h
         lexer/Token.h
 
+        parser/ASTVisitor.h
         parser/EventVisitor.h
         parser/EventVisitorAdapter.h
         parser/Parser.cpp
         parser/Parser.h
+
+        parser/ast/ASTNode.h
+        parser/ast/BinaryOpNode.cpp
+        parser/ast/BinaryOpNode.h
+        parser/ast/IntegerNode.cpp
+        parser/ast/IntegerNode.h
 
         parser/events/ASTEvent.h
         parser/events/BeginMainDeclEvent.cpp

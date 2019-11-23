@@ -5,4 +5,4 @@ void ReturnStmtEvent::visit(EventVisitor& visitor) {
     visitor.visitReturnStmt(*this);
 }
 
-ReturnStmtEvent::ReturnStmtEvent(std::string value) : value(std::move(value)) {}
+ReturnStmtEvent::ReturnStmtEvent(ASTNodePtr value) : value(std::move(value)) {}

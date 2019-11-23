@@ -6,6 +6,8 @@ set(TEST_SOURCES
         LexerTests.cpp
         ParserTests.cpp
 
+        helpers/ASTNodeString.cpp
+        helpers/ASTNodeString.h
         helpers/EventRecorder.cpp
         helpers/EventRecorder.h
         helpers/ParserChecker.cpp

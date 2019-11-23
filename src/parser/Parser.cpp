@@ -9,6 +9,7 @@
 #include "parser/events/BeginMainDeclEvent.h"
 #include "parser/events/ParseErrorEvent.h"
 #include "parser/events/EndMainDeclEvent.h"
+#include "parser/ast/IntegerNode.h"
 
 class Stage {
 public:
@@ -70,7 +71,7 @@ public:
         }
         state.drop();
         _completed = true;
-        return std::make_unique<ReturnStmtEvent>(std::move(value));
+        return std::make_unique<ReturnStmtEvent>(std::make_unique<IntegerNode>(std::stoi(value)));
     }
 };
 

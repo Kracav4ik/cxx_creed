@@ -5,6 +5,8 @@
 #include "parser/events/UnknownTokenTypeEvent.h"
 #include "parser/events/UnknownTokenEvent.h"
 
+#include "ASTNodeString.h"
+
 EventRecorder::EventRecorder(Parser& parser) : InterpreterBase(parser) {
 }
 
@@ -21,7 +23,7 @@ void EventRecorder::visitUnknownTokenType(UnknownTokenTypeEvent& event) {
 }
 
 void EventRecorder::visitReturnStmt(ReturnStmtEvent& event) {
-    _events.emplace_back("ReturnStmt " + event.value);
+    _events.emplace_back("ReturnStmt " + ASTNodeString(event.value).str());
 }
 
 void EventRecorder::visitParseError(ParseErrorEvent& event) {

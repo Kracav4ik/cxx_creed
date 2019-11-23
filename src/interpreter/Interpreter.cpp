@@ -1,5 +1,7 @@
 #include "Interpreter.h"
 
+#include "Evaluator.h"
+
 #include "parser/events/UnknownTokenEvent.h"
 #include "parser/events/UnknownTokenTypeEvent.h"
 #include "parser/events/ParseErrorEvent.h"
@@ -18,7 +20,7 @@ void Interpreter::visitUnknownTokenType(UnknownTokenTypeEvent& event) {
 }
 
 void Interpreter::visitReturnStmt(ReturnStmtEvent& event) {
-    std::cerr << ">>> return value `" << event.value << "`" << std::endl;
+    std::cerr << ">>> return value `" << Evaluator::evaluate(event.value) << "`" << std::endl;
 }
 
 void Interpreter::visitParseError(ParseErrorEvent& event) {

@@ -1,11 +1,11 @@
 #pragma once
 
 #include "ASTEvent.h"
-#include <string>
+#include "parser/ast/ASTNode.h"
 
 struct ReturnStmtEvent : public ASTEvent {
-    explicit ReturnStmtEvent(std::string value);
+    explicit ReturnStmtEvent(ASTNodePtr value);
     void visit(EventVisitor& visitor) override;
 
-    std::string value;
+    ASTNodePtr value;
 };
