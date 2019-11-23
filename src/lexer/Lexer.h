@@ -9,9 +9,27 @@ struct Token;
 
 class Lexer : public WithDLC<LexerDLC> {
 public:
+    class State {
+    friend class Lexer;
+    public:
+        void drop();
+        void revert();
+        ~State();
+
+    private:
+        explicit State(Lexer& lexer);
+        void assign(size_t pos);
+
+        Lexer& _lexer;
+        size_t _pos;
+        bool _dropped = false;
+    };
+
     void set_text(std::string text);
+    State get_state();
 
     Token next_token();
+    void skip_whitespace();
 
 private:
     std::string consume(size_t amount);

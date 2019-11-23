@@ -37,6 +37,15 @@ Token Lexer::next_token() {
     return {"UNKNOWN", consume(1)};
 }
 
+void Lexer::skip_whitespace() {
+    auto state = get_state();
+    Token token = next_token();
+    while (token.type == "WHITESPACE" || token.type == "NEWLINE") {
+        state.assign(_pos);
+        token = next_token();
+    }
+}
+
 std::string Lexer::consume(size_t amount) {
     auto result = _text.substr(_pos, amount);
     _pos += amount;
@@ -46,4 +55,29 @@ std::string Lexer::consume(size_t amount) {
 std::string_view Lexer::current_text() const {
     std::string_view view = _text;
     return view.substr(_pos);
+}
+
+Lexer::State Lexer::get_state() {
+    return State(*this);
+}
+
+void Lexer::State::drop() {
+    _dropped = true;
+}
+
+void Lexer::State::revert() {
+    if (!_dropped) {
+        _lexer._pos = _pos;
+    }
+    drop();
+}
+
+Lexer::State::~State() {
+    revert();
+}
+
+Lexer::State::State(Lexer& lexer) : _lexer(lexer), _pos(lexer._pos) {}
+
+void Lexer::State::assign(size_t pos) {
+    _pos = pos;
 }

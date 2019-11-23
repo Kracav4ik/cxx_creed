@@ -36,11 +36,19 @@ set(LIB_SOURCES
         lexer/Token.h
 
         parser/ASTEvent.h
+        parser/BeginMainDeclEvent.cpp
+        parser/BeginMainDeclEvent.h
+        parser/EndMainDeclEvent.cpp
+        parser/EndMainDeclEvent.h
         parser/EOFEvent.cpp
         parser/EOFEvent.h
         parser/EventVisitor.h
+        parser/ParseErrorEvent.cpp
+        parser/ParseErrorEvent.h
         parser/Parser.cpp
         parser/Parser.h
+        parser/ReturnStmtEvent.cpp
+        parser/ReturnStmtEvent.h
         parser/UnknownTokenEvent.cpp
         parser/UnknownTokenEvent.h
         parser/UnknownTokenTypeEvent.cpp
