@@ -30,6 +30,8 @@ set(LIB_SOURCES
 
         interpreter/Interpreter.cpp
         interpreter/Interpreter.h
+        interpreter/InterpreterBase.cpp
+        interpreter/InterpreterBase.h
 
         lexer/Lexer.cpp
         lexer/Lexer.h

@@ -98,6 +98,18 @@ Parser::~Parser() = default;
 
 std::unique_ptr<ASTEvent> Parser::next_event() {
     _lexer.skip_whitespace();
+    {
+        auto state = _lexer.get_state();
+        auto token = _lexer.next_token();
+        if (token.type == "UNKNOWN") {
+            state.drop();
+            return std::make_unique<UnknownTokenEvent>(token.text);
+        }
+        if (token.type == "EOF") {
+            state.drop();
+            return std::make_unique<EOFEvent>();
+        }
+    }
     if (_current_stage < _stages.size()) {
         const auto& stage = _stages[_current_stage];
         auto event = stage->try_eat(_lexer);
@@ -108,11 +120,5 @@ std::unique_ptr<ASTEvent> Parser::next_event() {
     }
 
     auto token = _lexer.next_token();
-    if (token.type == "UNKNOWN") {
-        return std::make_unique<UnknownTokenEvent>(token.text);
-    }
-    if (token.type == "EOF") {
-        return std::make_unique<EOFEvent>();
-    }
     return std::make_unique<UnknownTokenTypeEvent>(token.type);
 }
