@@ -1,0 +1,166 @@
+expression:
+    assignment_expression
+    expression , assignment_expression
+
+assignment_expression:
+    conditional_expression
+    logical_or_expression assignment_operator initializer_clause
+    throw_expression
+assignment_operator: one of
+    = *= /= %= += -= >>= <<= &= ˆ= |=
+
+conditional_expression:
+    logical_or_expression
+    logical_or_expression ? expression : assignment_expression
+
+logical_or_expression:
+    logical_and_expression
+    logical_or_expression || logical_and_expression
+
+logical_and_expression:
+    inclusive_or_expression
+    logical_and_expression && inclusive_or_expression
+
+inclusive_or_expression:
+    exclusive_or_expression
+    inclusive_or_expression | exclusive_or_expression
+
+exclusive_or_expression:
+    and_expression
+    exclusive_or_expression ˆ and_expression
+
+and_expression:
+    equality_expression
+    and_expression & equality_expression
+
+equality_expression:
+    relational_expression
+    equality_expression == relational_expression
+    equality_expression != relational_expression
+
+relational_expression:
+    shift_expression
+    relational_expression < shift_expression
+    relational_expression > shift_expression
+    relational_expression <= shift_expression
+    relational_expression >= shift_expression
+
+shift_expression:
+    additive_expression
+    shift_expression << additive_expression
+    shift_expression >> additive_expression
+
+additive_expression:
+    multiplicative_expression
+    additive_expression + multiplicative_expression
+    additive_expression - multiplicative_expression
+
+multiplicative_expression:
+    pm_expression
+    multiplicative_expression * pm_expression
+    multiplicative_expression / pm_expression
+    multiplicative_expression % pm_expression
+
+pm_expression:
+    cast_expression
+    pm_expression .* cast_expression
+    pm_expression ->* cast_expression
+
+cast_expression:
+    unary_expression
+    ( type_id ) cast_expression
+
+unary_expression:
+    postfix_expression
+    ++ cast_expression
+    -- cast_expression
+    unary_operator cast_expression
+    sizeof unary_expression
+    sizeof ( type_id )
+    sizeof ... ( identifier )
+    alignof ( type_id )
+    noexcept_expression
+    new_expression
+    delete_expression
+unary_operator: one of
+    * & + - ! ~
+
+postfix_expression:
+    primary_expression
+    postfix_expression [ expression ]
+    postfix_expression [ braced_init_list ]
+    postfix_expression ( expression_list/opt/)
+    simple_type_specifier ( expression_list/opt/)
+    typename_specifier ( expression_list/opt/)
+    simple_type_specifier braced_init_list
+    typename_specifier braced_init_list
+    postfix_expression . template/opt/ id_expression
+    postfix_expression -> template/opt/ id_expression
+    postfix_expression . pseudo_destructor_name
+    postfix_expression -> pseudo_destructor_name
+    postfix_expression ++
+    postfix_expression --
+    dynamic_cast < type_id > ( expression )
+    static_cast < type_id > ( expression )
+    reinterpret_cast < type_id > ( expression )
+    const_cast < type_id > ( expression )
+    typeid ( expression )
+    typeid ( type_id )
+pseudo_destructor_name:
+    nested_name_specifier/opt/ type_name :: ~ type_name
+    nested_name_specifier template simple_template_id :: ~ type_name
+    nested_name_specifier/opt/~ type_name
+    ~ decltype_specifier
+
+primary_expression:
+    literal
+    this
+    ( expression )
+    id_expression
+    lambda_expression
+
+id_expression:
+    unqualified_id
+    qualified_id
+
+unqualified_id:
+    identifier
+    operator_function_id
+    conversion_function_id
+    literal_operator_id
+    ~ class_name
+    ~ decltype_specifier
+    template_id
+
+========================================================================
+
+id_expression:
+    unqualified_id
+    qualified_id
+
+expression_list:
+    initializer_list
+
+new_expression:
+    ::/opt/new new_placement/opt/ new_type_id new_initializer/opt/
+    ::/opt/new new_placement/opt/( type_id ) new_initializer/opt/
+new_placement:
+    ( expression_list )
+new_type_id:
+    type_specifier_seq new_declarator/opt/
+new_declarator:
+    ptr_operator new_declarator/opt/
+    noptr_new_declarator
+noptr_new_declarator:
+    [ expression ] attribute_specifier_seq/opt/
+    noptr_new_declarator [ constant_expression ] attribute_specifier_seq/opt/
+new_initializer:
+    ( expression_list/opt/)
+    braced_init_list
+
+delete_expression:
+    ::/opt/delete cast_expression
+    ::/opt/delete [ ] cast_expression
+
+constant_expression:
+    conditional_expression
