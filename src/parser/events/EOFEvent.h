@@ -1,6 +1,6 @@
 #pragma once
 
-#include "parser/ASTEvent.h"
+#include "ASTEvent.h"
 
 struct EOFEvent : public ASTEvent {
     void visit(EventVisitor& visitor) override;

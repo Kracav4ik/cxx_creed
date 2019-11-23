@@ -1,9 +1,9 @@
 #include "Interpreter.h"
 
-#include "parser/UnknownTokenEvent.h"
-#include "parser/UnknownTokenTypeEvent.h"
-#include "parser/ParseErrorEvent.h"
-#include "parser/ReturnStmtEvent.h"
+#include "parser/events/UnknownTokenEvent.h"
+#include "parser/events/UnknownTokenTypeEvent.h"
+#include "parser/events/ParseErrorEvent.h"
+#include "parser/events/ReturnStmtEvent.h"
 
 #include <iostream>
 

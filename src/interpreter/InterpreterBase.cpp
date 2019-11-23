@@ -1,7 +1,7 @@
 #include "InterpreterBase.h"
 
 #include "parser/Parser.h"
-#include "parser/EOFEvent.h"
+#include "parser/events/EOFEvent.h"
 
 void InterpreterBase::run() {
     _is_running = true;

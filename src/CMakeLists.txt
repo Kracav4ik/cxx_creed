@@ -41,25 +41,26 @@ set(LIB_SOURCES
         lexer/Lexer.h
         lexer/Token.h
 
-        parser/ASTEvent.h
-        parser/BeginMainDeclEvent.cpp
-        parser/BeginMainDeclEvent.h
-        parser/EndMainDeclEvent.cpp
-        parser/EndMainDeclEvent.h
-        parser/EOFEvent.cpp
-        parser/EOFEvent.h
         parser/EventVisitor.h
         parser/EventVisitorAdapter.h
-        parser/ParseErrorEvent.cpp
-        parser/ParseErrorEvent.h
         parser/Parser.cpp
         parser/Parser.h
-        parser/ReturnStmtEvent.cpp
-        parser/ReturnStmtEvent.h
-        parser/UnknownTokenEvent.cpp
-        parser/UnknownTokenEvent.h
-        parser/UnknownTokenTypeEvent.cpp
-        parser/UnknownTokenTypeEvent.h
+
+        parser/events/ASTEvent.h
+        parser/events/BeginMainDeclEvent.cpp
+        parser/events/BeginMainDeclEvent.h
+        parser/events/EndMainDeclEvent.cpp
+        parser/events/EndMainDeclEvent.h
+        parser/events/EOFEvent.cpp
+        parser/events/EOFEvent.h
+        parser/events/ParseErrorEvent.cpp
+        parser/events/ParseErrorEvent.h
+        parser/events/ReturnStmtEvent.cpp
+        parser/events/ReturnStmtEvent.h
+        parser/events/UnknownTokenEvent.cpp
+        parser/events/UnknownTokenEvent.h
+        parser/events/UnknownTokenTypeEvent.cpp
+        parser/events/UnknownTokenTypeEvent.h
 )
 
 add_executable(${EXE_NAME} ${EXE_SOURCES})

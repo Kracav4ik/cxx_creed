@@ -1,14 +1,14 @@
 #include "Parser.h"
 
-#include "parser/EOFEvent.h"
-#include "parser/UnknownTokenEvent.h"
-#include "parser/UnknownTokenTypeEvent.h"
+#include "parser/events/EOFEvent.h"
+#include "parser/events/UnknownTokenEvent.h"
+#include "parser/events/UnknownTokenTypeEvent.h"
 #include "lexer/Lexer.h"
 #include "lexer/Token.h"
-#include "ReturnStmtEvent.h"
-#include "BeginMainDeclEvent.h"
-#include "ParseErrorEvent.h"
-#include "EndMainDeclEvent.h"
+#include "parser/events/ReturnStmtEvent.h"
+#include "parser/events/BeginMainDeclEvent.h"
+#include "parser/events/ParseErrorEvent.h"
+#include "parser/events/EndMainDeclEvent.h"
 
 class Stage {
 public:
