@@ -1,6 +1,7 @@
 #include "ASTNodeString.h"
 
 #include "parser/ast/BinaryOpNode.h"
+#include "parser/ast/UnaryOpNode.h"
 #include "parser/ast/IntegerNode.h"
 
 ASTNodeString::ASTNodeString(const ASTNodePtr& node) {
@@ -18,6 +19,13 @@ void ASTNodeString::visitBinaryOp(BinaryOpNode& node) {
     node.left->visit(*this);
     _buf << " " << node.op << " ";
     node.right->visit(*this);
+    _buf << "]";
+}
+
+void ASTNodeString::visitUnaryOp(UnaryOpNode& node) {
+    _buf << "[UnaryOp ";
+    _buf << node.op << " ";
+    node.subnode->visit(*this);
     _buf << "]";
 }
 

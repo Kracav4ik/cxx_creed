@@ -56,6 +56,8 @@ set(LIB_SOURCES
         parser/ast/BinaryOpNode.h
         parser/ast/IntegerNode.cpp
         parser/ast/IntegerNode.h
+        parser/ast/UnaryOpNode.cpp
+        parser/ast/UnaryOpNode.h
 
         parser/events/ASTEvent.h
         parser/events/BeginMainDeclEvent.cpp

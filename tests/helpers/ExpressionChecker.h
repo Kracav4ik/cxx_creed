@@ -1,12 +1,15 @@
 #pragma once
 
+#include "parser/ast/ASTNode.h"
+
 #include <string>
 
 class ExpressionChecker {
 public:
     explicit ExpressionChecker(std::string expression);
-    const std::string& str() const;
+    std::string str() const;
+    int value() const;
 
 private:
-    std::string _str;
+    ASTNodePtr _expression;
 };

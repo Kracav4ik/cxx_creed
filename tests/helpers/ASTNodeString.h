@@ -13,6 +13,7 @@ public:
 
 private:
     void visitBinaryOp(BinaryOpNode& node) override;
+    void visitUnaryOp(UnaryOpNode& node) override;
     void visitInteger(IntegerNode& node) override;
 
     std::stringstream _buf;

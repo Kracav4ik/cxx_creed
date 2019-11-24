@@ -9,6 +9,7 @@ public:
 
 private:
     void visitBinaryOp(BinaryOpNode& node) override;
+    void visitUnaryOp(UnaryOpNode& node) override;
     void visitInteger(IntegerNode& node) override;
 
     int _result = 0;

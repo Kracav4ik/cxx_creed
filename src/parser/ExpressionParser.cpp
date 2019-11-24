@@ -3,6 +3,7 @@
 #include "lexer/Lexer.h"
 #include "lexer/Token.h"
 #include "parser/ast/BinaryOpNode.h"
+#include "parser/ast/UnaryOpNode.h"
 #include "parser/ast/IntegerNode.h"
 
 ASTNodePtr ExpressionParser::try_expression(Lexer& lexer) {
@@ -37,7 +38,7 @@ ASTNodePtr ExpressionParser::try_additive_expression(Lexer& lexer) {
 
 ASTNodePtr ExpressionParser::try_multiplicative_expression(Lexer& lexer) {
     // TODO: almost same code as try_expression
-    auto first_operand = try_primary_expression(lexer);
+    auto first_operand = try_unary_expression(lexer);
 
     if (!first_operand) {
         return nullptr;
@@ -51,7 +52,7 @@ ASTNodePtr ExpressionParser::try_multiplicative_expression(Lexer& lexer) {
             break;
         }
 
-        auto second_operand = try_primary_expression(lexer);
+        auto second_operand = try_unary_expression(lexer);
         if (!second_operand) {
             break;
         }
@@ -60,6 +61,22 @@ ASTNodePtr ExpressionParser::try_multiplicative_expression(Lexer& lexer) {
         state.drop();
     }
     return first_operand;
+}
+
+ASTNodePtr ExpressionParser::try_unary_expression(Lexer& lexer) {
+    auto state = lexer.get_state();
+    auto token = lexer.next_token();
+    if (token.valid() && (token.type == "ADD" || token.type == "SUB")) {
+        auto expression = try_unary_expression(lexer);
+        if (!expression) {
+            return nullptr;
+        }
+        state.drop();
+        return std::make_unique<UnaryOpNode>(token.text, std::move(expression));
+    } else {
+        state.revert();
+        return try_primary_expression(lexer);
+    }
 }
 
 ASTNodePtr ExpressionParser::try_primary_expression(Lexer& lexer) {
@@ -75,10 +92,9 @@ ASTNodePtr ExpressionParser::try_primary_expression(Lexer& lexer) {
             if (!expression) {
                 return nullptr;
             }
-            auto inner_state = lexer.get_state();
             token = lexer.next_token();
             if (token.valid() && token.type == "RPAR") {
-                inner_state.drop();
+                state.drop();
                 return expression;
             }
         }

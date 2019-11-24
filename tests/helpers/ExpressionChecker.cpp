@@ -7,6 +7,7 @@
 #include "dlc/lexers/IntegerLexer.h"
 #include "dlc/lexers/ExactLexer.h"
 #include "parser/ExpressionParser.h"
+#include "interpreter/Evaluator.h"
 
 ExpressionChecker::ExpressionChecker(std::string expression) {
     Lexer lexer;
@@ -24,10 +25,16 @@ ExpressionChecker::ExpressionChecker(std::string expression) {
 
     lexer.set_text(std::move(expression));
     ExpressionParser expression_parser;
-    auto node = expression_parser.try_expression(lexer);
-    _str = ASTNodeString(node).str();
+    _expression = expression_parser.try_expression(lexer);
 }
 
-const std::string& ExpressionChecker::str() const {
-    return _str;
+std::string ExpressionChecker::str() const {
+    return ASTNodeString(_expression).str();
+}
+
+int ExpressionChecker::value() const {
+    if (_expression) {
+        return Evaluator::evaluate(_expression);
+    }
+    return 0;
 }

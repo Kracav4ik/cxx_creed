@@ -11,5 +11,6 @@ public:
 private:
     ASTNodePtr try_additive_expression(Lexer& lexer);
     ASTNodePtr try_multiplicative_expression(Lexer& lexer);
+    ASTNodePtr try_unary_expression(Lexer& lexer);
     ASTNodePtr try_primary_expression(Lexer& lexer);
 };
