@@ -17,9 +17,12 @@ void Lexer::set_text(std::string text) {
     _pos = 0;
 }
 
-Token Lexer::next_token() {
+Token Lexer::next_token(bool skip_space) {
     if (_pos >= _text.size()) {
         return {"EOF", ""};
+    }
+    if (skip_space) {
+        skip_whitespace();
     }
 
     auto text = current_text();
@@ -39,10 +42,10 @@ Token Lexer::next_token() {
 
 void Lexer::skip_whitespace() {
     auto state = get_state();
-    Token token = next_token();
+    Token token = next_token(false);
     while (token.type == "WHITESPACE" || token.type == "NEWLINE" || token.type == "COMMENT") {
         state.assign(_pos);
-        token = next_token();
+        token = next_token(false);
     }
 }
 

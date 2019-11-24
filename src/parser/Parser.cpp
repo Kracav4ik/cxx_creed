@@ -27,7 +27,6 @@ protected:
     }
 
     Token eat_token(const std::string& token_type, Lexer& lexer) {
-        lexer.skip_whitespace();
         auto token = lexer.next_token();
         if (token.type == token_type) {
             return token;
@@ -98,7 +97,6 @@ Parser::Parser(Lexer& lexer) : _lexer(lexer) {
 Parser::~Parser() = default;
 
 std::unique_ptr<ASTEvent> Parser::next_event() {
-    _lexer.skip_whitespace();
     {
         auto state = _lexer.get_state();
         auto token = _lexer.next_token();

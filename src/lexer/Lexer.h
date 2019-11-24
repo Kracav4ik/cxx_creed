@@ -28,7 +28,7 @@ public:
     void set_text(std::string text);
     State get_state();
 
-    Token next_token();
+    Token next_token(bool skip_space=true);
     void skip_whitespace();
 
 private:
