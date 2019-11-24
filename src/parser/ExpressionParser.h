@@ -9,6 +9,7 @@ public:
     ASTNodePtr try_expression(Lexer& lexer);
 
 private:
-    ASTNodePtr try_term(Lexer& lexer);
-    ASTNodePtr try_integer(Lexer& lexer);
+    ASTNodePtr try_additive_expression(Lexer& lexer);
+    ASTNodePtr try_multiplicative_expression(Lexer& lexer);
+    ASTNodePtr try_primary_expression(Lexer& lexer);
 };

@@ -6,7 +6,11 @@
 #include "parser/ast/IntegerNode.h"
 
 ASTNodePtr ExpressionParser::try_expression(Lexer& lexer) {
-    auto first_operand = try_term(lexer);
+    return try_additive_expression(lexer);
+}
+
+ASTNodePtr ExpressionParser::try_additive_expression(Lexer& lexer) {
+    auto first_operand = try_multiplicative_expression(lexer);
 
     if (!first_operand) {
         return nullptr;
@@ -20,7 +24,7 @@ ASTNodePtr ExpressionParser::try_expression(Lexer& lexer) {
             break;
         }
 
-        auto second_operand = try_term(lexer);
+        auto second_operand = try_multiplicative_expression(lexer);
         if (!second_operand) {
             break;
         }
@@ -31,9 +35,9 @@ ASTNodePtr ExpressionParser::try_expression(Lexer& lexer) {
     return first_operand;
 }
 
-ASTNodePtr ExpressionParser::try_term(Lexer& lexer) {
+ASTNodePtr ExpressionParser::try_multiplicative_expression(Lexer& lexer) {
     // TODO: almost same code as try_expression
-    auto first_operand = try_integer(lexer);
+    auto first_operand = try_primary_expression(lexer);
 
     if (!first_operand) {
         return nullptr;
@@ -47,7 +51,7 @@ ASTNodePtr ExpressionParser::try_term(Lexer& lexer) {
             break;
         }
 
-        auto second_operand = try_integer(lexer);
+        auto second_operand = try_primary_expression(lexer);
         if (!second_operand) {
             break;
         }
@@ -58,7 +62,7 @@ ASTNodePtr ExpressionParser::try_term(Lexer& lexer) {
     return first_operand;
 }
 
-ASTNodePtr ExpressionParser::try_integer(Lexer& lexer) {
+ASTNodePtr ExpressionParser::try_primary_expression(Lexer& lexer) {
     auto state = lexer.get_state();
     auto token = lexer.next_token();
     if (token.valid() && token.type == "INTEGER") {
