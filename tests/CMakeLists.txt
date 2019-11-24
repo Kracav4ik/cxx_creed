@@ -3,6 +3,7 @@ add_subdirectory(googletest-1.10.0)
 include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
 
 set(TEST_SOURCES
+        ExpressionParserTests.cpp
         LexerTests.cpp
         ParserTests.cpp
 
@@ -10,6 +11,8 @@ set(TEST_SOURCES
         helpers/ASTNodeString.h
         helpers/EventRecorder.cpp
         helpers/EventRecorder.h
+        helpers/ExpressionChecker.cpp
+        helpers/ExpressionChecker.h
         helpers/ParserChecker.cpp
         helpers/ParserChecker.h
         helpers/types.h

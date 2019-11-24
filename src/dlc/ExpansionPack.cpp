@@ -25,4 +25,9 @@ void ExpansionPack::install(Lexer& lexer, Parser& parser, Interpreter& interpret
     lexer.add_dlc(std::make_shared<ExactLexer>("RBRACE", "}"));
     lexer.add_dlc(std::make_shared<ExactLexer>("RETURN", "return"));
     lexer.add_dlc(std::make_shared<ExactLexer>("SEMICOLON", ";"));
+    lexer.add_dlc(std::make_shared<ExactLexer>("ADD", "+"));
+    lexer.add_dlc(std::make_shared<ExactLexer>("SUB", "-"));
+    lexer.add_dlc(std::make_shared<ExactLexer>("MUL", "*"));
+    lexer.add_dlc(std::make_shared<ExactLexer>("DIV", "/"));
+    lexer.add_dlc(std::make_shared<ExactLexer>("MOD", "%"));
 }

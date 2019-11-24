@@ -13,6 +13,12 @@ void Evaluator::visitBinaryOp(BinaryOpNode& node) {
         _result = evaluate(node.left) + evaluate(node.right);
     } else if (node.op == "-") {
         _result = evaluate(node.left) - evaluate(node.right);
+    } else if (node.op == "*") {
+        _result = evaluate(node.left) * evaluate(node.right);
+    } else if (node.op == "/") {
+        _result = evaluate(node.left) / evaluate(node.right);
+    } else if (node.op == "%") {
+        _result = evaluate(node.left) % evaluate(node.right);
     }
 }
 

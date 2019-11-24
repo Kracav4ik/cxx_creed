@@ -46,6 +46,8 @@ set(LIB_SOURCES
         parser/ASTVisitor.h
         parser/EventVisitor.h
         parser/EventVisitorAdapter.h
+        parser/ExpressionParser.cpp
+        parser/ExpressionParser.h
         parser/Parser.cpp
         parser/Parser.h
 

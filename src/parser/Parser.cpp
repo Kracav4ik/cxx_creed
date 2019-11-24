@@ -1,15 +1,16 @@
 #include "Parser.h"
 
+#include "lexer/Lexer.h"
+#include "lexer/Token.h"
+
 #include "parser/events/EOFEvent.h"
 #include "parser/events/UnknownTokenEvent.h"
 #include "parser/events/UnknownTokenTypeEvent.h"
-#include "lexer/Lexer.h"
-#include "lexer/Token.h"
 #include "parser/events/ReturnStmtEvent.h"
 #include "parser/events/BeginMainDeclEvent.h"
 #include "parser/events/ParseErrorEvent.h"
 #include "parser/events/EndMainDeclEvent.h"
-#include "parser/ast/IntegerNode.h"
+#include "parser/ExpressionParser.h"
 
 class Stage {
 public:
@@ -58,19 +59,23 @@ class ReturnStage : public Stage {
 public:
     std::unique_ptr<ASTEvent> try_eat(Lexer& lexer) override {
         auto state = lexer.get_state();
-        std::string value;
-        for (auto token_type : {"RETURN", "INTEGER", "SEMICOLON"}) {
-            auto token = eat_token(token_type, lexer);
-            if (!token.valid()) {
-                return eat_error(lexer, state);
-            }
-            if (token.type == "INTEGER") {
-                value = token.text;
-            }
+
+        if (!eat_token("RETURN", lexer).valid()) {
+            return eat_error(lexer, state);
+        }
+
+        ExpressionParser expression_parser;
+        auto expression = expression_parser.try_expression(lexer);
+        if (!expression) {
+            return eat_error(lexer, state);
+        }
+
+        if (!eat_token("SEMICOLON", lexer).valid()) {
+            return eat_error(lexer, state);
         }
         state.drop();
         _completed = true;
-        return std::make_unique<ReturnStmtEvent>(std::make_unique<IntegerNode>(std::stoi(value)));
+        return std::make_unique<ReturnStmtEvent>(std::move(expression));
     }
 };
 
