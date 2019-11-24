@@ -4,7 +4,9 @@
 #include "parser/ast/IntegerNode.h"
 
 ASTNodeString::ASTNodeString(const ASTNodePtr& node) {
-    node->visit(*this);
+    if (node) {
+        node->visit(*this);
+    }
 }
 
 std::string ASTNodeString::str() const {

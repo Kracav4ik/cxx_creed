@@ -14,6 +14,8 @@ ExpressionChecker::ExpressionChecker(std::string expression) {
     lexer.add_dlc(std::make_shared<WhitespaceLexer>());
     lexer.add_dlc(std::make_shared<IntegerLexer>());
 
+    lexer.add_dlc(std::make_shared<ExactLexer>("LPAR", "("));
+    lexer.add_dlc(std::make_shared<ExactLexer>("RPAR", ")"));
     lexer.add_dlc(std::make_shared<ExactLexer>("ADD", "+"));
     lexer.add_dlc(std::make_shared<ExactLexer>("SUB", "-"));
     lexer.add_dlc(std::make_shared<ExactLexer>("MUL", "*"));

@@ -65,9 +65,23 @@ ASTNodePtr ExpressionParser::try_multiplicative_expression(Lexer& lexer) {
 ASTNodePtr ExpressionParser::try_primary_expression(Lexer& lexer) {
     auto state = lexer.get_state();
     auto token = lexer.next_token();
-    if (token.valid() && token.type == "INTEGER") {
-        state.drop();
-        return std::make_unique<IntegerNode>(std::stoi(token.text));
+    if (token.valid()) {
+        if (token.type == "INTEGER") {
+            state.drop();
+            return std::make_unique<IntegerNode>(std::stoi(token.text));
+        }
+        if (token.type == "LPAR") {
+            auto expression = try_expression(lexer);
+            if (!expression) {
+                return nullptr;
+            }
+            auto inner_state = lexer.get_state();
+            token = lexer.next_token();
+            if (token.valid() && token.type == "RPAR") {
+                inner_state.drop();
+                return expression;
+            }
+        }
     }
     return nullptr;
 }
