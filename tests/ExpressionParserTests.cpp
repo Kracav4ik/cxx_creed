@@ -10,6 +10,11 @@ TEST(ExpressionParserTest, arithmetics) {
     EXPECT_EQ(ExpressionChecker("1 * 2").str(), "[BinaryOp [Integer 1] * [Integer 2]]");
     EXPECT_EQ(ExpressionChecker("1 / 2").str(), "[BinaryOp [Integer 1] / [Integer 2]]");
     EXPECT_EQ(ExpressionChecker("1 % 2").str(), "[BinaryOp [Integer 1] % [Integer 2]]");
+    EXPECT_EQ(ExpressionChecker("1 ^ 2").str(), "[BinaryOp [Integer 1] ^ [Integer 2]]");
+    EXPECT_EQ(ExpressionChecker("1 & 2").str(), "[BinaryOp [Integer 1] & [Integer 2]]");
+    EXPECT_EQ(ExpressionChecker("1 | 2").str(), "[BinaryOp [Integer 1] | [Integer 2]]");
+    EXPECT_EQ(ExpressionChecker("1 << 2").str(), "[BinaryOp [Integer 1] << [Integer 2]]");
+    EXPECT_EQ(ExpressionChecker("1 >> 2").str(), "[BinaryOp [Integer 1] >> [Integer 2]]");
 
     EXPECT_EQ(ExpressionChecker("1 + 2 - 3 + 4").str(), ""
             "[BinaryOp "
@@ -88,6 +93,19 @@ TEST(ExpressionParserTest, unary_op) {
     EXPECT_EQ(ExpressionChecker("+").str(), "");
     EXPECT_EQ(ExpressionChecker("+1").str(), "[UnaryOp + [Integer 1]]");
     EXPECT_EQ(ExpressionChecker("-1").str(), "[UnaryOp - [Integer 1]]");
-    EXPECT_EQ(ExpressionChecker("+ + - - + - 1").str(), "[UnaryOp + [UnaryOp + [UnaryOp - [UnaryOp - [UnaryOp + [UnaryOp - [Integer 1]]]]]]]");
-    EXPECT_EQ(ExpressionChecker("3 * + - (+ 1)").str(),"[BinaryOp [Integer 3] * [UnaryOp + [UnaryOp - [UnaryOp + [Integer 1]]]]]");
+    EXPECT_EQ(ExpressionChecker("~1").str(), "[UnaryOp ~ [Integer 1]]");
+    EXPECT_EQ(ExpressionChecker("+ ~ - - + - 1").str(), "[UnaryOp + [UnaryOp ~ [UnaryOp - [UnaryOp - [UnaryOp + [UnaryOp - [Integer 1]]]]]]]");
+    EXPECT_EQ(ExpressionChecker("3 * ~ - (+ 1)").str(),"[BinaryOp [Integer 3] * [UnaryOp ~ [UnaryOp - [UnaryOp + [Integer 1]]]]]");
+}
+
+TEST(ExpressionParserTest, binary_priority) {
+    EXPECT_EQ(ExpressionChecker("1 | 2 ^ 3 | 4").str(), "[BinaryOp [BinaryOp [Integer 1] | [BinaryOp [Integer 2] ^ [Integer 3]]] | [Integer 4]]");
+    EXPECT_EQ(ExpressionChecker("1 ^ 2 & 3 ^ 4").str(), "[BinaryOp [BinaryOp [Integer 1] ^ [BinaryOp [Integer 2] & [Integer 3]]] ^ [Integer 4]]");
+    EXPECT_EQ(ExpressionChecker("1 & 2 << 3 & 4").str(), "[BinaryOp [BinaryOp [Integer 1] & [BinaryOp [Integer 2] << [Integer 3]]] & [Integer 4]]");
+    EXPECT_EQ(ExpressionChecker("1 & 2 >> 3 & 4").str(), "[BinaryOp [BinaryOp [Integer 1] & [BinaryOp [Integer 2] >> [Integer 3]]] & [Integer 4]]");
+    EXPECT_EQ(ExpressionChecker("1 << 2 + 3 >> 4").str(), "[BinaryOp [BinaryOp [Integer 1] << [BinaryOp [Integer 2] + [Integer 3]]] >> [Integer 4]]");
+    EXPECT_EQ(ExpressionChecker("1 << 2 - 3 >> 4").str(), "[BinaryOp [BinaryOp [Integer 1] << [BinaryOp [Integer 2] - [Integer 3]]] >> [Integer 4]]");
+    EXPECT_EQ(ExpressionChecker("1 + 2 * 3 - 4").str(), "[BinaryOp [BinaryOp [Integer 1] + [BinaryOp [Integer 2] * [Integer 3]]] - [Integer 4]]");
+    EXPECT_EQ(ExpressionChecker("1 + 2 / 3 - 4").str(), "[BinaryOp [BinaryOp [Integer 1] + [BinaryOp [Integer 2] / [Integer 3]]] - [Integer 4]]");
+    EXPECT_EQ(ExpressionChecker("1 + 2 % 3 - 4").str(), "[BinaryOp [BinaryOp [Integer 1] + [BinaryOp [Integer 2] % [Integer 3]]] - [Integer 4]]");
 }

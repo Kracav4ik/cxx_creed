@@ -7,7 +7,111 @@
 #include "parser/ast/IntegerNode.h"
 
 ASTNodePtr ExpressionParser::try_expression(Lexer& lexer) {
-    return try_additive_expression(lexer);
+    return try_inclusive_or_expression(lexer);
+}
+
+ASTNodePtr ExpressionParser::try_inclusive_or_expression(Lexer& lexer) {
+    auto first_operand = try_exclusive_or_expression(lexer);
+
+    if (!first_operand) {
+        return nullptr;
+    }
+
+    while (true) {
+        auto state = lexer.get_state();
+
+        auto token = lexer.next_token();
+        if (!token.valid() || !(token.type == "BITOR")) {
+            break;
+        }
+
+        auto second_operand = try_exclusive_or_expression(lexer);
+        if (!second_operand) {
+            break;
+        }
+
+        first_operand = std::make_unique<BinaryOpNode>(token.text, std::move(first_operand), std::move(second_operand));
+        state.drop();
+    }
+    return first_operand;
+}
+
+ASTNodePtr ExpressionParser::try_exclusive_or_expression(Lexer& lexer) {
+    auto first_operand = try_and_expression(lexer);
+
+    if (!first_operand) {
+        return nullptr;
+    }
+
+    while (true) {
+        auto state = lexer.get_state();
+
+        auto token = lexer.next_token();
+        if (!token.valid() || !(token.type == "XOR")) {
+            break;
+        }
+
+        auto second_operand = try_and_expression(lexer);
+        if (!second_operand) {
+            break;
+        }
+
+        first_operand = std::make_unique<BinaryOpNode>(token.text, std::move(first_operand), std::move(second_operand));
+        state.drop();
+    }
+    return first_operand;
+}
+
+ASTNodePtr ExpressionParser::try_and_expression(Lexer& lexer) {
+    auto first_operand = try_shift_expression(lexer);
+
+    if (!first_operand) {
+        return nullptr;
+    }
+
+    while (true) {
+        auto state = lexer.get_state();
+
+        auto token = lexer.next_token();
+        if (!token.valid() || !(token.type == "BITAND")) {
+            break;
+        }
+
+        auto second_operand = try_shift_expression(lexer);
+        if (!second_operand) {
+            break;
+        }
+
+        first_operand = std::make_unique<BinaryOpNode>(token.text, std::move(first_operand), std::move(second_operand));
+        state.drop();
+    }
+    return first_operand;
+}
+
+ASTNodePtr ExpressionParser::try_shift_expression(Lexer& lexer) {
+    auto first_operand = try_additive_expression(lexer);
+
+    if (!first_operand) {
+        return nullptr;
+    }
+
+    while (true) {
+        auto state = lexer.get_state();
+
+        auto token = lexer.next_token();
+        if (!token.valid() || !(token.type == "LSHIFT" || token.type == "RSHIFT")) {
+            break;
+        }
+
+        auto second_operand = try_additive_expression(lexer);
+        if (!second_operand) {
+            break;
+        }
+
+        first_operand = std::make_unique<BinaryOpNode>(token.text, std::move(first_operand), std::move(second_operand));
+        state.drop();
+    }
+    return first_operand;
 }
 
 ASTNodePtr ExpressionParser::try_additive_expression(Lexer& lexer) {
@@ -66,7 +170,7 @@ ASTNodePtr ExpressionParser::try_multiplicative_expression(Lexer& lexer) {
 ASTNodePtr ExpressionParser::try_unary_expression(Lexer& lexer) {
     auto state = lexer.get_state();
     auto token = lexer.next_token();
-    if (token.valid() && (token.type == "ADD" || token.type == "SUB")) {
+    if (token.valid() && (token.type == "ADD" || token.type == "SUB" || token.type == "COMPL")) {
         auto expression = try_unary_expression(lexer);
         if (!expression) {
             return nullptr;

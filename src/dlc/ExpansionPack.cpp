@@ -30,4 +30,10 @@ void ExpansionPack::install(Lexer& lexer, Parser& parser, Interpreter& interpret
     lexer.add_dlc(std::make_shared<ExactLexer>("MUL", "*"));
     lexer.add_dlc(std::make_shared<ExactLexer>("DIV", "/"));
     lexer.add_dlc(std::make_shared<ExactLexer>("MOD", "%"));
+    lexer.add_dlc(std::make_shared<ExactLexer>("XOR", "^"));
+    lexer.add_dlc(std::make_shared<ExactLexer>("BITAND", "&"));
+    lexer.add_dlc(std::make_shared<ExactLexer>("BITOR", "|"));
+    lexer.add_dlc(std::make_shared<ExactLexer>("COMPL", "~"));
+    lexer.add_dlc(std::make_shared<ExactLexer>("LSHIFT", "<<"));
+    lexer.add_dlc(std::make_shared<ExactLexer>("RSHIFT", ">>"));
 }
