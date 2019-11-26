@@ -1,6 +1,6 @@
 #pragma once
 
-#include "parser/ast/ASTNode.h"
+#include "expression_parser/ast/ASTNode.h"
 
 #include <string>
 

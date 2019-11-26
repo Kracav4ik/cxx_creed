@@ -1,7 +1,7 @@
 #include "Evaluator.h"
-#include "parser/ast/BinaryOpNode.h"
-#include "parser/ast/UnaryOpNode.h"
-#include "parser/ast/IntegerNode.h"
+#include "expression_parser/ast/BinaryOpNode.h"
+#include "expression_parser/ast/UnaryOpNode.h"
+#include "expression_parser/ast/IntegerNode.h"
 
 int Evaluator::evaluate(const ASTNodePtr& node) {
     Evaluator evaluator;

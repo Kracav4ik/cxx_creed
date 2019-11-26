@@ -1,7 +1,7 @@
 #pragma once
 
-#include "parser/ASTVisitor.h"
-#include "parser/ast/ASTNode.h"
+#include "expression_parser/ASTVisitor.h"
+#include "expression_parser/ast/ASTNode.h"
 
 class Evaluator : ASTVisitor {
 public:

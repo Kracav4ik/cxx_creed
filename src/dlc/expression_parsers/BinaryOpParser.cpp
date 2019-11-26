@@ -1,9 +1,9 @@
 #include "BinaryOpParser.h"
 
 #include "expression_parser/ExpressionParser.h"
+#include "expression_parser/ast/BinaryOpNode.h"
 #include "lexer/Lexer.h"
 #include "lexer/Token.h"
-#include "parser/ast/BinaryOpNode.h"
 
 BinaryOpParser::BinaryOpParser(Priority priority, TokenList token_types) : ExpressionParserDLC(priority), _token_types(std::move(token_types)) {}
 

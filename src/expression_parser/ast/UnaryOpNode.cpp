@@ -1,6 +1,6 @@
 #include "UnaryOpNode.h"
 
-#include "parser/ASTVisitor.h"
+#include "expression_parser/ASTVisitor.h"
 
 void UnaryOpNode::visit(ASTVisitor& visitor) {
     visitor.visitUnaryOp(*this);

@@ -1,6 +1,6 @@
 #include "IntegerNode.h"
 
-#include "parser/ASTVisitor.h"
+#include "expression_parser/ASTVisitor.h"
 
 IntegerNode::IntegerNode(int value) : value(value) {}
 

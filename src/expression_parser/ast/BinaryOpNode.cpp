@@ -1,6 +1,6 @@
 #include "BinaryOpNode.h"
 
-#include "parser/ASTVisitor.h"
+#include "expression_parser/ASTVisitor.h"
 
 void BinaryOpNode::visit(ASTVisitor& visitor) {
     visitor.visitBinaryOp(*this);

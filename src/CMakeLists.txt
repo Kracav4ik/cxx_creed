@@ -43,11 +43,20 @@ set(LIB_SOURCES
         dlc/lexers/WhitespaceLexer.cpp
         dlc/lexers/WhitespaceLexer.h
 
+        expression_parser/ASTVisitor.h
         expression_parser/ExpressionParser.cpp
         expression_parser/ExpressionParser.h
         expression_parser/Priority.h
         expression_parser/TokenList.cpp
         expression_parser/TokenList.h
+
+        expression_parser/ast/ASTNode.h
+        expression_parser/ast/BinaryOpNode.cpp
+        expression_parser/ast/BinaryOpNode.h
+        expression_parser/ast/IntegerNode.cpp
+        expression_parser/ast/IntegerNode.h
+        expression_parser/ast/UnaryOpNode.cpp
+        expression_parser/ast/UnaryOpNode.h
 
         interpreter/Evaluator.cpp
         interpreter/Evaluator.h
@@ -60,19 +69,10 @@ set(LIB_SOURCES
         lexer/Lexer.h
         lexer/Token.h
 
-        parser/ASTVisitor.h
         parser/EventVisitor.h
         parser/EventVisitorAdapter.h
         parser/Parser.cpp
         parser/Parser.h
-
-        parser/ast/ASTNode.h
-        parser/ast/BinaryOpNode.cpp
-        parser/ast/BinaryOpNode.h
-        parser/ast/IntegerNode.cpp
-        parser/ast/IntegerNode.h
-        parser/ast/UnaryOpNode.cpp
-        parser/ast/UnaryOpNode.h
 
         parser/events/ASTEvent.h
         parser/events/BeginMainDeclEvent.cpp

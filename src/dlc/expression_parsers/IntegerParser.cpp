@@ -1,9 +1,9 @@
 #include "IntegerParser.h"
 
 #include "expression_parser/ExpressionParser.h"
+#include "expression_parser/ast/IntegerNode.h"
 #include "lexer/Lexer.h"
 #include "lexer/Token.h"
-#include "parser/ast/IntegerNode.h"
 
 IntegerParser::IntegerParser(Priority priority) : ExpressionParserDLC(priority) {}
 

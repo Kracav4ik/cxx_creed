@@ -1,8 +1,8 @@
 #include "ASTNodeString.h"
 
-#include "parser/ast/BinaryOpNode.h"
-#include "parser/ast/UnaryOpNode.h"
-#include "parser/ast/IntegerNode.h"
+#include "expression_parser/ast/BinaryOpNode.h"
+#include "expression_parser/ast/UnaryOpNode.h"
+#include "expression_parser/ast/IntegerNode.h"
 
 ASTNodeString::ASTNodeString(const ASTNodePtr& node) {
     if (node) {
