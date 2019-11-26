@@ -10,7 +10,7 @@
 #include "parser/events/BeginMainDeclEvent.h"
 #include "parser/events/ParseErrorEvent.h"
 #include "parser/events/EndMainDeclEvent.h"
-#include "parser/ExpressionParser.h"
+#include "expression_parser/ExpressionParser.h"
 
 class Stage {
 public:

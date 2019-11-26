@@ -6,7 +6,7 @@
 #include "dlc/lexers/WhitespaceLexer.h"
 #include "dlc/lexers/IntegerLexer.h"
 #include "dlc/lexers/ExactLexer.h"
-#include "parser/ExpressionParser.h"
+#include "expression_parser/ExpressionParser.h"
 #include "interpreter/Evaluator.h"
 
 ExpressionChecker::ExpressionChecker(std::string expression) {

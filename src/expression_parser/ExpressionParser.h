@@ -1,34 +1,12 @@
 #pragma once
 
 #include "parser/ast/ASTNode.h"
+#include "expression_parser/Priority.h"
 #include <map>
 #include <vector>
 
 class Lexer;
-class ExpressionParser;
-
-enum class Priority {
-    INCLUSIVE_OR_EXPRESSION,
-    EXCLUSIVE_OR_EXPRESSION,
-    AND_EXPRESSION,
-    SHIFT_EXPRESSION,
-    ADDITIVE_EXPRESSION,
-    MULTIPLICATIVE_EXPRESSION,
-    UNARY_EXPRESSION,
-    PRIMARY_EXPRESSION,
-};
-
-class ExpressionParserDLC {
-public:
-    ExpressionParserDLC(Priority priority);
-
-    virtual ~ExpressionParserDLC() = default;
-    virtual ASTNodePtr try_parse(Lexer& lexer, ExpressionParser& expressionParser) = 0;
-    Priority getPriority() const;
-
-private:
-    Priority _priority;
-};
+class ExpressionParserDLC;
 
 class ExpressionParser {
 public:

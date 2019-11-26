@@ -2,6 +2,9 @@
 
 #include "helpers/ExpressionChecker.h"
 
+#include "dlc/expression_parsers/BinaryOpParser.h"
+#include "expression_parser/ExpressionParser.h"
+
 TEST(ExpressionParserTest, arithmetics) {
     EXPECT_EQ(ExpressionChecker("1").str(), "[Integer 1]");
 
@@ -108,4 +111,11 @@ TEST(ExpressionParserTest, binary_priority) {
     EXPECT_EQ(ExpressionChecker("1 + 2 * 3 - 4").str(), "[BinaryOp [BinaryOp [Integer 1] + [BinaryOp [Integer 2] * [Integer 3]]] - [Integer 4]]");
     EXPECT_EQ(ExpressionChecker("1 + 2 / 3 - 4").str(), "[BinaryOp [BinaryOp [Integer 1] + [BinaryOp [Integer 2] / [Integer 3]]] - [Integer 4]]");
     EXPECT_EQ(ExpressionChecker("1 + 2 % 3 - 4").str(), "[BinaryOp [BinaryOp [Integer 1] + [BinaryOp [Integer 2] % [Integer 3]]] - [Integer 4]]");
+}
+
+TEST(ExpressionParserDeathTest, unsupported_binary_parsers) {
+    ExpressionParser parser;
+    ASSERT_DEATH((
+            parser.add_dlc(std::make_shared<BinaryOpParser>(Priority::AND_EXPRESSION, TokenList({"BITAND"})))
+    ), "Assertion failed!");
 }

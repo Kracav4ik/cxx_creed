@@ -10,10 +10,21 @@ set(LIB_SOURCES
 
         dlc/ExpansionPack.cpp
         dlc/ExpansionPack.h
+        dlc/ExpressionParserDLC.cpp
+        dlc/ExpressionParserDLC.h
         dlc/InterpreterDLC.h
         dlc/LexerDLC.h
         dlc/ParserDLC.h
         dlc/WithDLC.h
+
+        dlc/expression_parsers/BinaryOpParser.cpp
+        dlc/expression_parsers/BinaryOpParser.h
+        dlc/expression_parsers/IntegerParser.cpp
+        dlc/expression_parsers/IntegerParser.h
+        dlc/expression_parsers/ParensParser.cpp
+        dlc/expression_parsers/ParensParser.h
+        dlc/expression_parsers/UnaryOpParser.cpp
+        dlc/expression_parsers/UnaryOpParser.h
 
         dlc/lexers/BlockCommentLexer.cpp
         dlc/lexers/BlockCommentLexer.h
@@ -32,6 +43,12 @@ set(LIB_SOURCES
         dlc/lexers/WhitespaceLexer.cpp
         dlc/lexers/WhitespaceLexer.h
 
+        expression_parser/ExpressionParser.cpp
+        expression_parser/ExpressionParser.h
+        expression_parser/Priority.h
+        expression_parser/TokenList.cpp
+        expression_parser/TokenList.h
+
         interpreter/Evaluator.cpp
         interpreter/Evaluator.h
         interpreter/Interpreter.cpp
@@ -46,8 +63,6 @@ set(LIB_SOURCES
         parser/ASTVisitor.h
         parser/EventVisitor.h
         parser/EventVisitorAdapter.h
-        parser/ExpressionParser.cpp
-        parser/ExpressionParser.h
         parser/Parser.cpp
         parser/Parser.h
 
