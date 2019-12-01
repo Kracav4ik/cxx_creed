@@ -8,7 +8,7 @@
 /*
  * Interpreter entry point
  */
-int main() {
+int main(int argc, const char* argv[]) {
     Lexer lexer;
     Parser parser(lexer);
     ConsolePrinter printer;
@@ -17,11 +17,17 @@ int main() {
     ExpansionPack pack;
     pack.install(lexer, parser, interpreter);
 
-    // TODO: read from command line
-    std::string text = read_file("../src/main.cpp");
-    text = "int main() { return 1 - 20 * 300 + 100 / 10 + 5 % 2; }"; // -5988
+    {
+        std::string text;
+        if (argc == 2) {
+            text = read_file(argv[1]);
+        } else {
+            text = "int main() { return 1 - 20 * 300 + 100 / 10 + 5 % 2; }"; // -5988
+        }
 
-    lexer.set_text(text);
+        lexer.set_text(std::move(text));
+    }
+
     interpreter.run();
 
     return 0;
