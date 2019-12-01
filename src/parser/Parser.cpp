@@ -10,6 +10,8 @@
 #include "parser/events/BeginMainDeclEvent.h"
 #include "parser/events/ParseErrorEvent.h"
 #include "parser/events/EndMainDeclEvent.h"
+#include "parser/events/VarDeclEvent.h"
+#include "parser/events/ExprStmtEvent.h"
 #include "expression_parser/ExpressionParser.h"
 
 class Stage {
@@ -46,7 +48,7 @@ public:
         for (auto token_type : {"INT", "IDENTIFIER", "LPAR", "RPAR", "LBRACE"}) {
             auto token = eat_token(token_type, lexer);
             if (!token.valid() || (token.type == "IDENTIFIER" && token.text != "main")) {
-                return eat_error(lexer, state);
+                return nullptr;
             }
         }
         state.drop();
@@ -55,27 +57,76 @@ public:
     }
 };
 
-class ReturnStage : public Stage {
+class StmtListStage : public Stage {
 public:
     std::unique_ptr<ASTEvent> try_eat(Lexer& lexer) override {
+        if (auto event = try_eat_return(lexer)) {
+            return event;
+        }
+
+        if (auto event = try_eat_expr_stmt(lexer)) {
+            return event;
+        }
+
+        if (auto event = try_eat_var_decl(lexer)) {
+            return event;
+        }
+
+        _completed = true;
+        return nullptr;
+    }
+
+private:
+    std::unique_ptr<ASTEvent> try_eat_return(Lexer& lexer) {
         auto state = lexer.get_state();
 
         if (!eat_token("RETURN", lexer).valid()) {
-            return eat_error(lexer, state);
+            return nullptr;
         }
 
         ExpressionParser expression_parser;
         auto expression = expression_parser.try_expression(lexer);
         if (!expression) {
-            return eat_error(lexer, state);
+            return nullptr;
         }
 
         if (!eat_token("SEMICOLON", lexer).valid()) {
-            return eat_error(lexer, state);
+            return nullptr;
         }
         state.drop();
-        _completed = true;
         return std::make_unique<ReturnStmtEvent>(std::move(expression));
+    }
+
+    std::unique_ptr<ASTEvent> try_eat_var_decl(Lexer& lexer) {
+        auto state = lexer.get_state();
+        std::string result;
+        for (auto token_type : {"INT", "IDENTIFIER", "SEMICOLON"}) {
+            auto token = eat_token(token_type, lexer);
+            if (!token.valid()) {
+                return nullptr;
+            }
+            if (token.type == "IDENTIFIER") {
+                result = token.text;
+            }
+        }
+        state.drop();
+        return std::make_unique<VarDeclEvent>(result);
+    }
+
+    std::unique_ptr<ASTEvent> try_eat_expr_stmt(Lexer& lexer) {
+        auto state = lexer.get_state();
+
+        ExpressionParser expression_parser;
+        auto expression = expression_parser.try_expression(lexer);
+        if (!expression) {
+            return nullptr;
+        }
+
+        if (!eat_token("SEMICOLON", lexer).valid()) {
+            return nullptr;
+        }
+        state.drop();
+        return std::make_unique<ExprStmtEvent>(std::move(expression));
     }
 };
 
@@ -95,7 +146,7 @@ public:
 
 Parser::Parser(Lexer& lexer) : _lexer(lexer) {
     _stages.push_back(std::make_unique<BeginMainStage>());
-    _stages.push_back(std::make_unique<ReturnStage>());
+    _stages.push_back(std::make_unique<StmtListStage>());
     _stages.push_back(std::make_unique<EndMainStage>());
 }
 
@@ -114,12 +165,15 @@ std::unique_ptr<ASTEvent> Parser::next_event() {
             return std::make_unique<EOFEvent>();
         }
     }
-    if (_current_stage < _stages.size()) {
+    std::unique_ptr<ASTEvent> event = nullptr;
+    while (!event && _current_stage < _stages.size()) {
         const auto& stage = _stages[_current_stage];
-        auto event = stage->try_eat(_lexer);
+        event = stage->try_eat(_lexer);
         if (stage->completed()) {
             ++_current_stage;
         }
+    }
+    if (event) {
         return event;
     }
 

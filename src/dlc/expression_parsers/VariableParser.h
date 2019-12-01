@@ -2,9 +2,9 @@
 
 #include "dlc/ExpressionParserDLC.h"
 
-class IntegerParser : public ExpressionParserDLC {
+class VariableParser : public ExpressionParserDLC {
 public:
-    explicit IntegerParser(Priority priority);
+    explicit VariableParser(Priority priority);
 
     ASTNodePtr try_parse(Lexer& lexer, ExpressionParser& expression_parser) override;
 };

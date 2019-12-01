@@ -5,6 +5,9 @@ set(EXE_SOURCES
 )
 
 set(LIB_SOURCES
+        ConsolePrinter.cpp
+        ConsolePrinter.h
+        Printer.h
         util.cpp
         util.h
 
@@ -17,6 +20,8 @@ set(LIB_SOURCES
         dlc/ParserDLC.h
         dlc/WithDLC.h
 
+        dlc/expression_parsers/AssignmentParser.cpp
+        dlc/expression_parsers/AssignmentParser.h
         dlc/expression_parsers/BinaryOpParser.cpp
         dlc/expression_parsers/BinaryOpParser.h
         dlc/expression_parsers/IntegerParser.cpp
@@ -25,6 +30,8 @@ set(LIB_SOURCES
         dlc/expression_parsers/ParensParser.h
         dlc/expression_parsers/UnaryOpParser.cpp
         dlc/expression_parsers/UnaryOpParser.h
+        dlc/expression_parsers/VariableParser.cpp
+        dlc/expression_parsers/VariableParser.h
 
         dlc/lexers/BlockCommentLexer.cpp
         dlc/lexers/BlockCommentLexer.h
@@ -50,6 +57,8 @@ set(LIB_SOURCES
         expression_parser/TokenList.cpp
         expression_parser/TokenList.h
 
+        expression_parser/ast/AssignmentNode.cpp
+        expression_parser/ast/AssignmentNode.h
         expression_parser/ast/ASTNode.h
         expression_parser/ast/BinaryOpNode.cpp
         expression_parser/ast/BinaryOpNode.h
@@ -57,6 +66,8 @@ set(LIB_SOURCES
         expression_parser/ast/IntegerNode.h
         expression_parser/ast/UnaryOpNode.cpp
         expression_parser/ast/UnaryOpNode.h
+        expression_parser/ast/VariableNode.cpp
+        expression_parser/ast/VariableNode.h
 
         interpreter/Evaluator.cpp
         interpreter/Evaluator.h
@@ -64,6 +75,8 @@ set(LIB_SOURCES
         interpreter/Interpreter.h
         interpreter/InterpreterBase.cpp
         interpreter/InterpreterBase.h
+        interpreter/Scope.cpp
+        interpreter/Scope.h
 
         lexer/Lexer.cpp
         lexer/Lexer.h
@@ -81,6 +94,8 @@ set(LIB_SOURCES
         parser/events/EndMainDeclEvent.h
         parser/events/EOFEvent.cpp
         parser/events/EOFEvent.h
+        parser/events/ExprStmtEvent.cpp
+        parser/events/ExprStmtEvent.h
         parser/events/ParseErrorEvent.cpp
         parser/events/ParseErrorEvent.h
         parser/events/ReturnStmtEvent.cpp
@@ -89,6 +104,8 @@ set(LIB_SOURCES
         parser/events/UnknownTokenEvent.h
         parser/events/UnknownTokenTypeEvent.cpp
         parser/events/UnknownTokenTypeEvent.h
+        parser/events/VarDeclEvent.cpp
+        parser/events/VarDeclEvent.h
 )
 
 add_executable(${EXE_NAME} ${EXE_SOURCES})

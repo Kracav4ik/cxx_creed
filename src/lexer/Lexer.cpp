@@ -18,11 +18,11 @@ void Lexer::set_text(std::string text) {
 }
 
 Token Lexer::next_token(bool skip_space) {
-    if (_pos >= _text.size()) {
-        return {"EOF", ""};
-    }
     if (skip_space) {
         skip_whitespace();
+    }
+    if (_pos >= _text.size()) {
+        return {"EOF", ""};
     }
 
     auto text = current_text();

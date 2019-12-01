@@ -18,6 +18,23 @@ ParserChecker::ParserChecker(std::string text) : _parser(_lexer), _recorder(_par
     _lexer.add_dlc(std::make_shared<ExactLexer>("RBRACE", "}"));
     _lexer.add_dlc(std::make_shared<ExactLexer>("RETURN", "return"));
     _lexer.add_dlc(std::make_shared<ExactLexer>("SEMICOLON", ";"));
+    _lexer.add_dlc(std::make_shared<ExactLexer>("ASSIGN", "="));
+    _lexer.add_dlc(std::make_shared<ExactLexer>("LPAR", "("));
+    _lexer.add_dlc(std::make_shared<ExactLexer>("RPAR", ")"));
+    _lexer.add_dlc(std::make_shared<ExactLexer>("SEMICOLON", ";"));
+    _lexer.add_dlc(std::make_shared<ExactLexer>("ADD", "+"));
+    _lexer.add_dlc(std::make_shared<ExactLexer>("SUB", "-"));
+    _lexer.add_dlc(std::make_shared<ExactLexer>("MUL", "*"));
+    _lexer.add_dlc(std::make_shared<ExactLexer>("DIV", "/"));
+    _lexer.add_dlc(std::make_shared<ExactLexer>("MOD", "%"));
+    _lexer.add_dlc(std::make_shared<ExactLexer>("XOR", "^"));
+    _lexer.add_dlc(std::make_shared<ExactLexer>("BITAND", "&"));
+    _lexer.add_dlc(std::make_shared<ExactLexer>("BITOR", "|"));
+    _lexer.add_dlc(std::make_shared<ExactLexer>("COMPL", "~"));
+    _lexer.add_dlc(std::make_shared<ExactLexer>("LSHIFT", "<<"));
+    _lexer.add_dlc(std::make_shared<ExactLexer>("RSHIFT", ">>"));
+    _lexer.add_dlc(std::make_shared<ExactLexer>("ASSIGN", "="));
+
 
     _lexer.set_text(std::move(text));
     _recorder.run();

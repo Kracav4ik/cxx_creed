@@ -36,4 +36,5 @@ void ExpansionPack::install(Lexer& lexer, Parser& parser, Interpreter& interpret
     lexer.add_dlc(std::make_shared<ExactLexer>("COMPL", "~"));
     lexer.add_dlc(std::make_shared<ExactLexer>("LSHIFT", "<<"));
     lexer.add_dlc(std::make_shared<ExactLexer>("RSHIFT", ">>"));
+    lexer.add_dlc(std::make_shared<ExactLexer>("ASSIGN", "="));
 }

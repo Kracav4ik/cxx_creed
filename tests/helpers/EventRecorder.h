@@ -17,6 +17,8 @@ private:
     void visitParseError(ParseErrorEvent& event) override;
     void visitBeginMainDecl(BeginMainDeclEvent& event) override;
     void visitEndMainDecl(EndMainDeclEvent& event) override;
+    void visitExprStmt(ExprStmtEvent& event) override;
+    void visitVarDecl(VarDeclEvent& event) override;
 
     Strings _events;
 };

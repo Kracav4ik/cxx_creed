@@ -15,6 +15,8 @@ private:
     void visitBinaryOp(BinaryOpNode& node) override;
     void visitUnaryOp(UnaryOpNode& node) override;
     void visitInteger(IntegerNode& node) override;
+    void visitAssignment(AssignmentNode& node) override;
+    void visitVariable(VariableNode& node) override;
 
     std::stringstream _buf;
 };

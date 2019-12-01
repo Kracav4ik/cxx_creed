@@ -5,6 +5,7 @@ include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
 set(TEST_SOURCES
         EvaluatorTests.cpp
         ExpressionParserTests.cpp
+        InterpreterTests.cpp
         LexerTests.cpp
         ParserTests.cpp
 
@@ -14,9 +15,13 @@ set(TEST_SOURCES
         helpers/EventRecorder.h
         helpers/ExpressionChecker.cpp
         helpers/ExpressionChecker.h
+        helpers/InterpreterChecker.cpp
+        helpers/InterpreterChecker.h
         helpers/ParserChecker.cpp
         helpers/ParserChecker.h
         helpers/types.h
+        helpers/TestPrinter.cpp
+        helpers/TestPrinter.h
 )
 
 add_executable(creed_tests ${TEST_SOURCES})

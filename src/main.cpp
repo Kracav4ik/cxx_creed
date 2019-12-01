@@ -3,6 +3,7 @@
 #include "interpreter/Interpreter.h"
 #include "dlc/ExpansionPack.h"
 #include "util.h"
+#include "ConsolePrinter.h"
 
 /*
  * Interpreter entry point
@@ -10,7 +11,8 @@
 int main() {
     Lexer lexer;
     Parser parser(lexer);
-    Interpreter interpreter(parser);
+    ConsolePrinter printer;
+    Interpreter interpreter(parser, printer);
 
     ExpansionPack pack;
     pack.install(lexer, parser, interpreter);

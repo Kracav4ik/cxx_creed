@@ -4,6 +4,8 @@
 #include "parser/events/ReturnStmtEvent.h"
 #include "parser/events/UnknownTokenTypeEvent.h"
 #include "parser/events/UnknownTokenEvent.h"
+#include "parser/events/ExprStmtEvent.h"
+#include "parser/events/VarDeclEvent.h"
 
 #include "ASTNodeString.h"
 
@@ -36,4 +38,12 @@ void EventRecorder::visitBeginMainDecl(BeginMainDeclEvent& event) {
 
 void EventRecorder::visitEndMainDecl(EndMainDeclEvent& event) {
     _events.emplace_back("EndMainDecl");
+}
+
+void EventRecorder::visitExprStmt(ExprStmtEvent& event) {
+    _events.emplace_back("ExprStmt " + ASTNodeString(event.expr).str());
+}
+
+void EventRecorder::visitVarDecl(VarDeclEvent& event) {
+    _events.emplace_back("VarDecl " + event.var_name);
 }
