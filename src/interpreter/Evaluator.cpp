@@ -108,6 +108,7 @@ void Evaluator::visitInteger(IntegerNode& node) {
 
 void Evaluator::visitAssignment(AssignmentNode& node) {
     int value = evaluate(node.right, _scope, _printer);
+    _result = value;
     auto name = NameGetter::get_name(node.left);
     if (!_scope.has_name(name)) {
         if (name.empty()) {
@@ -118,7 +119,6 @@ void Evaluator::visitAssignment(AssignmentNode& node) {
         return;
     }
     _scope.set(name, value);
-    _result = value;
 }
 
 void Evaluator::visitVariable(VariableNode& node) {

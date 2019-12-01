@@ -89,6 +89,16 @@ Cannot assign to undeclared variable x
 )"));
 
     EXPECT_EQ(InterpreterChecker(R"(int main() {
+        int y;
+        y = (x = x + 5);
+        return 2 + y;
+    })").output(), (
+R"(Unknown variable name x
+Cannot assign to undeclared variable x
+>>> return value `7`
+)"));
+
+    EXPECT_EQ(InterpreterChecker(R"(int main() {
         int x;
         x = 5;
         int x;
