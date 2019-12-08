@@ -66,6 +66,13 @@ TEST(InterpreterTests, blocks) {
         }
     })").output(), ">>> return value `4`\n");
     EXPECT_EQ(InterpreterChecker(R"(int main() {
+        {
+            int x;
+            x = 2;
+        }
+        return x + 3;
+    })").output(), "Unknown variable name x\n>>> return value `3`\n");
+    EXPECT_EQ(InterpreterChecker(R"(int main() {
         int x;
         x = 1;
         int y;
