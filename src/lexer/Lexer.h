@@ -30,6 +30,7 @@ public:
 
     Token next_token(bool skip_space=true);
     void skip_whitespace();
+    Token next_token_with_type(const std::string& expected_type);
 
 private:
     std::string consume(size_t amount);

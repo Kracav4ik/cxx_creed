@@ -49,6 +49,15 @@ void Lexer::skip_whitespace() {
     }
 }
 
+Token Lexer::next_token_with_type(const std::string& expected_type) {
+    auto token = next_token();
+    if (token.type == expected_type) {
+        return token;
+    } else {
+        return {};
+    }
+}
+
 std::string Lexer::consume(size_t amount) {
     auto result = _text.substr(_pos, amount);
     _pos += amount;

@@ -110,6 +110,13 @@ set(LIB_SOURCES
         parser/events/UnknownTokenTypeEvent.h
         parser/events/VarDeclEvent.cpp
         parser/events/VarDeclEvent.h
+
+        parser/miniparsers/BlockMiniparser.cpp
+        parser/miniparsers/BlockMiniparser.h
+        parser/miniparsers/MainMiniparser.cpp
+        parser/miniparsers/MainMiniparser.h
+        parser/miniparsers/Miniparser.cpp
+        parser/miniparsers/Miniparser.h
 )
 
 add_executable(${EXE_NAME} ${EXE_SOURCES})
