@@ -47,24 +47,74 @@ TEST(InterpreterTests, basics) {
     })").output(), ">>> return value `835`\n");
 }
 
+TEST(InterpreterTests, blocks) {
+    EXPECT_EQ(InterpreterChecker(R"(int main() {
+        int x;
+        {
+            x = 5;
+        }
+        x;
+        return x * x;
+    })").output(), ">>> return value `25`\n");
+    EXPECT_EQ(InterpreterChecker(R"(int main() {
+        int x;
+        {
+            x = 2;
+            {
+                return x * x;
+            }
+        }
+    })").output(), ">>> return value `4`\n");
+    EXPECT_EQ(InterpreterChecker(R"(int main() {
+        int x;
+        x = 1;
+        int y;
+        y = 0;
+        {
+            y = y + x;              // 1
+            x = 2;
+            y = y + 10*x;           // 2
+            int x;
+            x = 3;
+            y = y + 100*x;          // 3
+            {
+                y = y + 1000*x;     // 3
+                int x;
+                y = y + 10000*x;    // 0
+                x = 4;
+                y = y + 100000*x;   // 4
+            }
+            y = y + 1000000*x;      // 3
+        }
+        y = y + 10000000*x;         // 2
+        return y;
+    })").output(), ">>> return value `23403321`\n");
+}
+
 TEST(InterpreterTests, with_errors) {
     EXPECT_EQ(InterpreterChecker(R"(int main() {
         // no return
     })").output(), "main() did not return a value\n");
 
     EXPECT_EQ(InterpreterChecker(R"(int main() {
+        return 2)").output(), (
+R"(Unknown token type: RETURN
+Unknown token type: INTEGER
+)"));
+
+    EXPECT_EQ(InterpreterChecker(R"(int main() {
         return 2 // no semicolon
     })").output(), (
-R"(Parse error: token RETURN `return`
-Parse error: token INTEGER `2`
+R"(Unknown token type: RETURN
+Unknown token type: INTEGER
 main() did not return a value
 )"));
 
-EXPECT_EQ(InterpreterChecker(R"(int main() {
+    EXPECT_EQ(InterpreterChecker(R"(int main() {
         return 5; $
     }
-int x;
-)").output(), (
+    int x;
+    )").output(), (
 R"(>>> return value `5`
 Unknown token: `$`
 Unknown token type: INT
@@ -115,4 +165,26 @@ R"(Variable x already declared
 R"(No variable to assign to
 >>> return value `7`
 )"));
+
+    EXPECT_EQ(InterpreterChecker(R"(int main() {
+        {
+            int x;
+        }
+        x;
+        return x * x;
+    })").output(), R"(Unknown variable name x
+Unknown variable name x
+Unknown variable name x
+>>> return value `0`
+)");
+    EXPECT_EQ(InterpreterChecker(R"(int main() {
+        int x;
+        {
+            int x;
+            int x;
+        }
+        return 0;
+    })").output(), R"(Variable x already declared
+>>> return value `0`
+)");
 }

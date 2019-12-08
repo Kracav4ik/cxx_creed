@@ -88,8 +88,12 @@ set(LIB_SOURCES
         parser/Parser.h
 
         parser/events/ASTEvent.h
+        parser/events/BeginBlockDeclEvent.cpp
+        parser/events/BeginBlockDeclEvent.h
         parser/events/BeginMainDeclEvent.cpp
         parser/events/BeginMainDeclEvent.h
+        parser/events/EndBlockDeclEvent.cpp
+        parser/events/EndBlockDeclEvent.h
         parser/events/EndMainDeclEvent.cpp
         parser/events/EndMainDeclEvent.h
         parser/events/EOFEvent.cpp

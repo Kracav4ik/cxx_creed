@@ -8,58 +8,71 @@
 #include "parser/events/UnknownTokenTypeEvent.h"
 #include "parser/events/ReturnStmtEvent.h"
 #include "parser/events/BeginMainDeclEvent.h"
-#include "parser/events/ParseErrorEvent.h"
 #include "parser/events/EndMainDeclEvent.h"
 #include "parser/events/VarDeclEvent.h"
 #include "parser/events/ExprStmtEvent.h"
+#include "parser/events/EndBlockDeclEvent.h"
+#include "parser/events/BeginBlockDeclEvent.h"
 #include "expression_parser/ExpressionParser.h"
 
-class Stage {
+Token eat_token(const std::string& token_type, Lexer& lexer) {
+    auto token = lexer.next_token();
+    if (token.type == token_type) {
+        return token;
+    } else {
+        return {};
+    }
+}
+
+class Miniparser {
 public:
-    virtual ~Stage() = default;
     bool completed() const {
         return _completed;
     }
 
-    virtual std::unique_ptr<ASTEvent> try_eat(Lexer& lexer) = 0;
+    virtual std::unique_ptr<ASTEvent> try_next_event(Lexer& lexer) = 0;
 
 protected:
-    std::unique_ptr<ASTEvent> eat_error(Lexer& lexer, Lexer::State& state) {
-        state.revert();
-        return std::make_unique<ParseErrorEvent>(lexer.next_token());
-    }
-
-    Token eat_token(const std::string& token_type, Lexer& lexer) {
-        auto token = lexer.next_token();
-        if (token.type == token_type) {
-            return token;
-        } else {
-            return {};
-        }
-    }
-
+    std::unique_ptr<Miniparser> _child;
     bool _completed = false;
 };
 
-class BeginMainStage : public Stage {
+class BlockMiniparser : public Miniparser {
 public:
-    std::unique_ptr<ASTEvent> try_eat(Lexer& lexer) override {
-        auto state = lexer.get_state();
-        for (auto token_type : {"INT", "IDENTIFIER", "LPAR", "RPAR", "LBRACE"}) {
-            auto token = eat_token(token_type, lexer);
-            if (!token.valid() || (token.type == "IDENTIFIER" && token.text != "main")) {
-                return nullptr;
+    std::unique_ptr<ASTEvent> try_next_event(Lexer& lexer) override {
+        if (_child) {
+            auto event = _child->try_next_event(lexer);
+            if (_child->completed()) {
+                _child.reset();
             }
+            return event;
         }
-        state.drop();
-        _completed = true;
-        return std::make_unique<BeginMainDeclEvent>();
+        if (auto event = try_eat_stmt_events(lexer)) {
+            return event;
+        }
+        if (auto event = try_eat_begin_block(lexer)) {
+            return event;
+        }
+        if (auto event = try_eat_self_end_block(lexer)) {
+            return event;
+        }
+        return nullptr;
     }
-};
 
-class StmtListStage : public Stage {
-public:
-    std::unique_ptr<ASTEvent> try_eat(Lexer& lexer) override {
+protected:
+    virtual std::unique_ptr<ASTEvent> try_eat_self_end_block(Lexer& lexer) {
+        auto state = lexer.get_state();
+        auto token = eat_token("RBRACE", lexer);
+        if (token.valid()) {
+            state.drop();
+            _completed = true;
+            return std::make_unique<EndBlockDeclEvent>();
+        }
+        return nullptr;
+    }
+
+private:
+    std::unique_ptr<ASTEvent> try_eat_stmt_events(Lexer& lexer) {
         if (auto event = try_eat_return(lexer)) {
             return event;
         }
@@ -71,12 +84,9 @@ public:
         if (auto event = try_eat_var_decl(lexer)) {
             return event;
         }
-
-        _completed = true;
         return nullptr;
     }
 
-private:
     std::unique_ptr<ASTEvent> try_eat_return(Lexer& lexer) {
         auto state = lexer.get_state();
 
@@ -128,29 +138,50 @@ private:
         state.drop();
         return std::make_unique<ExprStmtEvent>(std::move(expression));
     }
-};
 
-class EndMainStage : public Stage {
-public:
-    std::unique_ptr<ASTEvent> try_eat(Lexer& lexer) override {
+    std::unique_ptr<ASTEvent> try_eat_begin_block(Lexer& lexer) {
         auto state = lexer.get_state();
-        auto token = eat_token("RBRACE", lexer);
-        if (!token.valid()) {
-            return eat_error(lexer, state);
+        auto token = eat_token("LBRACE", lexer);
+        if (token.valid()) {
+            state.drop();
+            _child = std::make_unique<BlockMiniparser>();
+            return std::make_unique<BeginBlockDeclEvent>();
         }
-        state.drop();
-        _completed = true;
-        return std::make_unique<EndMainDeclEvent>();
+        return nullptr;
     }
 };
 
-Parser::Parser(Lexer& lexer) : _lexer(lexer) {
-    _stages.push_back(std::make_unique<BeginMainStage>());
-    _stages.push_back(std::make_unique<StmtListStage>());
-    _stages.push_back(std::make_unique<EndMainStage>());
+
+class MainMiniparser : public BlockMiniparser {
+protected:
+    std::unique_ptr<ASTEvent> try_eat_self_end_block(Lexer& lexer) override {
+        auto state = lexer.get_state();
+        auto token = eat_token("RBRACE", lexer);
+        if (token.valid()) {
+            state.drop();
+            _completed = true;
+            return std::make_unique<EndMainDeclEvent>();
+        }
+        return nullptr;
+    }
+};
+
+Parser::Parser(Lexer& lexer) : _lexer(lexer), _miniparser(nullptr) {
 }
 
 Parser::~Parser() = default;
+
+std::unique_ptr<ASTEvent> Parser::try_eat_begin_main() {
+    auto state = _lexer.get_state();
+    for (auto token_type : {"INT", "IDENTIFIER", "LPAR", "RPAR", "LBRACE"}) {
+        auto token = eat_token(token_type, _lexer);
+        if (!token.valid() || (token.type == "IDENTIFIER" && token.text != "main")) {
+            return nullptr;
+        }
+    }
+    state.drop();
+    return std::make_unique<BeginMainDeclEvent>();
+}
 
 std::unique_ptr<ASTEvent> Parser::next_event() {
     {
@@ -165,16 +196,19 @@ std::unique_ptr<ASTEvent> Parser::next_event() {
             return std::make_unique<EOFEvent>();
         }
     }
-    std::unique_ptr<ASTEvent> event = nullptr;
-    while (!event && _current_stage < _stages.size()) {
-        const auto& stage = _stages[_current_stage];
-        event = stage->try_eat(_lexer);
-        if (stage->completed()) {
-            ++_current_stage;
+
+    if (!_miniparser) {
+        if (auto event = try_eat_begin_main()) {
+            _miniparser = std::make_unique<MainMiniparser>();
+            return event;
         }
-    }
-    if (event) {
-        return event;
+    } else {
+        if (auto event = _miniparser->try_next_event(_lexer)) {
+            if (_miniparser->completed()) {
+                _miniparser.reset();
+            }
+            return event;
+        }
     }
 
     auto token = _lexer.next_token();

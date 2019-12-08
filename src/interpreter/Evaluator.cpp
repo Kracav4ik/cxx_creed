@@ -118,7 +118,7 @@ void Evaluator::visitAssignment(AssignmentNode& node) {
         }
         return;
     }
-    _scope.set(name, value);
+    _scope.set_value(name, value);
 }
 
 void Evaluator::visitVariable(VariableNode& node) {

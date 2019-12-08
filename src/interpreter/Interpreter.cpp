@@ -28,11 +28,11 @@ void Interpreter::visitUnknownTokenType(UnknownTokenTypeEvent& event) {
 }
 
 void Interpreter::visitReturnStmt(ReturnStmtEvent& event) {
-    if (_is_returning) {
+    if (_is_returning || !_scope) {
         return;
     }
     std::stringstream s;
-    s << ">>> return value `" << Evaluator::evaluate(event.value, _scope, _printer) << "`";
+    s << ">>> return value `" << Evaluator::evaluate(event.value, *_scope, _printer) << "`";
     _printer.print_message(s.str());
     _is_returning = true;
 }
@@ -44,21 +44,25 @@ void Interpreter::visitParseError(ParseErrorEvent& event) {
 }
 
 void Interpreter::visitExprStmt(ExprStmtEvent& event) {
-    if (_is_returning) {
+    if (_is_returning || !_scope) {
         return;
     }
-    Evaluator::evaluate(event.expr, _scope, _printer);
+    Evaluator::evaluate(event.expr, *_scope, _printer);
 }
 
 void Interpreter::visitVarDecl(VarDeclEvent& event) {
-    if (_is_returning) {
+    if (_is_returning || !_scope) {
         return;
     }
-    if (_scope.has_name(event.var_name)) {
+    if (_scope->has_name_local(event.var_name)) {
         _printer.print_error("Variable " + event.var_name + " already declared");
     } else {
-        _scope.set(event.var_name, 0);
+        _scope->create_value(event.var_name);
     }
+}
+
+void Interpreter::visitBeginMainDecl(BeginMainDeclEvent& event) {
+    _scope = std::make_shared<Scope>();
 }
 
 void Interpreter::visitEndMainDecl(EndMainDeclEvent& event) {
@@ -66,4 +70,14 @@ void Interpreter::visitEndMainDecl(EndMainDeclEvent& event) {
         _printer.print_error("main() did not return a value");
     }
     _is_returning = false;
+}
+
+void Interpreter::visitBeginBlockDecl(BeginBlockDeclEvent& event) {
+    auto new_scope = std::make_shared<Scope>();
+    new_scope->set_parent(_scope);
+    _scope = new_scope;
+}
+
+void Interpreter::visitEndBlockDecl(EndBlockDeclEvent& event) {
+    _scope = _scope->get_parent();
 }

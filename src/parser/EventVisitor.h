@@ -9,6 +9,8 @@ struct ReturnStmtEvent;
 struct ParseErrorEvent;
 struct BeginMainDeclEvent;
 struct EndMainDeclEvent;
+struct BeginBlockDeclEvent;
+struct EndBlockDeclEvent;
 
 class EventVisitor {
 public:
@@ -23,4 +25,6 @@ public:
     virtual void visitParseError(ParseErrorEvent& event) = 0;
     virtual void visitBeginMainDecl(BeginMainDeclEvent& event) = 0;
     virtual void visitEndMainDecl(EndMainDeclEvent& event) = 0;
+    virtual void visitBeginBlockDecl(BeginBlockDeclEvent& event) = 0;
+    virtual void visitEndBlockDecl(EndBlockDeclEvent& event) = 0;
 };

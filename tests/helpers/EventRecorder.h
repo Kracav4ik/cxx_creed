@@ -19,6 +19,8 @@ private:
     void visitEndMainDecl(EndMainDeclEvent& event) override;
     void visitExprStmt(ExprStmtEvent& event) override;
     void visitVarDecl(VarDeclEvent& event) override;
+    void visitBeginBlockDecl(BeginBlockDeclEvent& event) override;
+    void visitEndBlockDecl(EndBlockDeclEvent& event) override;
 
     Strings _events;
 };

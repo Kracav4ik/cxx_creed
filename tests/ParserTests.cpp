@@ -50,3 +50,33 @@ TEST(ParserTest, simple_main) {
             "BeginMainDecl", "ExprStmt [BinaryOp [Integer 3] + [BinaryOp [Integer 2] * [Integer 3]]]", "EndMainDecl"
     }));
 }
+
+TEST(ParserTest, block_tests) {
+    EXPECT_EQ(ParserChecker("int main() { { return 0;} }").events(), Strings({
+            "BeginMainDecl", "BeginBlockDecl", "ReturnStmt [Integer 0]", "EndBlockDecl", "EndMainDecl"
+    }));
+    EXPECT_EQ(ParserChecker("int main() { {  } }").events(), Strings({
+            "BeginMainDecl", "BeginBlockDecl", "EndBlockDecl", "EndMainDecl"
+    }));
+    EXPECT_EQ(ParserChecker("int main() { { {  } } }").events(), Strings({
+            "BeginMainDecl", "BeginBlockDecl", "BeginBlockDecl", "EndBlockDecl", "EndBlockDecl", "EndMainDecl"
+    }));
+    EXPECT_EQ(ParserChecker("int main() { { } return 0; }").events(), Strings({
+            "BeginMainDecl", "BeginBlockDecl", "EndBlockDecl", "ReturnStmt [Integer 0]", "EndMainDecl"
+    }));
+    EXPECT_EQ(ParserChecker("int main() { { int x; } { return 0; } }").events(), Strings({
+            "BeginMainDecl", "BeginBlockDecl", "VarDecl x", "EndBlockDecl", "BeginBlockDecl", "ReturnStmt [Integer 0]", "EndBlockDecl", "EndMainDecl"
+    }));
+    EXPECT_EQ(ParserChecker("int main() { { return 0; } x + 5; }").events(), Strings({
+            "BeginMainDecl", "BeginBlockDecl", "ReturnStmt [Integer 0]", "EndBlockDecl", "ExprStmt [BinaryOp [Variable x] + [Integer 5]]", "EndMainDecl"
+    }));
+}
+
+TEST(ParserTest, function_tests) {
+    EXPECT_EQ(ParserChecker("int main() { int main() {} }").events(), Strings({
+        "BeginMainDecl",
+            "UnknownTokenType INT", "UnknownTokenType IDENTIFIER", "UnknownTokenType LPAR", "UnknownTokenType RPAR",
+            "BeginBlockDecl", "EndBlockDecl",
+        "EndMainDecl"
+    }));
+}
