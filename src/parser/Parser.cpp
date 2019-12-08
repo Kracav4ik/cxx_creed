@@ -62,8 +62,7 @@ public:
 protected:
     virtual std::unique_ptr<ASTEvent> try_eat_self_end_block(Lexer& lexer) {
         auto state = lexer.get_state();
-        auto token = eat_token("RBRACE", lexer);
-        if (token.valid()) {
+        if (auto token = eat_token("RBRACE", lexer)) {
             state.drop();
             _completed = true;
             return std::make_unique<EndBlockDeclEvent>();
@@ -141,8 +140,7 @@ private:
 
     std::unique_ptr<ASTEvent> try_eat_begin_block(Lexer& lexer) {
         auto state = lexer.get_state();
-        auto token = eat_token("LBRACE", lexer);
-        if (token.valid()) {
+        if (auto token = eat_token("LBRACE", lexer)) {
             state.drop();
             _child = std::make_unique<BlockMiniparser>();
             return std::make_unique<BeginBlockDeclEvent>();
@@ -156,8 +154,7 @@ class MainMiniparser : public BlockMiniparser {
 protected:
     std::unique_ptr<ASTEvent> try_eat_self_end_block(Lexer& lexer) override {
         auto state = lexer.get_state();
-        auto token = eat_token("RBRACE", lexer);
-        if (token.valid()) {
+        if (auto token = eat_token("RBRACE", lexer)) {
             state.drop();
             _completed = true;
             return std::make_unique<EndMainDeclEvent>();

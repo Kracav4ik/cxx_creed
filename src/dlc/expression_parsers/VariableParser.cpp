@@ -9,8 +9,7 @@ VariableParser::VariableParser(Priority priority) : ExpressionParserDLC(priority
 
 ASTNodePtr VariableParser::try_parse(Lexer& lexer, ExpressionParser& expression_parser) {
     auto state = lexer.get_state();
-    auto token = lexer.next_token();
-    if (token.valid()) {
+    if (auto token = lexer.next_token()) {
         if (token.type == "IDENTIFIER") {
             state.drop();
             return std::make_unique<VariableNode>(token.text);
