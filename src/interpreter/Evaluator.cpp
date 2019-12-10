@@ -41,9 +41,42 @@ int Evaluator::evaluate(const ASTNodePtr& node, Scope& scope, Printer& printer) 
     return evaluator._result;
 }
 
+namespace {
+const int FALSE_VALUE = 0;
+const int TRUE_VALUE = 1;
+
+bool is_true(int val) {
+    return val != FALSE_VALUE;
+}
+int bool_convert(bool val) {
+    return val ? TRUE_VALUE : FALSE_VALUE;
+}
+int bool_convert(int val) {
+    return bool_convert(is_true(val));
+}
+}
+
 void Evaluator::visitBinaryOp(BinaryOpNode& node) {
     int first_op = evaluate(node.left, _scope, _printer);
-    int second_op = evaluate(node.right, _scope, _printer);
+    auto evaluate_second = [&node, this]() {
+        return evaluate(node.right, _scope, _printer);
+    }; 
+    if (node.op == "||") {
+        if (is_true(first_op)) {
+            _result = TRUE_VALUE;
+            return;
+        }
+        _result = bool_convert(evaluate_second());
+        return;
+    } else if (node.op == "&&") {
+        if (!is_true(first_op)) {
+            _result = FALSE_VALUE;
+            return;
+        }
+        _result = bool_convert(evaluate_second());
+        return;
+    }
+    int second_op = evaluate_second();
     if (node.op == "+") {
         int64_t to_check = (int64_t)first_op + (int64_t)second_op;
         check_value(to_check, _printer);
@@ -82,6 +115,18 @@ void Evaluator::visitBinaryOp(BinaryOpNode& node) {
         _result = first_op << second_op;
     } else if (node.op == ">>") {
         _result = first_op >> second_op;
+    } else if (node.op == "==") {
+        _result = bool_convert(first_op == second_op);
+    } else if (node.op == "!=") {
+        _result = bool_convert(first_op != second_op);
+    } else if (node.op == "<") {
+        _result = bool_convert(first_op < second_op);
+    } else if (node.op == "<=") {
+        _result = bool_convert(first_op <= second_op);
+    } else if (node.op == ">") {
+        _result = bool_convert(first_op > second_op);
+    } else if (node.op == ">=") {
+        _result = bool_convert(first_op >= second_op);
     } else {
         _printer.print_error("Unknown binary op " + node.op);
     }
@@ -97,6 +142,8 @@ void Evaluator::visitUnaryOp(UnaryOpNode& node) {
         _result = to_check;
     } else if (node.op == "~") {
         _result = ~operand;
+    } else if (node.op == "!") {
+        _result = bool_convert(!is_true(operand));
     } else {
         _printer.print_error("Unknown unary op " + node.op);
     }

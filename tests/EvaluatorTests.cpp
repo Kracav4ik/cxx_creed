@@ -7,8 +7,8 @@ TEST(EvaluatorTest, simple_arithmetics) {
 
     EXPECT_EQ(ExpressionChecker("+ 3").value(), 3);
     EXPECT_EQ(ExpressionChecker("- 3").value(), -3);
-    EXPECT_EQ(ExpressionChecker("~3").value(), -4);
-    EXPECT_EQ(ExpressionChecker("~-5").value(), 4);
+    EXPECT_EQ(ExpressionChecker("~ 3").value(), -4);
+    EXPECT_EQ(ExpressionChecker("~ - 5").value(), 4);
 
     EXPECT_EQ(ExpressionChecker("20 + 3").value(), 23);
     EXPECT_EQ(ExpressionChecker("20 - 3").value(), 17);
@@ -36,15 +36,56 @@ TEST(EvaluatorTest, complex_arithmetics) {
 }
 
 TEST(EvaluatorTest, binary_priority) {
+    EXPECT_EQ(ExpressionChecker("6 || 3 && 0").value(), 1);
+    EXPECT_EQ(ExpressionChecker("(6 || 3) && 0").value(), 0);
+    EXPECT_EQ(ExpressionChecker("0 && 0 | 1").value(), 0);
+    EXPECT_EQ(ExpressionChecker("(0 && 0) | 1").value(), 1);
+
     EXPECT_EQ(ExpressionChecker("5 | 3 ^ 1").value(), 7);
     EXPECT_EQ(ExpressionChecker("(5 | 3) ^ 1").value(), 6);
     EXPECT_EQ(ExpressionChecker("5 ^ 14 & 8").value(), 13);
     EXPECT_EQ(ExpressionChecker("(5 ^ 14) & 8").value(), 8);
 
-    EXPECT_EQ(ExpressionChecker("9 & 3 << 2").value(), 8);
-    EXPECT_EQ(ExpressionChecker("(9 & 3) << 2").value(), 4);
-    EXPECT_EQ(ExpressionChecker("11 & 31 >> 2").value(), 3);
-    EXPECT_EQ(ExpressionChecker("(11 & 31) >> 2").value(), 2);
+    EXPECT_EQ(ExpressionChecker("9 & 3 == 1").value(), 0);
+    EXPECT_EQ(ExpressionChecker("(9 & 3) == 1").value(), 1);
+    EXPECT_EQ(ExpressionChecker("11 & 31 != 11").value(), 1);
+    EXPECT_EQ(ExpressionChecker("(11 & 31) != 11").value(), 0);
+
+    EXPECT_EQ(ExpressionChecker("1 == 3 < 1").value(), 0);
+    EXPECT_EQ(ExpressionChecker("(1 == 3) < 1").value(), 1);
+    EXPECT_EQ(ExpressionChecker("1 == 3 <= 0").value(), 0);
+    EXPECT_EQ(ExpressionChecker("(1 == 3) <= 0").value(), 1);
+    EXPECT_EQ(ExpressionChecker("1 == 3 > 0").value(), 1);
+    EXPECT_EQ(ExpressionChecker("(1 == 3) > 0").value(), 0);
+    EXPECT_EQ(ExpressionChecker("2 == 3 >= 0").value(), 0);
+    EXPECT_EQ(ExpressionChecker("(2 == 3) >= 0").value(), 1);
+
+    EXPECT_EQ(ExpressionChecker("0 != 0 < 0").value(), 0);
+    EXPECT_EQ(ExpressionChecker("(0 != 0) < 1").value(), 1);
+    EXPECT_EQ(ExpressionChecker("1 != 0 <= 1").value(), 0);
+    EXPECT_EQ(ExpressionChecker("(1 != 0) <= 1").value(), 1);
+    EXPECT_EQ(ExpressionChecker("1 != 0 > 1").value(), 1);
+    EXPECT_EQ(ExpressionChecker("(1 != 0) > 1").value(), 0);
+    EXPECT_EQ(ExpressionChecker("1 != 0 >= 0").value(), 0);
+    EXPECT_EQ(ExpressionChecker("(1 != 0) >= 0").value(), 1);
+
+    EXPECT_EQ(ExpressionChecker("9 < 3 << 2").value(), 1);
+    EXPECT_EQ(ExpressionChecker("(9 < 3) << 2").value(), 0);
+    EXPECT_EQ(ExpressionChecker("9 <= 3 << 2").value(), 1);
+    EXPECT_EQ(ExpressionChecker("(9 <= 3) << 2").value(), 0);
+    EXPECT_EQ(ExpressionChecker("9 > 3 << 2").value(), 0);
+    EXPECT_EQ(ExpressionChecker("(9 > 3) << 2").value(), 4);
+    EXPECT_EQ(ExpressionChecker("9 >= 3 << 2").value(), 0);
+    EXPECT_EQ(ExpressionChecker("(9 >= 3) << 2").value(), 4);
+
+    EXPECT_EQ(ExpressionChecker("11 < 31 >> 1").value(), 1);
+    EXPECT_EQ(ExpressionChecker("(11 < 31) >> 1").value(), 0);
+    EXPECT_EQ(ExpressionChecker("11 <= 31 >> 1").value(), 1);
+    EXPECT_EQ(ExpressionChecker("(11 <= 31) >> 1").value(), 0);
+    EXPECT_EQ(ExpressionChecker("11 > 31 >> 2").value(), 1);
+    EXPECT_EQ(ExpressionChecker("(11 > 31) >> 2").value(), 0);
+    EXPECT_EQ(ExpressionChecker("11 >= 31 >> 2").value(), 1);
+    EXPECT_EQ(ExpressionChecker("(11 >= 31) >> 2").value(), 0);
 
     EXPECT_EQ(ExpressionChecker("1 << 4 + 3").value(), 128);
     EXPECT_EQ(ExpressionChecker("(1 << 4) + 3").value(), 19);
@@ -57,4 +98,21 @@ TEST(EvaluatorTest, binary_priority) {
     EXPECT_EQ(ExpressionChecker("(1 + 10) / 3").value(), 3);
     EXPECT_EQ(ExpressionChecker("1 + 20 % 3").value(), 3);
     EXPECT_EQ(ExpressionChecker("(1 + 20) % 3").value(), 0);
+}
+
+TEST(EvaluatorTest, logical_operations) {
+    EXPECT_EQ(ExpressionChecker("1 < 0").value(), 0);
+    EXPECT_EQ(ExpressionChecker("0 < 1").value(), 1);
+    EXPECT_EQ(ExpressionChecker("0 > 1").value(), 0);
+    EXPECT_EQ(ExpressionChecker("1 > 0").value(), 1);
+    EXPECT_EQ(ExpressionChecker("1 <= 0").value(), 0);
+    EXPECT_EQ(ExpressionChecker("1 <= 1").value(), 1);
+    EXPECT_EQ(ExpressionChecker("0 <= 1").value(), 1);
+    EXPECT_EQ(ExpressionChecker("0 >= 1").value(), 0);
+    EXPECT_EQ(ExpressionChecker("0 >= 0").value(), 1);
+    EXPECT_EQ(ExpressionChecker("1 >= 0").value(), 1);
+    EXPECT_EQ(ExpressionChecker("1 == 0").value(), 0);
+    EXPECT_EQ(ExpressionChecker("0 == 0").value(), 1);
+    EXPECT_EQ(ExpressionChecker("1 != 1").value(), 0);
+    EXPECT_EQ(ExpressionChecker("0 != 1").value(), 1);
 }

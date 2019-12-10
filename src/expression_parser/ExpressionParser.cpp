@@ -11,13 +11,17 @@
 
 ExpressionParser::ExpressionParser() {
     add_dlc(std::make_shared<AssignmentParser>(Priority::ASSIGNMENT_EXPRESSION));
+    add_dlc(std::make_shared<BinaryOpParser>(Priority::LOGICAL_OR_EXPRESSION, TokenList({"OR"})));
+    add_dlc(std::make_shared<BinaryOpParser>(Priority::LOGICAL_AND_EXPRESSION, TokenList({"AND"})));
     add_dlc(std::make_shared<BinaryOpParser>(Priority::INCLUSIVE_OR_EXPRESSION, TokenList({"BITOR"})));
     add_dlc(std::make_shared<BinaryOpParser>(Priority::EXCLUSIVE_OR_EXPRESSION, TokenList({"XOR"})));
     add_dlc(std::make_shared<BinaryOpParser>(Priority::AND_EXPRESSION, TokenList({"BITAND"})));
+    add_dlc(std::make_shared<BinaryOpParser>(Priority::EQUALITY_EXPRESSION, TokenList({"EQ", "NOTEQ"})));
+    add_dlc(std::make_shared<BinaryOpParser>(Priority::RELATIONAL_EXPRESSION, TokenList({"LT", "LTEQ", "GT", "GTEQ"})));
     add_dlc(std::make_shared<BinaryOpParser>(Priority::SHIFT_EXPRESSION, TokenList({"LSHIFT", "RSHIFT"})));
     add_dlc(std::make_shared<BinaryOpParser>(Priority::ADDITIVE_EXPRESSION, TokenList({"ADD", "SUB"})));
     add_dlc(std::make_shared<BinaryOpParser>(Priority::MULTIPLICATIVE_EXPRESSION, TokenList({"MUL", "DIV", "MOD"})));
-    add_dlc(std::make_shared<UnaryOpParser>(Priority::UNARY_EXPRESSION, TokenList({"ADD", "SUB", "COMPL"})));
+    add_dlc(std::make_shared<UnaryOpParser>(Priority::UNARY_EXPRESSION, TokenList({"ADD", "SUB", "COMPL", "NOT"})));
     add_dlc(std::make_shared<IntegerParser>(Priority::PRIMARY_EXPRESSION));
     add_dlc(std::make_shared<ParensParser>(Priority::PRIMARY_EXPRESSION));
     add_dlc(std::make_shared<VariableParser>(Priority::PRIMARY_EXPRESSION));

@@ -98,6 +98,46 @@ TEST(InterpreterTests, blocks) {
     })").output(), ">>> return value `23403321`\n");
 }
 
+TEST(InterpreterTests, lazy_evaluations) {
+    EXPECT_EQ(InterpreterChecker(R"(int main() {
+        return  5 || x;
+    })").output(), ">>> return value `1`\n");
+    EXPECT_EQ(InterpreterChecker(R"(int main() {
+        return  x || 5;
+    })").output(), "Unknown variable name x\n>>> return value `1`\n");
+    EXPECT_EQ(InterpreterChecker(R"(int main() {
+        int x;
+        x = 5;
+        3 || (x = 7);
+        return x;
+    })").output(), ">>> return value `5`\n");
+    EXPECT_EQ(InterpreterChecker(R"(int main() {
+        int x;
+        x = 5;
+        (x = 7) || 3;
+        return x;
+    })").output(), ">>> return value `7`\n");
+
+    EXPECT_EQ(InterpreterChecker(R"(int main() {
+        return 0 && x;
+    })").output(), ">>> return value `0`\n");
+    EXPECT_EQ(InterpreterChecker(R"(int main() {
+        return x && 0;
+    })").output(), "Unknown variable name x\n>>> return value `0`\n");
+    EXPECT_EQ(InterpreterChecker(R"(int main() {
+        int x;
+        x = 5;
+        0 && (x = 7);
+        return x;
+    })").output(), ">>> return value `5`\n");
+    EXPECT_EQ(InterpreterChecker(R"(int main() {
+        int x;
+        x = 5;
+        (x = 7) && 0;
+        return x;
+    })").output(), ">>> return value `7`\n");
+}
+
 TEST(InterpreterTests, with_errors) {
     EXPECT_EQ(InterpreterChecker(R"(int main() {
         // no return
