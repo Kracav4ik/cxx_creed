@@ -10,6 +10,8 @@
 #include "parser/events/ReturnStmtEvent.h"
 #include "parser/events/BeginIfStmtEvent.h"
 #include "parser/events/BeginWhileStmtEvent.h"
+#include "interpreter/types/ValueBase.h"
+#include "interpreter/types/IntegerType.h"
 #include "Printer.h"
 
 #include <sstream>
@@ -64,7 +66,7 @@ void Interpreter::visitReturnStmt(ReturnStmtEvent& event) {
         return;
     }
     std::stringstream s;
-    s << ">>> return value `" << Evaluator::evaluate(event.value, *_scope, _printer) << "`";
+    s << ">>> return value `" << Evaluator::evaluate(event.value, *_scope, _printer)->printable_str() << "`";
     _printer.print_message(s.str());
     _is_returning = true;
 }
@@ -89,7 +91,9 @@ void Interpreter::visitVarDecl(VarDeclEvent& event) {
     if (_scope->has_name_local(event.var_name)) {
         _printer.print_error("Variable " + event.var_name + " already declared");
     } else {
-        _scope->create_value(event.var_name);
+        // TODO: get type from scope
+        IntegerType type;
+        _scope->create_value(event.var_name, type);
     }
 }
 
@@ -115,7 +119,7 @@ void Interpreter::visitEndBlockStmt(EndBlockStmtEvent& event) {
 }
 
 void Interpreter::visitBeginIfStmt(BeginIfStmtEvent& event) {
-    if (!_is_returning && Evaluator::is_true(Evaluator::evaluate(event.expr, *_scope, _printer))) {
+    if (!_is_returning && Evaluator::evaluate(event.expr, *_scope, _printer)->is_true()) {
         auto new_scope = std::make_shared<Scope>();
         new_scope->set_parent(_scope);
         _scope = new_scope;
@@ -130,7 +134,7 @@ void Interpreter::visitEndIfStmt(EndIfStmtEvent& event) {
 }
 
 void Interpreter::visitBeginWhileStmt(BeginWhileStmtEvent& event) {
-    if (!_is_returning && Evaluator::is_true(Evaluator::evaluate(event.expr, *_scope, _printer))) {
+    if (!_is_returning && Evaluator::evaluate(event.expr, *_scope, _printer)->is_true()) {
         auto new_scope = std::make_shared<Scope>();
         new_scope->set_parent(_scope);
         _scope = new_scope;

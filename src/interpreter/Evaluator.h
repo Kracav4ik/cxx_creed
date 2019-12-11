@@ -3,6 +3,8 @@
 #include "expression_parser/ASTVisitor.h"
 #include "expression_parser/ast/ASTNode.h"
 
+#include "interpreter/types/ValueFwd.h"
+
 class Scope;
 class Printer;
 
@@ -10,8 +12,7 @@ class Evaluator : ASTVisitor {
 public:
     Evaluator(Scope& scope, Printer& printer);
 
-    static int evaluate(const ASTNodePtr& node, Scope& scope, Printer& printer);
-    static bool is_true(int val);
+    static ValuePtr evaluate(const ASTNodePtr& node, Scope& scope, Printer& printer);
 
 private:
     void visitBinaryOp(BinaryOpNode& node) override;
@@ -20,7 +21,7 @@ private:
     void visitAssignment(AssignmentNode& node) override;
     void visitVariable(VariableNode& node) override;
 
-    int _result = 0;
+    ValuePtr _result;
     Scope& _scope;
     Printer& _printer;
 };

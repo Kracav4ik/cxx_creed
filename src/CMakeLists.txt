@@ -69,6 +69,14 @@ set(LIB_SOURCES
         expression_parser/ast/VariableNode.cpp
         expression_parser/ast/VariableNode.h
 
+        interpreter/types/IntegerType.cpp
+        interpreter/types/IntegerType.h
+        interpreter/types/IntegerValue.cpp
+        interpreter/types/IntegerValue.h
+        interpreter/types/TypeBase.h
+        interpreter/types/ValueBase.h
+        interpreter/types/ValueFwd.h
+
         interpreter/Evaluator.cpp
         interpreter/Evaluator.h
         interpreter/Interpreter.cpp

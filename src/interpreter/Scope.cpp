@@ -1,32 +1,37 @@
 #include "Scope.h"
 
+#include "interpreter/types/TypeBase.h"
+#include "interpreter/types/IntegerType.h"
+
 #include <utility>
 
-int Scope::get(const std::string& key) const {
+ValuePtr Scope::get(const std::string& key) const {
     auto it = _scope.find(key);
     if (it == _scope.end()) {
         if (_parent) {
             return _parent->get(key);
         }
-        return 0;  // TODO: should be "undefined"
+        // TODO: don't hardcode type
+        IntegerType type;
+        return type.create_value();  // TODO: should be "undefined"
     }
     return it->second;
 }
 
-void Scope::set_value(const std::string& key, int val) {
+void Scope::set_value(const std::string& key, ValuePtr val) {
     if (has_name_local(key)) {
-        _scope[key] = val;
+        _scope[key] = std::move(val);
     } else if (_parent && _parent->has_name(key)) {
-        _parent->set_value(key, val);
+        _parent->set_value(key, std::move(val));
     } else {
         // TODO: scope should have BOTH "declared" status and value for variable names
         // currently "declared" is checked by has_name() call in Evaluator before assignment
-        _scope[key] = val;
+        _scope[key] = std::move(val);
     }
 }
 
-void Scope::create_value(const std::string& key) {
-    _scope[key] = 0;  // TODO: should be "uninitialized"
+void Scope::create_value(const std::string& key, const TypeBase& type) {
+    _scope[key] = type.create_value();  // TODO: should be "uninitialized"?
 }
 
 bool Scope::has_name(const std::string& key) const {

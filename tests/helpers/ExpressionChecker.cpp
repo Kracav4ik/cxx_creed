@@ -10,6 +10,7 @@
 #include "expression_parser/ExpressionParser.h"
 #include "interpreter/Evaluator.h"
 #include "interpreter/Scope.h"
+#include "interpreter/types/IntegerValue.h"
 
 #include "TestPrinter.h"
 
@@ -66,7 +67,10 @@ int ExpressionChecker::value() const {
     if (_expression) {
         Scope scope;
         TestPrinter printer;
-        return Evaluator::evaluate(_expression, scope, printer);
+        auto value = Evaluator::evaluate(_expression, scope, printer);
+        if (auto int_value = std::dynamic_pointer_cast<IntegerValue>(value)) {
+            return int_value->get_value();
+        }
     }
     return 0;
 }

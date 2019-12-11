@@ -115,4 +115,13 @@ TEST(EvaluatorTest, logical_operations) {
     EXPECT_EQ(ExpressionChecker("0 == 0").value(), 1);
     EXPECT_EQ(ExpressionChecker("1 != 1").value(), 0);
     EXPECT_EQ(ExpressionChecker("0 != 1").value(), 1);
+
+    EXPECT_EQ(ExpressionChecker("0 || 0").value(), 0);
+    EXPECT_EQ(ExpressionChecker("0 || 7").value(), 1);
+    EXPECT_EQ(ExpressionChecker("5 || 0").value(), 1);
+    EXPECT_EQ(ExpressionChecker("5 || 7").value(), 1);
+    EXPECT_EQ(ExpressionChecker("0 && 0").value(), 0);
+    EXPECT_EQ(ExpressionChecker("0 && 7").value(), 0);
+    EXPECT_EQ(ExpressionChecker("5 && 0").value(), 0);
+    EXPECT_EQ(ExpressionChecker("5 && 7").value(), 1);
 }
