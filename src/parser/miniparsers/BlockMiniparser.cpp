@@ -3,10 +3,10 @@
 #include "lexer/Lexer.h"
 #include "lexer/Token.h"
 
-#include "parser/events/BeginWhileDeclEvent.h"
-#include "parser/events/BeginIfDeclEvent.h"
-#include "parser/events/BeginBlockDeclEvent.h"
-#include "parser/events/EndBlockDeclEvent.h"
+#include "parser/events/BeginWhileStmtEvent.h"
+#include "parser/events/BeginIfStmtEvent.h"
+#include "parser/events/BeginBlockStmtEvent.h"
+#include "parser/events/EndBlockStmtEvent.h"
 #include "parser/events/ExprStmtEvent.h"
 #include "parser/events/ReturnStmtEvent.h"
 #include "parser/events/VarDeclEvent.h"
@@ -92,7 +92,7 @@ std::shared_ptr<ASTEvent> BlockMiniparser::try_eat_begin_if(Lexer& lexer) {
 
     state.drop();
     _child = std::make_unique<IfMiniparser>();
-    return std::make_shared<BeginIfDeclEvent>(std::move(expression));
+    return std::make_shared<BeginIfStmtEvent>(std::move(expression));
 }
 
 std::shared_ptr<ASTEvent> BlockMiniparser::try_eat_begin_while(Lexer& lexer) {
@@ -121,7 +121,7 @@ std::shared_ptr<ASTEvent> BlockMiniparser::try_eat_begin_while(Lexer& lexer) {
 
     state.drop();
     _child = std::make_unique<WhileMiniparser>();
-    return std::make_shared<BeginWhileDeclEvent>(std::move(expression));
+    return std::make_shared<BeginWhileStmtEvent>(std::move(expression));
 }
 
 std::shared_ptr<ASTEvent> BlockMiniparser::try_eat_return(Lexer& lexer) {
@@ -181,11 +181,11 @@ std::shared_ptr<ASTEvent> BlockMiniparser::try_eat_begin_block(Lexer& lexer) {
     if (auto token = lexer.next_token_with_type("LBRACE")) {
         state.drop();
         _child = std::make_unique<BlockMiniparser>();
-        return std::make_shared<BeginBlockDeclEvent>();
+        return std::make_shared<BeginBlockStmtEvent>();
     }
     return nullptr;
 }
 
 std::shared_ptr<ASTEvent> BlockMiniparser::end_block_ast_event() {
-    return std::make_shared<EndBlockDeclEvent>();
+    return std::make_shared<EndBlockStmtEvent>();
 }

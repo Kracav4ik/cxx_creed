@@ -6,6 +6,8 @@
 #include "parser/events/UnknownTokenEvent.h"
 #include "parser/events/ExprStmtEvent.h"
 #include "parser/events/VarDeclEvent.h"
+#include "parser/events/BeginIfStmtEvent.h"
+#include "parser/events/BeginWhileStmtEvent.h"
 
 #include "ASTNodeString.h"
 
@@ -48,26 +50,26 @@ void EventRecorder::visitVarDecl(VarDeclEvent& event) {
     _events.emplace_back("VarDecl " + event.var_name);
 }
 
-void EventRecorder::visitBeginBlockDecl(BeginBlockDeclEvent& event) {
-    _events.emplace_back("BeginBlockDecl");
+void EventRecorder::visitBeginBlockStmt(BeginBlockStmtEvent& event) {
+    _events.emplace_back("BeginBlockStmt");
 }
 
-void EventRecorder::visitEndBlockDecl(EndBlockDeclEvent& event) {
-    _events.emplace_back("EndBlockDecl");
+void EventRecorder::visitEndBlockStmt(EndBlockStmtEvent& event) {
+    _events.emplace_back("EndBlockStmt");
 }
 
-void EventRecorder::visitBeginIfDecl(BeginIfDeclEvent& event) {
-    _events.emplace_back("BeginIfDecl");
+void EventRecorder::visitBeginIfStmt(BeginIfStmtEvent& event) {
+    _events.emplace_back("BeginIfStmt " + ASTNodeString(event.expr).str());
 }
 
-void EventRecorder::visitEndIfDecl(EndIfDeclEvent& event) {
-    _events.emplace_back("EndIfDecl");
+void EventRecorder::visitEndIfStmt(EndIfStmtEvent& event) {
+    _events.emplace_back("EndIfStmt");
 }
 
-void EventRecorder::visitBeginWhileDecl(BeginWhileDeclEvent& event) {
-    _events.emplace_back("BeginWhileDecl");
+void EventRecorder::visitBeginWhileStmt(BeginWhileStmtEvent& event) {
+    _events.emplace_back("BeginWhileStmt " + ASTNodeString(event.expr).str());
 }
 
-void EventRecorder::visitEndWhileDecl(EndWhileDeclEvent& event) {
-    _events.emplace_back("EndWhileDecl");
+void EventRecorder::visitEndWhileStmt(EndWhileStmtEvent& event) {
+    _events.emplace_back("EndWhileStmt");
 }

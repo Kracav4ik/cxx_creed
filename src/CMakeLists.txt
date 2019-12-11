@@ -91,22 +91,22 @@ set(LIB_SOURCES
         parser/ParserBase.h
 
         parser/events/ASTEvent.h
-        parser/events/BeginBlockDeclEvent.cpp
-        parser/events/BeginBlockDeclEvent.h
-        parser/events/BeginIfDeclEvent.cpp
-        parser/events/BeginIfDeclEvent.h
+        parser/events/BeginBlockStmtEvent.cpp
+        parser/events/BeginBlockStmtEvent.h
+        parser/events/BeginIfStmtEvent.cpp
+        parser/events/BeginIfStmtEvent.h
         parser/events/BeginMainDeclEvent.cpp
         parser/events/BeginMainDeclEvent.h
-        parser/events/BeginWhileDeclEvent.cpp
-        parser/events/BeginWhileDeclEvent.h
-        parser/events/EndBlockDeclEvent.cpp
-        parser/events/EndBlockDeclEvent.h
-        parser/events/EndIfDeclEvent.cpp
-        parser/events/EndIfDeclEvent.h
+        parser/events/BeginWhileStmtEvent.cpp
+        parser/events/BeginWhileStmtEvent.h
+        parser/events/EndBlockStmtEvent.cpp
+        parser/events/EndBlockStmtEvent.h
+        parser/events/EndIfStmtEvent.cpp
+        parser/events/EndIfStmtEvent.h
         parser/events/EndMainDeclEvent.cpp
         parser/events/EndMainDeclEvent.h
-        parser/events/EndWhileDeclEvent.cpp
-        parser/events/EndWhileDeclEvent.h
+        parser/events/EndWhileStmtEvent.cpp
+        parser/events/EndWhileStmtEvent.h
         parser/events/EOFEvent.cpp
         parser/events/EOFEvent.h
         parser/events/ExprStmtEvent.cpp

@@ -21,16 +21,16 @@ private:
     void visitUnknownTokenType(UnknownTokenTypeEvent& event) override;
     void visitExprStmt(ExprStmtEvent& event) override;
     void visitVarDecl(VarDeclEvent& event) override;
-    void visitBeginIfDecl(BeginIfDeclEvent& event) override;
-    void visitEndIfDecl(EndIfDeclEvent& event) override;
+    void visitBeginIfStmt(BeginIfStmtEvent& event) override;
+    void visitEndIfStmt(EndIfStmtEvent& event) override;
     void visitBeginMainDecl(BeginMainDeclEvent& event) override;
     void visitEndMainDecl(EndMainDeclEvent& event) override;
-    void visitBeginBlockDecl(BeginBlockDeclEvent& event) override;
-    void visitEndBlockDecl(EndBlockDeclEvent& event) override;
+    void visitBeginBlockStmt(BeginBlockStmtEvent& event) override;
+    void visitEndBlockStmt(EndBlockStmtEvent& event) override;
     void visitReturnStmt(ReturnStmtEvent& event) override;
     void visitParseError(ParseErrorEvent& event) override;
-    void visitBeginWhileDecl(BeginWhileDeclEvent& event) override;
-    void visitEndWhileDecl(EndWhileDeclEvent& event) override;
+    void visitBeginWhileStmt(BeginWhileStmtEvent& event) override;
+    void visitEndWhileStmt(EndWhileStmtEvent& event) override;
 
     bool _is_returning = false;
     std::shared_ptr<Scope> _scope;

@@ -8,8 +8,8 @@
 #include "parser/events/ExprStmtEvent.h"
 #include "parser/events/VarDeclEvent.h"
 #include "parser/events/ReturnStmtEvent.h"
-#include "parser/events/BeginIfDeclEvent.h"
-#include "parser/events/BeginWhileDeclEvent.h"
+#include "parser/events/BeginIfStmtEvent.h"
+#include "parser/events/BeginWhileStmtEvent.h"
 #include "Printer.h"
 
 #include <sstream>
@@ -19,12 +19,12 @@
 struct IfBlockSkipper : public InterpreterBase, public EventVisitorAdapter {
     explicit IfBlockSkipper(ParserBase& parser) : InterpreterBase(parser) {}
 
-    void visitBeginIfDecl(BeginIfDeclEvent& event) override {
+    void visitBeginIfStmt(BeginIfStmtEvent& event) override {
         IfBlockSkipper skipper(get_parser());
         skipper.run();
     }
 
-    void visitEndIfDecl(EndIfDeclEvent& event) override {
+    void visitEndIfStmt(EndIfStmtEvent& event) override {
         _is_running = false;
     }
 };
@@ -32,12 +32,12 @@ struct IfBlockSkipper : public InterpreterBase, public EventVisitorAdapter {
 struct WhileBlockSkipper : public InterpreterBase, public EventVisitorAdapter {
     explicit WhileBlockSkipper(ParserBase& parser) : InterpreterBase(parser) {}
 
-    void visitBeginWhileDecl(BeginWhileDeclEvent& event) override {
+    void visitBeginWhileStmt(BeginWhileStmtEvent& event) override {
         WhileBlockSkipper skipper(get_parser());
         skipper.run();
     }
 
-    void visitEndWhileDecl(EndWhileDeclEvent& event) override {
+    void visitEndWhileStmt(EndWhileStmtEvent& event) override {
         _is_running = false;
     }
 };
@@ -104,17 +104,17 @@ void Interpreter::visitEndMainDecl(EndMainDeclEvent& event) {
     _is_returning = false;
 }
 
-void Interpreter::visitBeginBlockDecl(BeginBlockDeclEvent& event) {
+void Interpreter::visitBeginBlockStmt(BeginBlockStmtEvent& event) {
     auto new_scope = std::make_shared<Scope>();
     new_scope->set_parent(_scope);
     _scope = new_scope;
 }
 
-void Interpreter::visitEndBlockDecl(EndBlockDeclEvent& event) {
+void Interpreter::visitEndBlockStmt(EndBlockStmtEvent& event) {
     _scope = _scope->get_parent();
 }
 
-void Interpreter::visitBeginIfDecl(BeginIfDeclEvent& event) {
+void Interpreter::visitBeginIfStmt(BeginIfStmtEvent& event) {
     if (!_is_returning && Evaluator::is_true(Evaluator::evaluate(event.expr, *_scope, _printer))) {
         auto new_scope = std::make_shared<Scope>();
         new_scope->set_parent(_scope);
@@ -125,11 +125,11 @@ void Interpreter::visitBeginIfDecl(BeginIfDeclEvent& event) {
     }
 }
 
-void Interpreter::visitEndIfDecl(EndIfDeclEvent& event) {
+void Interpreter::visitEndIfStmt(EndIfStmtEvent& event) {
     _scope = _scope->get_parent();
 }
 
-void Interpreter::visitBeginWhileDecl(BeginWhileDeclEvent& event) {
+void Interpreter::visitBeginWhileStmt(BeginWhileStmtEvent& event) {
     if (!_is_returning && Evaluator::is_true(Evaluator::evaluate(event.expr, *_scope, _printer))) {
         auto new_scope = std::make_shared<Scope>();
         new_scope->set_parent(_scope);
@@ -141,7 +141,7 @@ void Interpreter::visitBeginWhileDecl(BeginWhileDeclEvent& event) {
     }
 }
 
-void Interpreter::visitEndWhileDecl(EndWhileDeclEvent& event) {
+void Interpreter::visitEndWhileStmt(EndWhileStmtEvent& event) {
     _scope = _scope->get_parent();
     if (!_is_returning) {
         _states.back().revert();

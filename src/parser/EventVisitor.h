@@ -9,12 +9,12 @@ struct ReturnStmtEvent;
 struct ParseErrorEvent;
 struct BeginMainDeclEvent;
 struct EndMainDeclEvent;
-struct BeginBlockDeclEvent;
-struct EndBlockDeclEvent;
-struct BeginIfDeclEvent;
-struct EndIfDeclEvent;
-struct BeginWhileDeclEvent;
-struct EndWhileDeclEvent;
+struct BeginBlockStmtEvent;
+struct EndBlockStmtEvent;
+struct BeginIfStmtEvent;
+struct EndIfStmtEvent;
+struct BeginWhileStmtEvent;
+struct EndWhileStmtEvent;
 
 class EventVisitor {
 public:
@@ -27,12 +27,12 @@ public:
     virtual void visitVarDecl(VarDeclEvent& event) = 0;
     virtual void visitReturnStmt(ReturnStmtEvent& event) = 0;
     virtual void visitParseError(ParseErrorEvent& event) = 0;
-    virtual void visitBeginIfDecl(BeginIfDeclEvent& event) = 0;
-    virtual void visitEndIfDecl(EndIfDeclEvent& event) = 0;
+    virtual void visitBeginIfStmt(BeginIfStmtEvent& event) = 0;
+    virtual void visitEndIfStmt(EndIfStmtEvent& event) = 0;
     virtual void visitBeginMainDecl(BeginMainDeclEvent& event) = 0;
     virtual void visitEndMainDecl(EndMainDeclEvent& event) = 0;
-    virtual void visitBeginBlockDecl(BeginBlockDeclEvent& event) = 0;
-    virtual void visitEndBlockDecl(EndBlockDeclEvent& event) = 0;
-    virtual void visitBeginWhileDecl(BeginWhileDeclEvent& event) = 0;
-    virtual void visitEndWhileDecl(EndWhileDeclEvent& event) = 0;
+    virtual void visitBeginBlockStmt(BeginBlockStmtEvent& event) = 0;
+    virtual void visitEndBlockStmt(EndBlockStmtEvent& event) = 0;
+    virtual void visitBeginWhileStmt(BeginWhileStmtEvent& event) = 0;
+    virtual void visitEndWhileStmt(EndWhileStmtEvent& event) = 0;
 };

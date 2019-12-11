@@ -2,6 +2,6 @@
 
 #include "ASTEvent.h"
 
-struct EndBlockDeclEvent : public ASTEvent {
+struct EndIfStmtEvent : public ASTEvent {
     void visit(EventVisitor& visitor) override;
 };

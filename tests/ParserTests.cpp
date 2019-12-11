@@ -53,22 +53,22 @@ TEST(ParserTest, simple_main) {
 
 TEST(ParserTest, block_tests) {
     EXPECT_EQ(ParserChecker("int main() { { return 0;} }").events(), Strings({
-            "BeginMainDecl", "BeginBlockDecl", "ReturnStmt [Integer 0]", "EndBlockDecl", "EndMainDecl"
+            "BeginMainDecl", "BeginBlockStmt", "ReturnStmt [Integer 0]", "EndBlockStmt", "EndMainDecl"
     }));
     EXPECT_EQ(ParserChecker("int main() { {  } }").events(), Strings({
-            "BeginMainDecl", "BeginBlockDecl", "EndBlockDecl", "EndMainDecl"
+            "BeginMainDecl", "BeginBlockStmt", "EndBlockStmt", "EndMainDecl"
     }));
     EXPECT_EQ(ParserChecker("int main() { { {  } } }").events(), Strings({
-            "BeginMainDecl", "BeginBlockDecl", "BeginBlockDecl", "EndBlockDecl", "EndBlockDecl", "EndMainDecl"
+            "BeginMainDecl", "BeginBlockStmt", "BeginBlockStmt", "EndBlockStmt", "EndBlockStmt", "EndMainDecl"
     }));
     EXPECT_EQ(ParserChecker("int main() { { } return 0; }").events(), Strings({
-            "BeginMainDecl", "BeginBlockDecl", "EndBlockDecl", "ReturnStmt [Integer 0]", "EndMainDecl"
+            "BeginMainDecl", "BeginBlockStmt", "EndBlockStmt", "ReturnStmt [Integer 0]", "EndMainDecl"
     }));
     EXPECT_EQ(ParserChecker("int main() { { int x; } { return 0; } }").events(), Strings({
-            "BeginMainDecl", "BeginBlockDecl", "VarDecl x", "EndBlockDecl", "BeginBlockDecl", "ReturnStmt [Integer 0]", "EndBlockDecl", "EndMainDecl"
+            "BeginMainDecl", "BeginBlockStmt", "VarDecl x", "EndBlockStmt", "BeginBlockStmt", "ReturnStmt [Integer 0]", "EndBlockStmt", "EndMainDecl"
     }));
     EXPECT_EQ(ParserChecker("int main() { { return 0; } x + 5; }").events(), Strings({
-            "BeginMainDecl", "BeginBlockDecl", "ReturnStmt [Integer 0]", "EndBlockDecl", "ExprStmt [BinaryOp [Variable x] + [Integer 5]]", "EndMainDecl"
+            "BeginMainDecl", "BeginBlockStmt", "ReturnStmt [Integer 0]", "EndBlockStmt", "ExprStmt [BinaryOp [Variable x] + [Integer 5]]", "EndMainDecl"
     }));
 }
 
@@ -76,7 +76,39 @@ TEST(ParserTest, function_tests) {
     EXPECT_EQ(ParserChecker("int main() { int main() {} }").events(), Strings({
         "BeginMainDecl",
             "UnknownTokenType INT", "UnknownTokenType IDENTIFIER", "UnknownTokenType LPAR", "UnknownTokenType RPAR",
-            "BeginBlockDecl", "EndBlockDecl",
+            "BeginBlockStmt", "EndBlockStmt",
         "EndMainDecl"
+    }));
+}
+
+TEST(ParserTest, conditions_tests) {
+    EXPECT_EQ(ParserChecker("int main() { if (1) { return 0; } }").events(), Strings({
+        "BeginMainDecl", "BeginIfStmt [Integer 1]", "ReturnStmt [Integer 0]", "EndIfStmt", "EndMainDecl"
+    }));
+    EXPECT_EQ(ParserChecker("int main() { { if (1) { return 0; } } }").events(), Strings({
+        "BeginMainDecl", "BeginBlockStmt",
+            "BeginIfStmt [Integer 1]", "ReturnStmt [Integer 0]", "EndIfStmt",
+        "EndBlockStmt", "EndMainDecl"
+    }));
+    EXPECT_EQ(ParserChecker("int main() { if (1) { { return 0; } } }").events(), Strings({
+        "BeginMainDecl", "BeginIfStmt [Integer 1]",
+            "BeginBlockStmt", "ReturnStmt [Integer 0]", "EndBlockStmt",
+        "EndIfStmt", "EndMainDecl"
+    }));
+}
+
+TEST(ParserTest, loops_tests) {
+    EXPECT_EQ(ParserChecker("int main() { while (1) { return 0; } }").events(), Strings({
+        "BeginMainDecl", "BeginWhileStmt [Integer 1]", "ReturnStmt [Integer 0]", "EndWhileStmt", "EndMainDecl"
+    }));
+    EXPECT_EQ(ParserChecker("int main() { { while (1) { return 0; } } }").events(), Strings({
+        "BeginMainDecl", "BeginBlockStmt",
+            "BeginWhileStmt [Integer 1]", "ReturnStmt [Integer 0]", "EndWhileStmt",
+        "EndBlockStmt", "EndMainDecl"
+    }));
+    EXPECT_EQ(ParserChecker("int main() { while (1) { { return 0; } } }").events(), Strings({
+        "BeginMainDecl", "BeginWhileStmt [Integer 1]",
+            "BeginBlockStmt", "ReturnStmt [Integer 0]", "EndBlockStmt",
+        "EndWhileStmt", "EndMainDecl"
     }));
 }
