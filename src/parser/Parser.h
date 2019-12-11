@@ -17,8 +17,6 @@ public:
     std::unique_ptr<ASTEvent> next_event();
 
 private:
-    std::unique_ptr<ASTEvent> try_eat_begin_main();
-
     Lexer& _lexer;
     std::unique_ptr<Miniparser> _miniparser;
 };

@@ -15,6 +15,8 @@ private:
     void visitUnknownTokenType(UnknownTokenTypeEvent& event) override;
     void visitReturnStmt(ReturnStmtEvent& event) override;
     void visitParseError(ParseErrorEvent& event) override;
+    void visitBeginIfDecl(BeginIfDeclEvent& event) override;
+    void visitEndIfDecl(EndIfDeclEvent& event) override;
     void visitBeginMainDecl(BeginMainDeclEvent& event) override;
     void visitEndMainDecl(EndMainDeclEvent& event) override;
     void visitExprStmt(ExprStmtEvent& event) override;

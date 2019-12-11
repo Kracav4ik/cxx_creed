@@ -8,10 +8,26 @@
 #include "parser/events/ExprStmtEvent.h"
 #include "parser/events/VarDeclEvent.h"
 #include "parser/events/ReturnStmtEvent.h"
+#include "parser/events/BeginIfDeclEvent.h"
 #include "Printer.h"
 
 #include <sstream>
 #include <iostream>
+
+
+struct IfBlockSkipper : public InterpreterBase, public EventVisitorAdapter {
+    explicit IfBlockSkipper(Parser& parser) : InterpreterBase(parser) {}
+
+    void visitBeginIfDecl(BeginIfDeclEvent& event) override {
+        IfBlockSkipper skipper(_parser);
+        skipper.run();
+    }
+
+    void visitEndIfDecl(EndIfDeclEvent& event) override {
+        _is_running = false;
+    }
+};
+
 
 Interpreter::Interpreter(Parser& parser, Printer& printer) : InterpreterBase(parser), _printer(printer) {}
 
@@ -79,5 +95,20 @@ void Interpreter::visitBeginBlockDecl(BeginBlockDeclEvent& event) {
 }
 
 void Interpreter::visitEndBlockDecl(EndBlockDeclEvent& event) {
+    _scope = _scope->get_parent();
+}
+
+void Interpreter::visitBeginIfDecl(BeginIfDeclEvent& event) {
+    if (Evaluator::is_true(Evaluator::evaluate(event.expr, *_scope, _printer))) {
+        auto new_scope = std::make_shared<Scope>();
+        new_scope->set_parent(_scope);
+        _scope = new_scope;
+    } else {
+        IfBlockSkipper skipper(_parser);
+        skipper.run();
+    }
+}
+
+void Interpreter::visitEndIfDecl(EndIfDeclEvent& event) {
     _scope = _scope->get_parent();
 }

@@ -3,12 +3,14 @@
 #include "lexer/Lexer.h"
 #include "lexer/Token.h"
 
+#include "parser/events/BeginIfDeclEvent.h"
 #include "parser/events/BeginBlockDeclEvent.h"
 #include "parser/events/EndBlockDeclEvent.h"
 #include "parser/events/ExprStmtEvent.h"
 #include "parser/events/ReturnStmtEvent.h"
 #include "parser/events/VarDeclEvent.h"
 #include "expression_parser/ExpressionParser.h"
+#include "IfMiniparser.h"
 
 
 std::unique_ptr<ASTEvent> BlockMiniparser::try_next_event(Lexer& lexer) {
@@ -25,6 +27,9 @@ std::unique_ptr<ASTEvent> BlockMiniparser::try_next_event(Lexer& lexer) {
     if (auto event = try_eat_begin_block(lexer)) {
         return event;
     }
+    if (auto event = try_eat_begin_if(lexer)) {
+        return event;
+    }
     if (auto event = try_eat_self_end_block(lexer)) {
         return event;
     }
@@ -36,7 +41,7 @@ std::unique_ptr<ASTEvent> BlockMiniparser::try_eat_self_end_block(Lexer& lexer) 
     if (auto token = lexer.next_token_with_type("RBRACE")) {
         state.drop();
         _completed = true;
-        return std::make_unique<EndBlockDeclEvent>();
+        return end_block_ast_event();
     }
     return nullptr;
 }
@@ -54,6 +59,35 @@ std::unique_ptr<ASTEvent> BlockMiniparser::try_eat_stmt_events(Lexer& lexer) {
         return event;
     }
     return nullptr;
+}
+
+std::unique_ptr<ASTEvent> BlockMiniparser::try_eat_begin_if(Lexer& lexer) {
+    auto state = lexer.get_state();
+
+    if (!lexer.next_token_with_type("IF").valid()) {
+        return nullptr;
+    }
+
+    if (!lexer.next_token_with_type("LPAR").valid()) {
+        return nullptr;
+    }
+
+    ExpressionParser expression_parser;
+    auto expression = expression_parser.try_expression(lexer);
+    if (!expression) {
+        return nullptr;
+    }
+
+    if (!lexer.next_token_with_type("RPAR").valid()) {
+        return nullptr;
+    }
+    if (!lexer.next_token_with_type("LBRACE").valid()) {
+        return nullptr;
+    }
+
+    state.drop();
+    _child = std::make_unique<IfMiniparser>();
+    return std::make_unique<BeginIfDeclEvent>(std::move(expression));
 }
 
 std::unique_ptr<ASTEvent> BlockMiniparser::try_eat_return(Lexer& lexer) {
@@ -116,4 +150,8 @@ std::unique_ptr<ASTEvent> BlockMiniparser::try_eat_begin_block(Lexer& lexer) {
         return std::make_unique<BeginBlockDeclEvent>();
     }
     return nullptr;
+}
+
+std::unique_ptr<ASTEvent> BlockMiniparser::end_block_ast_event() {
+    return std::make_unique<EndBlockDeclEvent>();
 }

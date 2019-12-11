@@ -90,10 +90,14 @@ set(LIB_SOURCES
         parser/events/ASTEvent.h
         parser/events/BeginBlockDeclEvent.cpp
         parser/events/BeginBlockDeclEvent.h
+        parser/events/BeginIfDeclEvent.cpp
+        parser/events/BeginIfDeclEvent.h
         parser/events/BeginMainDeclEvent.cpp
         parser/events/BeginMainDeclEvent.h
         parser/events/EndBlockDeclEvent.cpp
         parser/events/EndBlockDeclEvent.h
+        parser/events/EndIfDeclEvent.cpp
+        parser/events/EndIfDeclEvent.h
         parser/events/EndMainDeclEvent.cpp
         parser/events/EndMainDeclEvent.h
         parser/events/EOFEvent.cpp
@@ -113,6 +117,8 @@ set(LIB_SOURCES
 
         parser/miniparsers/BlockMiniparser.cpp
         parser/miniparsers/BlockMiniparser.h
+        parser/miniparsers/IfMiniparser.cpp
+        parser/miniparsers/IfMiniparser.h
         parser/miniparsers/MainMiniparser.cpp
         parser/miniparsers/MainMiniparser.h
         parser/miniparsers/Miniparser.cpp

@@ -11,6 +11,8 @@ struct BeginMainDeclEvent;
 struct EndMainDeclEvent;
 struct BeginBlockDeclEvent;
 struct EndBlockDeclEvent;
+struct BeginIfDeclEvent;
+struct EndIfDeclEvent;
 
 class EventVisitor {
 public:
@@ -23,6 +25,8 @@ public:
     virtual void visitVarDecl(VarDeclEvent& event) = 0;
     virtual void visitReturnStmt(ReturnStmtEvent& event) = 0;
     virtual void visitParseError(ParseErrorEvent& event) = 0;
+    virtual void visitBeginIfDecl(BeginIfDeclEvent& event) = 0;
+    virtual void visitEndIfDecl(EndIfDeclEvent& event) = 0;
     virtual void visitBeginMainDecl(BeginMainDeclEvent& event) = 0;
     virtual void visitEndMainDecl(EndMainDeclEvent& event) = 0;
     virtual void visitBeginBlockDecl(BeginBlockDeclEvent& event) = 0;

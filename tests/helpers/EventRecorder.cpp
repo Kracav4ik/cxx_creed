@@ -55,3 +55,11 @@ void EventRecorder::visitBeginBlockDecl(BeginBlockDeclEvent& event) {
 void EventRecorder::visitEndBlockDecl(EndBlockDeclEvent& event) {
     _events.emplace_back("EndBlockDecl");
 }
+
+void EventRecorder::visitBeginIfDecl(BeginIfDeclEvent& event) {
+    _events.emplace_back("BeginIfDecl");
+}
+
+void EventRecorder::visitEndIfDecl(EndIfDeclEvent& event) {
+    _events.emplace_back("EndIfDecl");
+}

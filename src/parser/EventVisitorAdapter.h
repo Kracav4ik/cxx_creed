@@ -9,6 +9,8 @@ public:
     void visitExprStmt(ExprStmtEvent& event) override {}
     void visitVarDecl(VarDeclEvent& event) override {}
     void visitReturnStmt(ReturnStmtEvent& event) override {}
+    void visitBeginIfDecl(BeginIfDeclEvent& event) override {}
+    void visitEndIfDecl(EndIfDeclEvent& event) override {}
     void visitParseError(ParseErrorEvent& event) override {}
     void visitBeginMainDecl(BeginMainDeclEvent& event) override {}
     void visitEndMainDecl(EndMainDeclEvent& event) override {}

@@ -11,6 +11,7 @@ public:
     Evaluator(Scope& scope, Printer& printer);
 
     static int evaluate(const ASTNodePtr& node, Scope& scope, Printer& printer);
+    static bool is_true(int val);
 
 private:
     void visitBinaryOp(BinaryOpNode& node) override;

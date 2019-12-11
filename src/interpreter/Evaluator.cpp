@@ -45,15 +45,16 @@ namespace {
 const int FALSE_VALUE = 0;
 const int TRUE_VALUE = 1;
 
-bool is_true(int val) {
-    return val != FALSE_VALUE;
-}
 int bool_convert(bool val) {
     return val ? TRUE_VALUE : FALSE_VALUE;
 }
 int bool_convert(int val) {
-    return bool_convert(is_true(val));
+    return bool_convert(Evaluator::is_true(val));
 }
+}
+
+bool Evaluator::is_true(int val) {
+    return val != FALSE_VALUE;
 }
 
 void Evaluator::visitBinaryOp(BinaryOpNode& node) {

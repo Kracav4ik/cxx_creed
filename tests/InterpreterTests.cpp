@@ -138,6 +138,91 @@ TEST(InterpreterTests, lazy_evaluations) {
     })").output(), ">>> return value `7`\n");
 }
 
+TEST(InterpreterTests, conditions) {
+    EXPECT_EQ(InterpreterChecker(R"(int main() {
+        if (1) {
+            return 1;
+        }
+        return 2;
+    })").output(), ">>> return value `1`\n");
+    EXPECT_EQ(InterpreterChecker(R"(int main() {
+        if (0) {
+            return 1;
+        }
+        return 2;
+    })").output(), ">>> return value `2`\n");
+    EXPECT_EQ(InterpreterChecker(R"(int main() {
+        if (1) {
+            if (0) {
+                return 1;
+            }
+            return 2;
+        }
+        return 3;
+    })").output(), ">>> return value `2`\n");
+}
+
+TEST(InterpreterTests, conditions_scope) {
+    EXPECT_EQ(InterpreterChecker(R"(int main() {
+        int x;
+        if (1) {
+            x = 5;
+        }
+        x;
+        return x * x;
+    })").output(), ">>> return value `25`\n");
+    EXPECT_EQ(InterpreterChecker(R"(int main() {
+        int x;
+        if (1) {
+            x = 2;
+            if (x == 2) {
+                return x * x;
+            }
+        }
+    })").output(), ">>> return value `4`\n");
+    EXPECT_EQ(InterpreterChecker(R"(int main() {
+        if (x < 4) {
+            int x;
+            x = 2;
+        }
+        return x + 3;
+    })").output(), "Unknown variable name x\nUnknown variable name x\n>>> return value `3`\n");
+    EXPECT_EQ(InterpreterChecker(R"(int main() {
+        int x;
+        x = 1;
+        int y;
+        y = 0;
+        if (x == 1) {
+            y = y + x;              // 1
+            x = 2;
+            y = y + 10*x;           // 2
+            int x;
+            x = 3;
+            y = y + 100*x;          // 3
+            {
+                if (x == 3) {
+                    y = y + 1000*x;     // 3
+                }
+                int x;
+                if (x == 0) {
+                    y = y + 10000*x;    // 0
+                }
+                x = 4;
+                if (x == 4) {
+                    y = y + 100000*x;   // 4
+                }
+            }
+            if (x == 3) {
+                y = y + 1000000*x;      // 3
+            }
+        }
+        if (x == 2) {
+            y = y + 10000000*x;         // 2
+        }
+        return y;
+    })").output(), ">>> return value `23403321`\n");
+}
+
 TEST(InterpreterTests, with_errors) {
     EXPECT_EQ(InterpreterChecker(R"(int main() {
         // no return
@@ -230,8 +315,76 @@ Unknown variable name x
             int x;
             int x;
         }
-        return 0;
+        return 5;
     })").output(), R"(Variable x already declared
+>>> return value `5`
+)");
+
+    EXPECT_EQ(InterpreterChecker(R"(int main() {
+        if (1) {
+            int x;
+        }
+        x;
+        return x * x;
+    })").output(), R"(Unknown variable name x
+Unknown variable name x
+Unknown variable name x
 >>> return value `0`
+)");
+    EXPECT_EQ(InterpreterChecker(R"(int main() {
+        int x;
+        if (1) {
+            int x;
+            int x;
+        }
+        return 5;
+    })").output(), R"(Variable x already declared
+>>> return value `5`
+)");
+
+    EXPECT_EQ(InterpreterChecker(R"(int main() {
+        if (return 1) {}
+        return 5;
+    })").output(), R"(Unknown token type: IF
+Unknown token type: LPAR
+Unknown token type: RETURN
+Unknown token type: INTEGER
+Unknown token type: RPAR
+>>> return value `5`
+)");
+    EXPECT_EQ(InterpreterChecker(R"(int main() {
+        if (int x) {}
+        return 5;
+    })").output(), R"(Unknown token type: IF
+Unknown token type: LPAR
+Unknown token type: INT
+Unknown token type: IDENTIFIER
+Unknown token type: RPAR
+>>> return value `5`
+)");
+    EXPECT_EQ(InterpreterChecker(R"(int main() {
+        if (if (1) {}) {}
+        return 5;
+    })").output(), R"(Unknown token type: IF
+Unknown token type: LPAR
+Unknown token type: RPAR
+>>> return value `5`
+)");
+    EXPECT_EQ(InterpreterChecker(R"(int main() {
+        if (1)
+        return 5;
+    })").output(), R"(Unknown token type: IF
+Unknown token type: LPAR
+Unknown token type: INTEGER
+Unknown token type: RPAR
+>>> return value `5`
+)");
+    EXPECT_EQ(InterpreterChecker(R"(int main() {
+        if () {}
+        return 5;
+    })").output(), R"(Unknown token type: IF
+Unknown token type: LPAR
+Unknown token type: RPAR
+>>> return value `5`
 )");
 }
