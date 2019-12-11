@@ -9,6 +9,7 @@
 #include "parser/events/VarDeclEvent.h"
 #include "parser/events/ReturnStmtEvent.h"
 #include "parser/events/BeginIfDeclEvent.h"
+#include "parser/events/BeginWhileDeclEvent.h"
 #include "Printer.h"
 
 #include <sstream>
@@ -16,10 +17,10 @@
 
 
 struct IfBlockSkipper : public InterpreterBase, public EventVisitorAdapter {
-    explicit IfBlockSkipper(Parser& parser) : InterpreterBase(parser) {}
+    explicit IfBlockSkipper(ParserBase& parser) : InterpreterBase(parser) {}
 
     void visitBeginIfDecl(BeginIfDeclEvent& event) override {
-        IfBlockSkipper skipper(_parser);
+        IfBlockSkipper skipper(get_parser());
         skipper.run();
     }
 
@@ -28,8 +29,23 @@ struct IfBlockSkipper : public InterpreterBase, public EventVisitorAdapter {
     }
 };
 
+struct WhileBlockSkipper : public InterpreterBase, public EventVisitorAdapter {
+    explicit WhileBlockSkipper(ParserBase& parser) : InterpreterBase(parser) {}
 
-Interpreter::Interpreter(Parser& parser, Printer& printer) : InterpreterBase(parser), _printer(printer) {}
+    void visitBeginWhileDecl(BeginWhileDeclEvent& event) override {
+        WhileBlockSkipper skipper(get_parser());
+        skipper.run();
+    }
+
+    void visitEndWhileDecl(EndWhileDeclEvent& event) override {
+        _is_running = false;
+    }
+};
+
+Interpreter::Interpreter(ParserBase& parser, Printer& printer)
+    : InterpreterBase(parser), _printer(printer), _cachingParser(parser)
+{
+}
 
 void Interpreter::visitUnknownToken(UnknownTokenEvent& event) {
     std::stringstream s;
@@ -99,16 +115,40 @@ void Interpreter::visitEndBlockDecl(EndBlockDeclEvent& event) {
 }
 
 void Interpreter::visitBeginIfDecl(BeginIfDeclEvent& event) {
-    if (Evaluator::is_true(Evaluator::evaluate(event.expr, *_scope, _printer))) {
+    if (!_is_returning && Evaluator::is_true(Evaluator::evaluate(event.expr, *_scope, _printer))) {
         auto new_scope = std::make_shared<Scope>();
         new_scope->set_parent(_scope);
         _scope = new_scope;
     } else {
-        IfBlockSkipper skipper(_parser);
+        IfBlockSkipper skipper(get_parser());
         skipper.run();
     }
 }
 
 void Interpreter::visitEndIfDecl(EndIfDeclEvent& event) {
     _scope = _scope->get_parent();
+}
+
+void Interpreter::visitBeginWhileDecl(BeginWhileDeclEvent& event) {
+    if (!_is_returning && Evaluator::is_true(Evaluator::evaluate(event.expr, *_scope, _printer))) {
+        auto new_scope = std::make_shared<Scope>();
+        new_scope->set_parent(_scope);
+        _scope = new_scope;
+        _states.push_back(_cachingParser.state_before_event());
+    } else {
+        WhileBlockSkipper skipper(get_parser());
+        skipper.run();
+    }
+}
+
+void Interpreter::visitEndWhileDecl(EndWhileDeclEvent& event) {
+    _scope = _scope->get_parent();
+    if (!_is_returning) {
+        _states.back().revert();
+    }
+    _states.pop_back();
+}
+
+ParserBase& Interpreter::get_parser() {
+    return _cachingParser;
 }

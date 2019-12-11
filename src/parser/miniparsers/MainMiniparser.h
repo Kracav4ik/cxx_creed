@@ -4,10 +4,10 @@
 
 class MainMiniparser : public BlockMiniparser {
 public:
-    std::unique_ptr<ASTEvent> try_next_event(Lexer& lexer) override;
+    std::shared_ptr<ASTEvent> try_next_event(Lexer& lexer) override;
 
 private:
-    std::unique_ptr<ASTEvent> end_block_ast_event() override;
-    std::unique_ptr<ASTEvent> try_eat_begin_main(Lexer& lexer);
+    std::shared_ptr<ASTEvent> end_block_ast_event() override;
+    std::shared_ptr<ASTEvent> try_eat_begin_main(Lexer& lexer);
     bool _main_begin = false;
 };

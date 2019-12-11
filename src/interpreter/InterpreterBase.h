@@ -2,16 +2,19 @@
 
 #include "parser/EventVisitor.h"
 
-class Parser;
+class ParserBase;
 class InterpreterBase : virtual public EventVisitor {
 public:
     void run();
 
 protected:
-    explicit InterpreterBase(Parser& parser);
+    explicit InterpreterBase(ParserBase& parser);
 
     void visitEOF(EOFEvent& event) override;
+    virtual ParserBase& get_parser();
 
     bool _is_running = false;
-    Parser& _parser;
+
+private:
+    ParserBase& _parser;
 };

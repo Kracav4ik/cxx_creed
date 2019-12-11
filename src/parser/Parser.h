@@ -1,20 +1,17 @@
 #pragma once
 
+#include "ParserBase.h"
 #include "dlc/ParserDLC.h"
 #include "dlc/WithDLC.h"
 
-#include <memory>
-
-struct ASTEvent;
 class Lexer;
 class Miniparser;
-
-class Parser : public WithDLC<ParserDLC>  {
+class Parser : public ParserBase, public WithDLC<ParserDLC> {
 public:
     explicit Parser(Lexer& lexer);
     ~Parser();
 
-    std::unique_ptr<ASTEvent> next_event();
+    std::shared_ptr<ASTEvent> next_event() override;
 
 private:
     Lexer& _lexer;

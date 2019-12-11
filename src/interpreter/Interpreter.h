@@ -2,6 +2,7 @@
 
 #include "InterpreterBase.h"
 #include "parser/EventVisitorAdapter.h"
+#include "parser/CachingParser.h"
 #include "dlc/InterpreterDLC.h"
 #include "dlc/WithDLC.h"
 #include "Scope.h"
@@ -10,8 +11,10 @@ class Printer;
 
 class Interpreter : public InterpreterBase, public WithDLC<InterpreterDLC>, public EventVisitorAdapter {
 public:
-    Interpreter(Parser& parser, Printer& printer);
+    Interpreter(ParserBase& parser, Printer& printer);
 
+protected:
+    ParserBase& get_parser() override;
 
 private:
     void visitUnknownToken(UnknownTokenEvent& event) override;
@@ -26,8 +29,12 @@ private:
     void visitEndBlockDecl(EndBlockDeclEvent& event) override;
     void visitReturnStmt(ReturnStmtEvent& event) override;
     void visitParseError(ParseErrorEvent& event) override;
+    void visitBeginWhileDecl(BeginWhileDeclEvent& event) override;
+    void visitEndWhileDecl(EndWhileDeclEvent& event) override;
 
     bool _is_returning = false;
     std::shared_ptr<Scope> _scope;
     Printer& _printer;
+    CachingParser _cachingParser;
+    std::vector<CachingParser::State> _states;
 };

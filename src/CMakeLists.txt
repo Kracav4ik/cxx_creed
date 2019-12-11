@@ -82,10 +82,13 @@ set(LIB_SOURCES
         lexer/Lexer.h
         lexer/Token.h
 
+        parser/CachingParser.cpp
+        parser/CachingParser.h
         parser/EventVisitor.h
         parser/EventVisitorAdapter.h
         parser/Parser.cpp
         parser/Parser.h
+        parser/ParserBase.h
 
         parser/events/ASTEvent.h
         parser/events/BeginBlockDeclEvent.cpp
@@ -94,12 +97,16 @@ set(LIB_SOURCES
         parser/events/BeginIfDeclEvent.h
         parser/events/BeginMainDeclEvent.cpp
         parser/events/BeginMainDeclEvent.h
+        parser/events/BeginWhileDeclEvent.cpp
+        parser/events/BeginWhileDeclEvent.h
         parser/events/EndBlockDeclEvent.cpp
         parser/events/EndBlockDeclEvent.h
         parser/events/EndIfDeclEvent.cpp
         parser/events/EndIfDeclEvent.h
         parser/events/EndMainDeclEvent.cpp
         parser/events/EndMainDeclEvent.h
+        parser/events/EndWhileDeclEvent.cpp
+        parser/events/EndWhileDeclEvent.h
         parser/events/EOFEvent.cpp
         parser/events/EOFEvent.h
         parser/events/ExprStmtEvent.cpp
@@ -123,6 +130,8 @@ set(LIB_SOURCES
         parser/miniparsers/MainMiniparser.h
         parser/miniparsers/Miniparser.cpp
         parser/miniparsers/Miniparser.h
+        parser/miniparsers/WhileMiniparser.cpp
+        parser/miniparsers/WhileMiniparser.h
 )
 
 add_executable(${EXE_NAME} ${EXE_SOURCES})

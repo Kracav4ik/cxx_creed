@@ -138,6 +138,38 @@ TEST(InterpreterTests, lazy_evaluations) {
     })").output(), ">>> return value `7`\n");
 }
 
+TEST(InterpreterTests, loops) {
+    EXPECT_EQ(InterpreterChecker(R"(int main() {
+        while (0) {
+            while (1) {}
+        }
+        return 5;
+    })").output(), ">>> return value `5`\n");
+
+    EXPECT_EQ(InterpreterChecker(R"(int main() {
+        int x;
+        x = 2;
+        while (x < 5) {
+            x = x + 1;
+        }
+        return x;
+    })").output(), ">>> return value `5`\n");
+
+    EXPECT_EQ(InterpreterChecker(R"(int main() {
+        int x;
+        x = 1;
+        int y;
+        y = 2;
+        while (y > 0) {
+            x = x - 1;
+            int x;
+            x = 5;
+            y = y - 1;
+        }
+        return x;
+    })").output(), ">>> return value `-1`\n");
+}
+
 TEST(InterpreterTests, conditions) {
     EXPECT_EQ(InterpreterChecker(R"(int main() {
         if (1) {
@@ -221,6 +253,31 @@ TEST(InterpreterTests, conditions_scope) {
         }
         return y;
     })").output(), ">>> return value `23403321`\n");
+}
+
+TEST(InterpreterTests, returns) {
+    EXPECT_EQ(InterpreterChecker(R"(int main() {
+        return 3;
+        if (x) {
+        }
+    })").output(), ">>> return value `3`\n");
+    EXPECT_EQ(InterpreterChecker(R"(int main() {
+        return 3;
+        while (x) {
+        }
+    })").output(), ">>> return value `3`\n");
+
+    EXPECT_EQ(InterpreterChecker(R"(int main() {
+        while (1) {
+            return 5;
+        }
+    })").output(), ">>> return value `5`\n");
+    EXPECT_EQ(InterpreterChecker(R"(int main() {
+        while (x == 0) {
+            return 5;
+        }
+        return 7;
+    })").output(), "Unknown variable name x\n>>> return value `5`\n");
 }
 
 TEST(InterpreterTests, with_errors) {

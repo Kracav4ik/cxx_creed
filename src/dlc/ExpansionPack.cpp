@@ -18,6 +18,7 @@ void ExpansionPack::install(Lexer& lexer, Parser& parser, Interpreter& interpret
     lexer.add_dlc(std::make_shared<LineCommentLexer>());
     lexer.add_dlc(std::make_shared<BlockCommentLexer>());
 
+    lexer.add_dlc(std::make_shared<ExactLexer>("WHILE", "while"));
     lexer.add_dlc(std::make_shared<ExactLexer>("IF", "if"));
     lexer.add_dlc(std::make_shared<ExactLexer>("INT", "int"));
     lexer.add_dlc(std::make_shared<ExactLexer>("LPAR", "("));

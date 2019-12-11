@@ -13,6 +13,8 @@ struct BeginBlockDeclEvent;
 struct EndBlockDeclEvent;
 struct BeginIfDeclEvent;
 struct EndIfDeclEvent;
+struct BeginWhileDeclEvent;
+struct EndWhileDeclEvent;
 
 class EventVisitor {
 public:
@@ -31,4 +33,6 @@ public:
     virtual void visitEndMainDecl(EndMainDeclEvent& event) = 0;
     virtual void visitBeginBlockDecl(BeginBlockDeclEvent& event) = 0;
     virtual void visitEndBlockDecl(EndBlockDeclEvent& event) = 0;
+    virtual void visitBeginWhileDecl(BeginWhileDeclEvent& event) = 0;
+    virtual void visitEndWhileDecl(EndWhileDeclEvent& event) = 0;
 };

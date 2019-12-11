@@ -3,6 +3,7 @@
 #include "lexer/Lexer.h"
 #include "lexer/Token.h"
 
+#include "parser/events/BeginWhileDeclEvent.h"
 #include "parser/events/BeginIfDeclEvent.h"
 #include "parser/events/BeginBlockDeclEvent.h"
 #include "parser/events/EndBlockDeclEvent.h"
@@ -11,9 +12,10 @@
 #include "parser/events/VarDeclEvent.h"
 #include "expression_parser/ExpressionParser.h"
 #include "IfMiniparser.h"
+#include "WhileMiniparser.h"
 
 
-std::unique_ptr<ASTEvent> BlockMiniparser::try_next_event(Lexer& lexer) {
+std::shared_ptr<ASTEvent> BlockMiniparser::try_next_event(Lexer& lexer) {
     if (_child) {
         auto event = _child->try_next_event(lexer);
         if (_child->completed()) {
@@ -30,13 +32,16 @@ std::unique_ptr<ASTEvent> BlockMiniparser::try_next_event(Lexer& lexer) {
     if (auto event = try_eat_begin_if(lexer)) {
         return event;
     }
+    if (auto event = try_eat_begin_while(lexer)) {
+        return event;
+    }
     if (auto event = try_eat_self_end_block(lexer)) {
         return event;
     }
     return nullptr;
 }
 
-std::unique_ptr<ASTEvent> BlockMiniparser::try_eat_self_end_block(Lexer& lexer) {
+std::shared_ptr<ASTEvent> BlockMiniparser::try_eat_self_end_block(Lexer& lexer) {
     auto state = lexer.get_state();
     if (auto token = lexer.next_token_with_type("RBRACE")) {
         state.drop();
@@ -46,7 +51,7 @@ std::unique_ptr<ASTEvent> BlockMiniparser::try_eat_self_end_block(Lexer& lexer) 
     return nullptr;
 }
 
-std::unique_ptr<ASTEvent> BlockMiniparser::try_eat_stmt_events(Lexer& lexer) {
+std::shared_ptr<ASTEvent> BlockMiniparser::try_eat_stmt_events(Lexer& lexer) {
     if (auto event = try_eat_return(lexer)) {
         return event;
     }
@@ -61,7 +66,7 @@ std::unique_ptr<ASTEvent> BlockMiniparser::try_eat_stmt_events(Lexer& lexer) {
     return nullptr;
 }
 
-std::unique_ptr<ASTEvent> BlockMiniparser::try_eat_begin_if(Lexer& lexer) {
+std::shared_ptr<ASTEvent> BlockMiniparser::try_eat_begin_if(Lexer& lexer) {
     auto state = lexer.get_state();
 
     if (!lexer.next_token_with_type("IF").valid()) {
@@ -87,10 +92,39 @@ std::unique_ptr<ASTEvent> BlockMiniparser::try_eat_begin_if(Lexer& lexer) {
 
     state.drop();
     _child = std::make_unique<IfMiniparser>();
-    return std::make_unique<BeginIfDeclEvent>(std::move(expression));
+    return std::make_shared<BeginIfDeclEvent>(std::move(expression));
 }
 
-std::unique_ptr<ASTEvent> BlockMiniparser::try_eat_return(Lexer& lexer) {
+std::shared_ptr<ASTEvent> BlockMiniparser::try_eat_begin_while(Lexer& lexer) {
+    auto state = lexer.get_state();
+
+    if (!lexer.next_token_with_type("WHILE").valid()) {
+        return nullptr;
+    }
+
+    if (!lexer.next_token_with_type("LPAR").valid()) {
+        return nullptr;
+    }
+
+    ExpressionParser expression_parser;
+    auto expression = expression_parser.try_expression(lexer);
+    if (!expression) {
+        return nullptr;
+    }
+
+    if (!lexer.next_token_with_type("RPAR").valid()) {
+        return nullptr;
+    }
+    if (!lexer.next_token_with_type("LBRACE").valid()) {
+        return nullptr;
+    }
+
+    state.drop();
+    _child = std::make_unique<WhileMiniparser>();
+    return std::make_shared<BeginWhileDeclEvent>(std::move(expression));
+}
+
+std::shared_ptr<ASTEvent> BlockMiniparser::try_eat_return(Lexer& lexer) {
     auto state = lexer.get_state();
 
     if (!lexer.next_token_with_type("RETURN").valid()) {
@@ -107,10 +141,10 @@ std::unique_ptr<ASTEvent> BlockMiniparser::try_eat_return(Lexer& lexer) {
         return nullptr;
     }
     state.drop();
-    return std::make_unique<ReturnStmtEvent>(std::move(expression));
+    return std::make_shared<ReturnStmtEvent>(std::move(expression));
 }
 
-std::unique_ptr<ASTEvent> BlockMiniparser::try_eat_var_decl(Lexer& lexer) {
+std::shared_ptr<ASTEvent> BlockMiniparser::try_eat_var_decl(Lexer& lexer) {
     auto state = lexer.get_state();
     std::string result;
     for (auto token_type : {"INT", "IDENTIFIER", "SEMICOLON"}) {
@@ -123,10 +157,10 @@ std::unique_ptr<ASTEvent> BlockMiniparser::try_eat_var_decl(Lexer& lexer) {
         }
     }
     state.drop();
-    return std::make_unique<VarDeclEvent>(result);
+    return std::make_shared<VarDeclEvent>(result);
 }
 
-std::unique_ptr<ASTEvent> BlockMiniparser::try_eat_expr_stmt(Lexer& lexer) {
+std::shared_ptr<ASTEvent> BlockMiniparser::try_eat_expr_stmt(Lexer& lexer) {
     auto state = lexer.get_state();
 
     ExpressionParser expression_parser;
@@ -139,19 +173,19 @@ std::unique_ptr<ASTEvent> BlockMiniparser::try_eat_expr_stmt(Lexer& lexer) {
         return nullptr;
     }
     state.drop();
-    return std::make_unique<ExprStmtEvent>(std::move(expression));
+    return std::make_shared<ExprStmtEvent>(std::move(expression));
 }
 
-std::unique_ptr<ASTEvent> BlockMiniparser::try_eat_begin_block(Lexer& lexer) {
+std::shared_ptr<ASTEvent> BlockMiniparser::try_eat_begin_block(Lexer& lexer) {
     auto state = lexer.get_state();
     if (auto token = lexer.next_token_with_type("LBRACE")) {
         state.drop();
         _child = std::make_unique<BlockMiniparser>();
-        return std::make_unique<BeginBlockDeclEvent>();
+        return std::make_shared<BeginBlockDeclEvent>();
     }
     return nullptr;
 }
 
-std::unique_ptr<ASTEvent> BlockMiniparser::end_block_ast_event() {
-    return std::make_unique<EndBlockDeclEvent>();
+std::shared_ptr<ASTEvent> BlockMiniparser::end_block_ast_event() {
+    return std::make_shared<EndBlockDeclEvent>();
 }

@@ -14,17 +14,17 @@ Parser::Parser(Lexer& lexer) : _lexer(lexer) {
 
 Parser::~Parser() = default;
 
-std::unique_ptr<ASTEvent> Parser::next_event() {
+std::shared_ptr<ASTEvent> Parser::next_event() {
     {
         auto state = _lexer.get_state();
         auto token = _lexer.next_token();
         if (token.type == "UNKNOWN") {
             state.drop();
-            return std::make_unique<UnknownTokenEvent>(token.text);
+            return std::make_shared<UnknownTokenEvent>(token.text);
         }
         if (token.type == "EOF") {
             state.drop();
-            return std::make_unique<EOFEvent>();
+            return std::make_shared<EOFEvent>();
         }
     }
     if (_miniparser) {
@@ -37,5 +37,5 @@ std::unique_ptr<ASTEvent> Parser::next_event() {
     }
 
     auto token = _lexer.next_token();
-    return std::make_unique<UnknownTokenTypeEvent>(token.type);
+    return std::make_shared<UnknownTokenTypeEvent>(token.type);
 }

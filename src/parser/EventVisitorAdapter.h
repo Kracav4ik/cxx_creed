@@ -16,4 +16,6 @@ public:
     void visitEndMainDecl(EndMainDeclEvent& event) override {}
     void visitBeginBlockDecl(BeginBlockDeclEvent& event) override {}
     void visitEndBlockDecl(EndBlockDeclEvent& event) override {}
+    void visitBeginWhileDecl(BeginWhileDeclEvent& event) override {}
+    void visitEndWhileDecl(EndWhileDeclEvent& event) override {}
 };

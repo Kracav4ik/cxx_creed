@@ -6,7 +6,7 @@
 
 class EventRecorder : public InterpreterBase {
 public:
-    explicit EventRecorder(Parser& parser);
+    explicit EventRecorder(ParserBase& parser);
 
     const Strings& events() const;
 
@@ -23,6 +23,8 @@ private:
     void visitVarDecl(VarDeclEvent& event) override;
     void visitBeginBlockDecl(BeginBlockDeclEvent& event) override;
     void visitEndBlockDecl(EndBlockDeclEvent& event) override;
+    void visitBeginWhileDecl(BeginWhileDeclEvent& event) override;
+    void visitEndWhileDecl(EndWhileDeclEvent& event) override;
 
     Strings _events;
 };

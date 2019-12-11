@@ -9,7 +9,7 @@
 
 #include "ASTNodeString.h"
 
-EventRecorder::EventRecorder(Parser& parser) : InterpreterBase(parser) {
+EventRecorder::EventRecorder(ParserBase& parser) : InterpreterBase(parser) {
 }
 
 const Strings& EventRecorder::events() const {
@@ -62,4 +62,12 @@ void EventRecorder::visitBeginIfDecl(BeginIfDeclEvent& event) {
 
 void EventRecorder::visitEndIfDecl(EndIfDeclEvent& event) {
     _events.emplace_back("EndIfDecl");
+}
+
+void EventRecorder::visitBeginWhileDecl(BeginWhileDeclEvent& event) {
+    _events.emplace_back("BeginWhileDecl");
+}
+
+void EventRecorder::visitEndWhileDecl(EndWhileDeclEvent& event) {
+    _events.emplace_back("EndWhileDecl");
 }
