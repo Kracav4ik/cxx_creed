@@ -16,7 +16,7 @@ ASTNodePtr UnaryOpParser::try_parse(Lexer& lexer, ExpressionParser& expression_p
             return nullptr;
         }
         state.drop();
-        return std::make_unique<UnaryOpNode>(token.text, std::move(expression));
+        return std::make_unique<UnaryOpNode>(token.type, token.text, std::move(expression));
     } else {
         state.revert();
         return expression_parser.try_next_priority(lexer, getPriority());

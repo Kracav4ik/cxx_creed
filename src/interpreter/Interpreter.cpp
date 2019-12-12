@@ -92,7 +92,7 @@ void Interpreter::visitVarDecl(VarDeclEvent& event) {
         _printer.print_error("Variable " + event.var_name + " already declared");
     } else {
         // TODO: get type from scope
-        IntegerType type;
+        const auto& type = *IntegerType::get();
         _scope->create_value(event.var_name, type);
     }
 }

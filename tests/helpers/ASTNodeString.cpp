@@ -19,14 +19,14 @@ std::string ASTNodeString::str() const {
 void ASTNodeString::visitBinaryOp(BinaryOpNode& node) {
     _buf << "[BinaryOp ";
     node.left->visit(*this);
-    _buf << " " << node.op << " ";
+    _buf << " " << node.text << " ";
     node.right->visit(*this);
     _buf << "]";
 }
 
 void ASTNodeString::visitUnaryOp(UnaryOpNode& node) {
     _buf << "[UnaryOp ";
-    _buf << node.op << " ";
+    _buf << node.text << " ";
     node.subnode->visit(*this);
     _buf << "]";
 }

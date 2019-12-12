@@ -74,6 +74,7 @@ set(LIB_SOURCES
         interpreter/types/IntegerValue.cpp
         interpreter/types/IntegerValue.h
         interpreter/types/TypeBase.h
+        interpreter/types/ValueBase.cpp
         interpreter/types/ValueBase.h
         interpreter/types/ValueFwd.h
 

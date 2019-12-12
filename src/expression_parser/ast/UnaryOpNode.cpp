@@ -6,8 +6,9 @@ void UnaryOpNode::visit(ASTVisitor& visitor) {
     visitor.visitUnaryOp(*this);
 }
 
-UnaryOpNode::UnaryOpNode(std::string op, ASTNodePtr subnode)
+UnaryOpNode::UnaryOpNode(std::string op, std::string text, ASTNodePtr subnode)
         : op(std::move(op))
+        , text(std::move(text))
         , subnode(std::move(subnode))
 {
 }

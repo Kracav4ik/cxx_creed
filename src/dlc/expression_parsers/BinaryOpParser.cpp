@@ -25,7 +25,7 @@ ASTNodePtr BinaryOpParser::try_parse(Lexer& lexer, ExpressionParser& expression_
             break;
         }
 
-        first_operand = std::make_unique<BinaryOpNode>(token.text, std::move(first_operand), std::move(second_operand));
+        first_operand = std::make_unique<BinaryOpNode>(token.type, token.text, std::move(first_operand), std::move(second_operand));
         state.drop();
     }
     return first_operand;

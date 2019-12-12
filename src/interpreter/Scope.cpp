@@ -12,7 +12,7 @@ ValuePtr Scope::get(const std::string& key) const {
             return _parent->get(key);
         }
         // TODO: don't hardcode type
-        IntegerType type;
+        const auto& type = *IntegerType::get();
         return type.create_value();  // TODO: should be "undefined"
     }
     return it->second;

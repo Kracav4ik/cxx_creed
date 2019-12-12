@@ -50,18 +50,18 @@ void Evaluator::visitBinaryOp(BinaryOpNode& node) {
     auto evaluate_second = [&node, this]() {
         return evaluate(node.right, _scope, _printer);
     }; 
-    if (node.op == "||") {
+    if (node.op == "OR") {
         // TODO: don't hardcode type
-        IntegerType type;
+        const auto& type = *IntegerType::get();
         if (first_op->is_true()) {
             _result = type.create_true();
             return;
         }
         _result = evaluate_second()->is_true() ? type.create_true() : type.create_false();
         return;
-    } else if (node.op == "&&") {
+    } else if (node.op == "AND") {
         // TODO: don't hardcode type
-        IntegerType type;
+        const auto& type = *IntegerType::get();
         if (!first_op->is_true()) {
             _result = type.create_false();
             return;
@@ -70,69 +70,21 @@ void Evaluator::visitBinaryOp(BinaryOpNode& node) {
         return;
     }
     auto second_op = evaluate_second();
-    if (node.op == "+") {
-        // TODO: check value
-        _result = first_op->binary_add(second_op);
-    } else if (node.op == "-") {
-        // TODO: check value
-        _result = first_op->binary_sub(second_op);
-    } else if (node.op == "*") {
-        // TODO: check value
-        _result = first_op->binary_mul(second_op);
-    } else if (node.op == "/") {
-        // TODO: check value
-        // TODO: check div by zero
-        _result = first_op->binary_div(second_op);
-    } else if (node.op == "%") {
-        // TODO: check value
-        // TODO: check div by zero
-        _result = first_op->binary_mod(second_op);
-    } else if (node.op == "^") {
-        _result = first_op->binary_xor(second_op);
-    } else if (node.op == "&") {
-        _result = first_op->binary_bitand(second_op);
-    } else if (node.op == "|") {
-        _result = first_op->binary_bitor(second_op);
-    } else if (node.op == "<<") {
-        _result = first_op->binary_lshift(second_op);
-    } else if (node.op == ">>") {
-        _result = first_op->binary_rshift(second_op);
-    } else if (node.op == "==") {
-        _result = first_op->binary_eq(second_op);
-    } else if (node.op == "!=") {
-        _result = first_op->binary_noteq(second_op);
-    } else if (node.op == "<") {
-        _result = first_op->binary_lt(second_op);
-    } else if (node.op == "<=") {
-        _result = first_op->binary_lteq(second_op);
-    } else if (node.op == ">") {
-        _result = first_op->binary_gt(second_op);
-    } else if (node.op == ">=") {
-        _result = first_op->binary_gteq(second_op);
-    } else {
-        _printer.print_error("Unknown binary op " + node.op);
-    }
+    _result = first_op->binary_op(node.op, second_op);
+    // TODO: check unknown op
+    // _printer.print_error("Unknown binary op " + node.op);
 }
 
 void Evaluator::visitUnaryOp(UnaryOpNode& node) {
     auto operand = evaluate(node.subnode, _scope, _printer);
-    if (node.op == "+") {
-        _result = operand->unary_plus();
-    } else if (node.op == "-") {
-        // TODO: check value
-        _result = operand->unary_minus();
-    } else if (node.op == "~") {
-        _result = operand->unary_compl();
-    } else if (node.op == "!") {
-        _result = operand->unary_not();
-    } else {
-        _printer.print_error("Unknown unary op " + node.op);
-    }
+    _result = operand->unary_op(node.op);
+    // TODO: check unknown op
+    // _printer.print_error("Unknown unary op " + node.op);
 }
 
 void Evaluator::visitInteger(IntegerNode& node) {
     // TODO: get type from scope
-    IntegerType type;
+    const auto& type = *IntegerType::get();
     _result = type.create_value(node.value);
 }
 
@@ -161,6 +113,6 @@ void Evaluator::visitVariable(VariableNode& node) {
 
 Evaluator::Evaluator(Scope& scope, Printer& printer) : _scope(scope), _printer(printer) {
     // TODO: don't hardcode type
-    IntegerType type;
+    const auto& type = *IntegerType::get();
     _result = type.create_value();  // TODO: should be "undefined"
 }

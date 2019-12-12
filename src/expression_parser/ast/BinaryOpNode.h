@@ -5,10 +5,11 @@
 #include <string>
 
 struct BinaryOpNode : ASTNode {
-    BinaryOpNode(std::string op, ASTNodePtr left, ASTNodePtr right);
+    BinaryOpNode(std::string op, std::string text, ASTNodePtr left, ASTNodePtr right);
     void visit(ASTVisitor& visitor) override;
 
     std::string op;
+    std::string text;
     ASTNodePtr left;
     ASTNodePtr right;
 };
