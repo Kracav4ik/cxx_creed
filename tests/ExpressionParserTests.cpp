@@ -175,21 +175,36 @@ TEST(ExpressionParserTest, binary_priority) {
 
 TEST(ExpressionParserTest, check_errors) {
     EXPECT_EQ(ExpressionChecker("2000000000 + 2000000000").str_messages(),
-              "Integer overflow\n");
+              "Integer overflow: 4000000000 > 2147483647\n");
+    EXPECT_EQ(ExpressionChecker("2000000000 + 2000000000").value(),
+              -294967296);
     EXPECT_EQ(ExpressionChecker("-2000000000 - 2000000000").str_messages(),
-              "Integer underflow\n");
+              "Integer underflow: -4000000000 < -2147483648\n");
+    EXPECT_EQ(ExpressionChecker("-2000000000 - 2000000000").value(),
+              294967296);
     EXPECT_EQ(ExpressionChecker("2000000000 * 2000000000").str_messages(),
-              "Integer overflow\n");
+              "Integer overflow: 4000000000000000000 > 2147483647\n");
+    EXPECT_EQ(ExpressionChecker("2000000000 * 2000000000").value(),
+              -1651507200);
     EXPECT_EQ(ExpressionChecker("-2000000000 * 2000000000").str_messages(),
-              "Integer underflow\n");
+              "Integer underflow: -4000000000000000000 < -2147483648\n");
+    EXPECT_EQ(ExpressionChecker("-2000000000 * 2000000000").value(),
+              1651507200);
     EXPECT_EQ(ExpressionChecker("(-2147483647 - 1) / -1").str_messages(),
-              "Integer overflow\n");
+              "Integer overflow: 2147483648 > 2147483647\n");
+    EXPECT_EQ(ExpressionChecker("(-2147483647 - 1) / -1").value(),
+              -2147483648);
     EXPECT_EQ(ExpressionChecker("2183648 / 0").str_messages(),
               "Integer division by zero\n");
     EXPECT_EQ(ExpressionChecker("-2183648 % 0").str_messages(),
               "Remainder of integer division by zero\n");
+
+    EXPECT_EQ(ExpressionChecker("2147483648").str_messages(),
+              "");
     EXPECT_EQ(ExpressionChecker("2147483648").value(),
               -2147483648);
+    EXPECT_EQ(ExpressionChecker("-2147483648").str_messages(),
+              "Integer overflow: 2147483648 > 2147483647\n");
     EXPECT_EQ(ExpressionChecker("-2147483648").value(),
               -2147483648);
     EXPECT_EQ(ExpressionChecker("(-2147483648) * -1").value(),

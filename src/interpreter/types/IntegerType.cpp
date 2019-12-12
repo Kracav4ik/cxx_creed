@@ -1,14 +1,19 @@
 #include "IntegerType.h"
 #include "IntegerValue.h"
+#include "RealTypeBase.hpp"
 
-#include <cassert>
+#include "interpreter/exceptions/ArithmeticException.h"
 
-ValuePtr IntegerType::create_value() const {
-    return std::make_shared<IntegerValue>();
+bool IntegerType::is_true(const IntegerValue& value) const {
+    return is_true_value(value.get_value());
 }
 
 ValuePtr IntegerType::create_value(int value) const {
     return std::make_shared<IntegerValue>(value);
+}
+
+std::string IntegerType::type_name() const {
+    return "int";
 }
 
 ValuePtr IntegerType::create_false() const {
@@ -25,67 +30,67 @@ std::shared_ptr<IntegerType> IntegerType::get() {
 }
 
 IntegerType::IntegerType() {
-    _binary_ops["ADD"] = [](int a, int b) { return a + b; };  // TODO: check value
-    _binary_ops["SUB"] = [](int a, int b) { return a - b; };  // TODO: check value
-    _binary_ops["MUL"] = [](int a, int b) { return a * b; };  // TODO: check value
-    _binary_ops["DIV"] = [](int a, int b) { return a / b; };  // TODO: check value and div by zero
-    _binary_ops["MOD"] = [](int a, int b) { return a % b; };  // TODO: check value and div by zero
-    _binary_ops["XOR"] = [](int a, int b) { return a ^ b; };
-    _binary_ops["BITAND"] = [](int a, int b) { return a & b; };
-    _binary_ops["BITOR"] = [](int a, int b) { return a | b; };
-    _binary_ops["LSHIFT"] = [](int a, int b) { return a << b; };
-    _binary_ops["RSHIFT"] = [](int a, int b) { return a >> b; };
-    _binary_ops["EQ"] = [](int a, int b) { return bool_convert(a == b); };
-    _binary_ops["NOTEQ"] = [](int a, int b) { return bool_convert(a != b); };
-    _binary_ops["LT"] = [](int a, int b) { return bool_convert(a < b); };
-    _binary_ops["LTEQ"] = [](int a, int b) { return bool_convert(a <= b); };
-    _binary_ops["GT"] = [](int a, int b) { return bool_convert(a > b); };
-    _binary_ops["GTEQ"] = [](int a, int b) { return bool_convert(a >= b); };
-
-    _unary_ops["ADD"] = [](int a) { return a; };
-    _unary_ops["SUB"] = [](int a) { return -a; };  // TODO: check value
-    _unary_ops["NOT"] = [](int a) { return bool_convert(!is_true_value(a)); };
-    _unary_ops["COMPL"] = [](int a) { return ~a; };
-}
-
-ValuePtr IntegerType::binary_op(const ValueBase& left, const std::string& op, const ValueBase& right) const {
-    auto op_it = _binary_ops.find(op);
-    if (op_it == _binary_ops.end()) {
-        // TODO: throw
-        assert(false);
-    }
-    if (auto left_int = dynamic_cast<const IntegerValue*>(&left)) {
-        if (auto right_int = dynamic_cast<const IntegerValue*>(&right)) {
-            int result = op_it->second(left_int->get_value(), right_int->get_value());
-            return create_value(result);
+    installBinaryOp("ADD", [](int a, int b) {
+        int64_t to_check = (int64_t)a + (int64_t)b;
+        check_value(to_check);
+        return to_check;
+    });
+    installBinaryOp("SUB", [](int a, int b) {
+        int64_t to_check = (int64_t)a - (int64_t)b;
+        check_value(to_check);
+        return to_check;
+    });
+    installBinaryOp("MUL", [](int a, int b) {
+        int64_t to_check = (int64_t)a * (int64_t)b;
+        check_value(to_check);
+        return to_check;
+    });
+    installBinaryOp("DIV", [](int a, int b) {
+        if (b == 0) {
+            throw ArithmeticException("Integer division by zero", 0);
         }
-        // TODO: throw
-        assert(false);
-    }
-    // TODO: throw
-    assert(false);
+        int64_t to_check = (int64_t)a / (int64_t)b;
+        check_value(to_check);
+        return to_check;
+    });
+    installBinaryOp("MOD", [](int a, int b) {
+        if (b == 0) {
+            throw ArithmeticException("Remainder of integer division by zero", 0);
+        }
+        int64_t to_check = (int64_t)a % (int64_t)b;
+        check_value(to_check);
+        return to_check;
+    });
+
+    installBinaryOp("XOR", [](int a, int b) { return a ^ b; });
+    installBinaryOp("BITAND", [](int a, int b) { return a & b; });
+    installBinaryOp("BITOR", [](int a, int b) { return a | b; });
+    installBinaryOp("LSHIFT", [](int a, int b) { return a << b; });
+    installBinaryOp("RSHIFT", [](int a, int b) { return a >> b; });
+    installBinaryOp("EQ", [](int a, int b) { return bool_convert(a == b); });
+    installBinaryOp("NOTEQ", [](int a, int b) { return bool_convert(a != b); });
+    installBinaryOp("LT", [](int a, int b) { return bool_convert(a < b); });
+    installBinaryOp("LTEQ", [](int a, int b) { return bool_convert(a <= b); });
+    installBinaryOp("GT", [](int a, int b) { return bool_convert(a > b); });
+    installBinaryOp("GTEQ", [](int a, int b) { return bool_convert(a >= b); });
+
+    installUnaryOp("ADD", [](int a) { return a; });
+    installUnaryOp("SUB", [](int a) {
+        int64_t to_check = -(int64_t)a;
+        check_value(to_check);
+        return to_check;
+    });
+    installUnaryOp("NOT", [](int a) { return bool_convert(!is_true_value(a)); });
+    installUnaryOp("COMPL", [](int a) { return ~a; });
 }
 
-ValuePtr IntegerType::unary_op(const std::string& op, const ValueBase& value) const {
-    auto op_it = _unary_ops.find(op);
-    if (op_it == _unary_ops.end()) {
-        // TODO: throw
-        assert(false);
+void IntegerType::check_value(int64_t val) {
+    if (val > std::numeric_limits<int>::max()) {
+        throw ArithmeticException("Integer overflow: " + std::to_string(val) + " > " + std::to_string(std::numeric_limits<int>::max()), val);
     }
-    if (auto value_int = dynamic_cast<const IntegerValue*>(&value)) {
-        int result = op_it->second(value_int->get_value());
-        return create_value(result);
+    if (val < std::numeric_limits<int>::min()) {
+        throw ArithmeticException("Integer underflow: " + std::to_string(val) + " < " + std::to_string(std::numeric_limits<int>::min()), val);
     }
-    // TODO: throw
-    assert(false);
-}
-
-bool IntegerType::is_true(const ValueBase& value) const {
-    if (auto value_int = dynamic_cast<const IntegerValue*>(&value)) {
-        return is_true_value(value_int->get_value());
-    }
-    // TODO: throw
-    assert(false);
 }
 
 int IntegerType::bool_convert(bool val) {

@@ -69,12 +69,24 @@ set(LIB_SOURCES
         expression_parser/ast/VariableNode.cpp
         expression_parser/ast/VariableNode.h
 
+        interpreter/exceptions/ArithmeticException.cpp
+        interpreter/exceptions/ArithmeticException.h
+        interpreter/exceptions/OperandTypeException.cpp
+        interpreter/exceptions/OperandTypeException.h
+        interpreter/exceptions/RuntimeException.cpp
+        interpreter/exceptions/RuntimeException.h
+        interpreter/exceptions/UnknownOpException.cpp
+        interpreter/exceptions/UnknownOpException.h
+
         interpreter/types/IntegerType.cpp
         interpreter/types/IntegerType.h
         interpreter/types/IntegerValue.cpp
         interpreter/types/IntegerValue.h
+        interpreter/types/RealTypeBase.h
+        interpreter/types/RealTypeBase.hpp
+        interpreter/types/RealValueBase.h
+        interpreter/types/RealValueBase.hpp
         interpreter/types/TypeBase.h
-        interpreter/types/ValueBase.cpp
         interpreter/types/ValueBase.h
         interpreter/types/ValueFwd.h
 

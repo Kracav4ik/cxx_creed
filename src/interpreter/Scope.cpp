@@ -2,6 +2,7 @@
 
 #include "interpreter/types/TypeBase.h"
 #include "interpreter/types/IntegerType.h"
+#include "interpreter/types/RealTypeBase.hpp"
 
 #include <utility>
 
@@ -13,7 +14,7 @@ ValuePtr Scope::get(const std::string& key) const {
         }
         // TODO: don't hardcode type
         const auto& type = *IntegerType::get();
-        return type.create_value();  // TODO: should be "undefined"
+        return type.create_empty_value();  // TODO: should be "undefined"
     }
     return it->second;
 }
@@ -31,7 +32,7 @@ void Scope::set_value(const std::string& key, ValuePtr val) {
 }
 
 void Scope::create_value(const std::string& key, const TypeBase& type) {
-    _scope[key] = type.create_value();  // TODO: should be "uninitialized"?
+    _scope[key] = type.create_empty_value();  // TODO: should be "uninitialized"?
 }
 
 bool Scope::has_name(const std::string& key) const {

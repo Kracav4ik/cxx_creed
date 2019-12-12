@@ -1,19 +1,17 @@
 #pragma once
 
-#include "TypeBase.h"
+#include "RealTypeBase.h"
 #include <unordered_map>
 #include <string>
 #include <functional>
 
 class IntegerValue;
-class IntegerType : public TypeBase {
+class IntegerType : public RealTypeBase<IntegerValue, int> {
 public:
-    ValuePtr create_value() const override;
-    ValuePtr binary_op(const ValueBase& left, const std::string& op, const ValueBase& right) const override;
-    ValuePtr unary_op(const std::string& op, const ValueBase& value) const override;
-    bool is_true(const ValueBase& value) const override;
+    bool is_true(const IntegerValue& value) const override;
+    ValuePtr create_value(int value) const override;
+    std::string type_name() const override;
 
-    ValuePtr create_value(int value) const;
     ValuePtr create_false() const;
     ValuePtr create_true() const;
 
@@ -25,9 +23,7 @@ private:
 
     IntegerType();
 
+    static void check_value(int64_t val);
     static int bool_convert(bool val);
     static bool is_true_value(int val);
-
-    std::unordered_map<std::string, std::function<int(int, int)>> _binary_ops;
-    std::unordered_map<std::string, std::function<int(int)>> _unary_ops;
 };

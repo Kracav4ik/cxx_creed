@@ -7,6 +7,10 @@
 
 #include "interpreter/types/IntegerType.h"
 #include "interpreter/types/IntegerValue.h"
+#include "interpreter/types/RealTypeBase.hpp"
+
+#include "interpreter/exceptions/ArithmeticException.h"
+#include "interpreter/exceptions/UnknownOpException.h"
 
 #include "Scope.h"
 #include "Printer.h"
@@ -29,15 +33,6 @@ private:
     }
     std::string _res;
 };
-
-void check_value(int64_t val, Printer& printer) {
-    if (val > std::numeric_limits<int>::max()) {
-        printer.print_error("Integer overflow");
-    }
-    if (val < std::numeric_limits<int>::min()) {
-        printer.print_error("Integer underflow");
-    }
-}
 
 ValuePtr Evaluator::evaluate(const ASTNodePtr& node, Scope& scope, Printer& printer) {
     Evaluator evaluator(scope, printer);
@@ -70,16 +65,26 @@ void Evaluator::visitBinaryOp(BinaryOpNode& node) {
         return;
     }
     auto second_op = evaluate_second();
-    _result = first_op->binary_op(node.op, second_op);
-    // TODO: check unknown op
-    // _printer.print_error("Unknown binary op " + node.op);
+    try {
+        _result = first_op->binary_op(node.op, second_op);
+    } catch (const UnknownOpException&) {
+        _printer.print_error("Unknown binary op " + node.text);
+    } catch (const ArithmeticException& e) {
+        _printer.print_error(e.what_str());
+        _result = IntegerType::get()->create_value(e.get_result());  // TODO: is there a better way?
+    }
 }
 
 void Evaluator::visitUnaryOp(UnaryOpNode& node) {
     auto operand = evaluate(node.subnode, _scope, _printer);
-    _result = operand->unary_op(node.op);
-    // TODO: check unknown op
-    // _printer.print_error("Unknown unary op " + node.op);
+    try {
+        _result = operand->unary_op(node.op);
+    } catch (const UnknownOpException&) {
+        _printer.print_error("Unknown unary op " + node.text);
+    } catch (const ArithmeticException& e) {
+        _printer.print_error(e.what_str());
+        _result = IntegerType::get()->create_value(e.get_result());  // TODO: is there a better way?
+    }
 }
 
 void Evaluator::visitInteger(IntegerNode& node) {
@@ -114,5 +119,5 @@ void Evaluator::visitVariable(VariableNode& node) {
 Evaluator::Evaluator(Scope& scope, Printer& printer) : _scope(scope), _printer(printer) {
     // TODO: don't hardcode type
     const auto& type = *IntegerType::get();
-    _result = type.create_value();  // TODO: should be "undefined"
+    _result = type.create_empty_value();  // TODO: should be "undefined"
 }
