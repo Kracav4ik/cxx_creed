@@ -46,22 +46,18 @@ void Evaluator::visitBinaryOp(BinaryOpNode& node) {
         return evaluate(node.right, _scope, _printer);
     }; 
     if (node.op == "OR") {
-        // TODO: don't hardcode type
-        const auto& type = *IntegerType::get();
         if (first_op->is_true()) {
-            _result = type.create_true();
+            _result = IntegerType::create_true();
             return;
         }
-        _result = evaluate_second()->is_true() ? type.create_true() : type.create_false();
+        _result = evaluate_second()->is_true() ? IntegerType::create_true() : IntegerType::create_false();
         return;
     } else if (node.op == "AND") {
-        // TODO: don't hardcode type
-        const auto& type = *IntegerType::get();
         if (!first_op->is_true()) {
-            _result = type.create_false();
+            _result = IntegerType::create_false();
             return;
         }
-        _result = evaluate_second()->is_true() ? type.create_true() : type.create_false();
+        _result = evaluate_second()->is_true() ? IntegerType::create_true() : IntegerType::create_false();
         return;
     }
     auto second_op = evaluate_second();

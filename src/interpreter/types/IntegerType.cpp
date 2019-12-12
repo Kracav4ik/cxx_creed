@@ -16,12 +16,12 @@ std::string IntegerType::type_name() const {
     return "int";
 }
 
-ValuePtr IntegerType::create_false() const {
-    return create_value(FALSE_VALUE);
+ValuePtr IntegerType::create_false() {
+    return get()->create_value(FALSE_VALUE);
 }
 
-ValuePtr IntegerType::create_true() const {
-    return create_value(TRUE_VALUE);
+ValuePtr IntegerType::create_true() {
+    return get()->create_value(TRUE_VALUE);
 }
 
 std::shared_ptr<IntegerType> IntegerType::get() {

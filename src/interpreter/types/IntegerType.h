@@ -12,9 +12,8 @@ public:
     ValuePtr create_value(int value) const override;
     std::string type_name() const override;
 
-    ValuePtr create_false() const;
-    ValuePtr create_true() const;
-
+    static ValuePtr create_false();
+    static ValuePtr create_true();
     static std::shared_ptr<IntegerType> get();
 
 private:
