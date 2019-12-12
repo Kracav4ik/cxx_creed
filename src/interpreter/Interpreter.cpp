@@ -91,14 +91,17 @@ void Interpreter::visitVarDecl(VarDeclEvent& event) {
     if (_scope->has_name_local(event.var_name)) {
         _printer.print_error("Variable " + event.var_name + " already declared");
     } else {
-        // TODO: get type from scope
-        const auto& type = *IntegerType::get();
-        _scope->create_value(event.var_name, type);
+        if (auto type = _scope->get_type(event.type_name)) {
+            _scope->create_value(event.var_name, *type);
+        } else {
+            _printer.print_error("Unknown type " + event.type_name);
+        }
     }
 }
 
 void Interpreter::visitBeginMainDecl(BeginMainDeclEvent& event) {
     _scope = std::make_shared<Scope>();
+    _scope->insert_type(IntegerType::get());  // TODO: insert in global scope
 }
 
 void Interpreter::visitEndMainDecl(EndMainDeclEvent& event) {

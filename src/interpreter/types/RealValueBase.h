@@ -9,7 +9,7 @@ public:
     ValuePtr unary_op(const std::string& op) const final;
     bool is_true() const final;
 
-    std::shared_ptr<TypeBase> get_type() const final;
+    TypePtr get_type() const final;
 
     virtual std::shared_ptr<TypeClass> get_real_type() const = 0;
 };

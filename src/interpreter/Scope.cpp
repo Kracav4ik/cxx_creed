@@ -50,3 +50,19 @@ void Scope::set_parent(std::shared_ptr<Scope> scope) {
 const std::shared_ptr<Scope>& Scope::get_parent() {
     return _parent;
 }
+
+TypePtr Scope::get_type(const std::string& key) const {
+    auto it = _types.find(key);
+    if (it == _types.end()) {
+        if (_parent) {
+            return _parent->get_type(key);
+        }
+        return nullptr;
+    }
+    return it->second;
+}
+
+void Scope::insert_type(TypePtr type) {
+    std::string type_name = type->type_name();
+    _types.emplace(std::move(type_name), std::move(type));
+}

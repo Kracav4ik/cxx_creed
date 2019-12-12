@@ -11,7 +11,7 @@ TEST(ParserTest, simple_main) {
             "BeginMainDecl", "ReturnStmt [Integer 123456]", "EndMainDecl"
     }));
     EXPECT_EQ(ParserChecker("int main() { int x; }").events(), Strings({
-            "BeginMainDecl", "VarDecl x", "EndMainDecl"
+            "BeginMainDecl", "VarDecl int x", "EndMainDecl"
     }));
     EXPECT_EQ(ParserChecker("int main() { }").events(), Strings({
             "BeginMainDecl", "EndMainDecl"
@@ -65,7 +65,7 @@ TEST(ParserTest, block_tests) {
             "BeginMainDecl", "BeginBlockStmt", "EndBlockStmt", "ReturnStmt [Integer 0]", "EndMainDecl"
     }));
     EXPECT_EQ(ParserChecker("int main() { { int x; } { return 0; } }").events(), Strings({
-            "BeginMainDecl", "BeginBlockStmt", "VarDecl x", "EndBlockStmt", "BeginBlockStmt", "ReturnStmt [Integer 0]", "EndBlockStmt", "EndMainDecl"
+            "BeginMainDecl", "BeginBlockStmt", "VarDecl int x", "EndBlockStmt", "BeginBlockStmt", "ReturnStmt [Integer 0]", "EndBlockStmt", "EndMainDecl"
     }));
     EXPECT_EQ(ParserChecker("int main() { { return 0; } x + 5; }").events(), Strings({
             "BeginMainDecl", "BeginBlockStmt", "ReturnStmt [Integer 0]", "EndBlockStmt", "ExprStmt [BinaryOp [Variable x] + [Integer 5]]", "EndMainDecl"

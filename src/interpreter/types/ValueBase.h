@@ -13,5 +13,5 @@ public:
 
     virtual ValuePtr copy() const = 0;
     virtual std::string printable_str() const = 0;
-    virtual std::shared_ptr<TypeBase> get_type() const = 0;
+    virtual TypePtr get_type() const = 0;
 };

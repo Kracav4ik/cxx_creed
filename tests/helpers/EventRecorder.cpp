@@ -47,7 +47,7 @@ void EventRecorder::visitExprStmt(ExprStmtEvent& event) {
 }
 
 void EventRecorder::visitVarDecl(VarDeclEvent& event) {
-    _events.emplace_back("VarDecl " + event.var_name);
+    _events.emplace_back("VarDecl " + event.type_name + " " + event.var_name);
 }
 
 void EventRecorder::visitBeginBlockStmt(BeginBlockStmtEvent& event) {

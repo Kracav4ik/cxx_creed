@@ -5,8 +5,9 @@
 
 
 struct VarDeclEvent : public ASTEvent {
-    explicit VarDeclEvent(std::string value);
+    VarDeclEvent(std::string type_name, std::string var_name);
     void visit(EventVisitor& visitor) override;
 
+    std::string type_name;
     std::string var_name;
 };

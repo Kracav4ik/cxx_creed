@@ -21,6 +21,6 @@ bool RealValueBase<ValueClass, TypeClass>::is_true() const {
 }
 
 template <typename ValueClass, typename TypeClass>
-std::shared_ptr<TypeBase> RealValueBase<ValueClass, TypeClass>::get_type() const {
+TypePtr RealValueBase<ValueClass, TypeClass>::get_type() const {
     return get_real_type();
 }

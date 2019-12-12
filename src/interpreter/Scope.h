@@ -17,7 +17,11 @@ public:
     void set_parent(std::shared_ptr<Scope> scope);
     const std::shared_ptr<Scope>& get_parent();
 
+    TypePtr get_type(const std::string& key) const;
+    void insert_type(TypePtr type);
+
 private:
     std::unordered_map<std::string, ValuePtr> _scope;
+    std::unordered_map<std::string, TypePtr> _types;
     std::shared_ptr<Scope> _parent;
 };
