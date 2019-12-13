@@ -43,10 +43,10 @@ set(LIB_SOURCES
         dlc/lexers/IntegerLexer.h
         dlc/lexers/LineCommentLexer.cpp
         dlc/lexers/LineCommentLexer.h
-        dlc/lexers/RegexpLexer.cpp
-        dlc/lexers/RegexpLexer.h
         dlc/lexers/NewlineLexer.cpp
         dlc/lexers/NewlineLexer.h
+        dlc/lexers/RegexpLexer.cpp
+        dlc/lexers/RegexpLexer.h
         dlc/lexers/WhitespaceLexer.cpp
         dlc/lexers/WhitespaceLexer.h
 

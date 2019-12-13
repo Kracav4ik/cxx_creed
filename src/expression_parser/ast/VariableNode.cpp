@@ -3,6 +3,6 @@
 
 VariableNode::VariableNode(std::string value) : var_name(std::move(value)) {}
 
-void VariableNode::visit(ASTVisitor& visitor) {
+void VariableNode::visit(ASTVisitor& visitor) const {
     visitor.visitVariable(*this);
 }

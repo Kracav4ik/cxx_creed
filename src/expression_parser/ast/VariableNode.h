@@ -4,7 +4,7 @@
 
 struct VariableNode : ASTNode {
     explicit VariableNode(std::string value);
-    void visit(ASTVisitor& visitor) override;
+    void visit(ASTVisitor& visitor) const override;
 
     std::string var_name;
 };

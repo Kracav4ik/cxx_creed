@@ -4,7 +4,7 @@
 
 struct IntegerNode : ASTNode {
     explicit IntegerNode(int value);
-    void visit(ASTVisitor& visitor) override;
+    void visit(ASTVisitor& visitor) const override;
 
     int value;
 };

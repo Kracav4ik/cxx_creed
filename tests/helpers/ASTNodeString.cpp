@@ -16,7 +16,7 @@ std::string ASTNodeString::str() const {
     return _buf.str();
 }
 
-void ASTNodeString::visitBinaryOp(BinaryOpNode& node) {
+void ASTNodeString::visitBinaryOp(const BinaryOpNode& node) {
     _buf << "[BinaryOp ";
     node.left->visit(*this);
     _buf << " " << node.text << " ";
@@ -24,18 +24,18 @@ void ASTNodeString::visitBinaryOp(BinaryOpNode& node) {
     _buf << "]";
 }
 
-void ASTNodeString::visitUnaryOp(UnaryOpNode& node) {
+void ASTNodeString::visitUnaryOp(const UnaryOpNode& node) {
     _buf << "[UnaryOp ";
     _buf << node.text << " ";
     node.subnode->visit(*this);
     _buf << "]";
 }
 
-void ASTNodeString::visitInteger(IntegerNode& node) {
+void ASTNodeString::visitInteger(const IntegerNode& node) {
     _buf << "[Integer " << node.value << "]";
 }
 
-void ASTNodeString::visitAssignment(AssignmentNode& node) {
+void ASTNodeString::visitAssignment(const AssignmentNode& node) {
     _buf << "[AssignmentOp ";
     node.left->visit(*this);
     _buf << " = ";
@@ -43,6 +43,6 @@ void ASTNodeString::visitAssignment(AssignmentNode& node) {
     _buf << "]";
 }
 
-void ASTNodeString::visitVariable(VariableNode& node) {
+void ASTNodeString::visitVariable(const VariableNode& node) {
     _buf << "[Variable " << node.var_name << "]";
 }

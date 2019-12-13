@@ -4,6 +4,6 @@
 
 IntegerNode::IntegerNode(int value) : value(value) {}
 
-void IntegerNode::visit(ASTVisitor& visitor) {
+void IntegerNode::visit(ASTVisitor& visitor) const {
     visitor.visitInteger(*this);
 }

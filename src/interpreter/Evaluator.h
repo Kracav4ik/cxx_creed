@@ -15,11 +15,11 @@ public:
     static ValuePtr evaluate(const ASTNodePtr& node, Scope& scope, Printer& printer);
 
 private:
-    void visitBinaryOp(BinaryOpNode& node) override;
-    void visitUnaryOp(UnaryOpNode& node) override;
-    void visitInteger(IntegerNode& node) override;
-    void visitAssignment(AssignmentNode& node) override;
-    void visitVariable(VariableNode& node) override;
+    void visitBinaryOp(const BinaryOpNode& node) override;
+    void visitUnaryOp(const UnaryOpNode& node) override;
+    void visitInteger(const IntegerNode& node) override;
+    void visitAssignment(const AssignmentNode& node) override;
+    void visitVariable(const VariableNode& node) override;
 
     ValuePtr _result;
     Scope& _scope;

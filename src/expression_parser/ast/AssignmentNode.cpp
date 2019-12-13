@@ -7,6 +7,6 @@ AssignmentNode::AssignmentNode(ASTNodePtr left, ASTNodePtr right)
 {
 }
 
-void AssignmentNode::visit(ASTVisitor& visitor) {
+void AssignmentNode::visit(ASTVisitor& visitor) const {
     visitor.visitAssignment(*this);
 }

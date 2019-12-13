@@ -2,7 +2,7 @@
 
 #include "expression_parser/ASTVisitor.h"
 
-void UnaryOpNode::visit(ASTVisitor& visitor) {
+void UnaryOpNode::visit(ASTVisitor& visitor) const {
     visitor.visitUnaryOp(*this);
 }
 

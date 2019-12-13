@@ -17,18 +17,18 @@
 
 class NameGetter : ASTVisitor {
 public:
-    static std::string get_name(ASTNodePtr& node) {
+    static std::string get_name(const ASTNodePtr& node) {
         NameGetter getter;
         node->visit(getter);
         return getter._res;
     }
 
 private:
-    void visitBinaryOp(BinaryOpNode& node) override {}
-    void visitUnaryOp(UnaryOpNode& node) override {}
-    void visitInteger(IntegerNode& node) override {}
-    void visitAssignment(AssignmentNode& node) override {}
-    void visitVariable(VariableNode& node) override {
+    void visitBinaryOp(const BinaryOpNode& node) override {}
+    void visitUnaryOp(const UnaryOpNode& node) override {}
+    void visitInteger(const IntegerNode& node) override {}
+    void visitAssignment(const AssignmentNode& node) override {}
+    void visitVariable(const VariableNode& node) override {
         _res = node.var_name;
     }
     std::string _res;
@@ -40,7 +40,7 @@ ValuePtr Evaluator::evaluate(const ASTNodePtr& node, Scope& scope, Printer& prin
     return evaluator._result;
 }
 
-void Evaluator::visitBinaryOp(BinaryOpNode& node) {
+void Evaluator::visitBinaryOp(const BinaryOpNode& node) {
     auto first_op = evaluate(node.left, _scope, _printer);
     auto evaluate_second = [&node, this]() {
         return evaluate(node.right, _scope, _printer);
@@ -71,7 +71,7 @@ void Evaluator::visitBinaryOp(BinaryOpNode& node) {
     }
 }
 
-void Evaluator::visitUnaryOp(UnaryOpNode& node) {
+void Evaluator::visitUnaryOp(const UnaryOpNode& node) {
     auto operand = evaluate(node.subnode, _scope, _printer);
     try {
         _result = operand->unary_op(node.op);
@@ -83,13 +83,13 @@ void Evaluator::visitUnaryOp(UnaryOpNode& node) {
     }
 }
 
-void Evaluator::visitInteger(IntegerNode& node) {
-    // TODO: get type from scope
+void Evaluator::visitInteger(const IntegerNode& node) {
+    // TODO: get type from scope?
     const auto& type = *IntegerType::get();
     _result = type.create_value(node.value);
 }
 
-void Evaluator::visitAssignment(AssignmentNode& node) {
+void Evaluator::visitAssignment(const AssignmentNode& node) {
     auto value = evaluate(node.right, _scope, _printer);
     _result = value;
     auto name = NameGetter::get_name(node.left);
@@ -104,7 +104,7 @@ void Evaluator::visitAssignment(AssignmentNode& node) {
     _scope.set_value(name, std::move(value));
 }
 
-void Evaluator::visitVariable(VariableNode& node) {
+void Evaluator::visitVariable(const VariableNode& node) {
     if (!_scope.has_name(node.var_name)) {
         _printer.print_error("Unknown variable name " + node.var_name);
     }
