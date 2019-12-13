@@ -22,7 +22,7 @@ Token Lexer::next_token(bool skip_space) {
         skip_whitespace();
     }
     if (_pos >= _text.size()) {
-        return {"EOF", ""};
+        return Token::make_eof();
     }
 
     auto text = current_text();
@@ -37,7 +37,7 @@ Token Lexer::next_token(bool skip_space) {
         return {std::move(max_consume.type), consume(max_consume.consumed_size())};
     }
 
-    return {"UNKNOWN", consume(1)};
+    return Token::make_unknown(consume(1));
 }
 
 void Lexer::skip_whitespace() {

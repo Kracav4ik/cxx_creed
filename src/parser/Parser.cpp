@@ -18,11 +18,11 @@ std::shared_ptr<ASTEvent> Parser::next_event() {
     {
         auto state = _lexer.get_state();
         auto token = _lexer.next_token();
-        if (token.type == "UNKNOWN") {
+        if (token.unknown()) {
             state.drop();
             return std::make_shared<UnknownTokenEvent>(token.text);
         }
-        if (token.type == "EOF") {
+        if (token.eof()) {
             state.drop();
             return std::make_shared<EOFEvent>();
         }

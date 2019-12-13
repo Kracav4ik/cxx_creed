@@ -87,7 +87,7 @@ TEST(ParserTest, function_tests) {
     }));
 }
 
-TEST(ParserTest, conditions_tests) {
+TEST(ParserTest, if_block_tests) {
     EXPECT_EQ(ParserChecker("int main() { if (1) { return 0; } }").events(), Strings({
         "BeginMainDecl", "BeginIfStmt [Integer 1]", "ReturnStmt [Integer 0]", "EndIfStmt", "EndMainDecl"
     }));
@@ -116,5 +116,41 @@ TEST(ParserTest, loops_tests) {
         "BeginMainDecl", "BeginWhileStmt [Integer 1]",
             "BeginBlockStmt", "ReturnStmt [Integer 0]", "EndBlockStmt",
         "EndWhileStmt", "EndMainDecl"
+    }));
+}
+
+TEST(ParserTest, include_tests) {
+    EXPECT_EQ(ParserChecker("#include").events(), Strings({
+        "UnknownTokenType INCLUDE"
+    }));
+    EXPECT_EQ(ParserChecker("#include <>").events(), Strings({
+        "UnknownTokenType INCLUDE", "UnknownTokenType LT", "UnknownTokenType GT"
+    }));
+    EXPECT_EQ(ParserChecker("#include <1234>").events(), Strings({
+        "UnknownTokenType INCLUDE", "UnknownTokenType LT", "UnknownTokenType INTEGER", "UnknownTokenType GT"
+    }));
+    EXPECT_EQ(ParserChecker("#include <abc>").events(), Strings({
+        "Include <abc>"
+    }));
+    EXPECT_EQ(ParserChecker("#include< abc > ").events(), Strings({
+        "Include <abc>"
+    }));
+    EXPECT_EQ(ParserChecker("#include < abc > xyz").events(), Strings({
+        "Include <abc>", "UnknownTokenType IDENTIFIER"
+    }));
+    EXPECT_EQ(ParserChecker("#include < abc > \n xyz").events(), Strings({
+        "Include <abc>", "UnknownTokenType IDENTIFIER"
+    }));
+    EXPECT_EQ(ParserChecker("#include < abc > /* \n comment \n */").events(), Strings({
+        "Include <abc>"
+    }));
+    EXPECT_EQ(ParserChecker("#include < abc > /* \n comment \n */ xyz").events(), Strings({
+        "Include <abc>", "UnknownTokenType IDENTIFIER"
+    }));
+    EXPECT_EQ(ParserChecker("#include < abc > // comment").events(), Strings({
+        "Include <abc>"
+    }));
+    EXPECT_EQ(ParserChecker("#include < abc > // comment \n xyz").events(), Strings({
+        "Include <abc>", "UnknownTokenType IDENTIFIER"
     }));
 }

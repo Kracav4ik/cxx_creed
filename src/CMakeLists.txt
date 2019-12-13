@@ -41,6 +41,8 @@ set(LIB_SOURCES
         dlc/lexers/ExactLexer.h
         dlc/lexers/IdentifierLexer.cpp
         dlc/lexers/IdentifierLexer.h
+        dlc/lexers/IncludeLexer.cpp
+        dlc/lexers/IncludeLexer.h
         dlc/lexers/IntegerLexer.cpp
         dlc/lexers/IntegerLexer.h
         dlc/lexers/LineCommentLexer.cpp
@@ -138,6 +140,8 @@ set(LIB_SOURCES
         parser/events/EOFEvent.h
         parser/events/ExprStmtEvent.cpp
         parser/events/ExprStmtEvent.h
+        parser/events/IncludeEvent.cpp
+        parser/events/IncludeEvent.h
         parser/events/ParseErrorEvent.cpp
         parser/events/ParseErrorEvent.h
         parser/events/ReturnStmtEvent.cpp

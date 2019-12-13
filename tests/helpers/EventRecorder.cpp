@@ -8,6 +8,7 @@
 #include "parser/events/VarDeclEvent.h"
 #include "parser/events/BeginIfStmtEvent.h"
 #include "parser/events/BeginWhileStmtEvent.h"
+#include "parser/events/IncludeEvent.h"
 
 #include "ASTNodeString.h"
 
@@ -72,4 +73,8 @@ void EventRecorder::visitBeginWhileStmt(BeginWhileStmtEvent& event) {
 
 void EventRecorder::visitEndWhileStmt(EndWhileStmtEvent& event) {
     _events.emplace_back("EndWhileStmt");
+}
+
+void EventRecorder::visitInclude(IncludeEvent& event) {
+    _events.emplace_back("Include <" + event.include + ">");
 }

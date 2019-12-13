@@ -1,7 +1,6 @@
 #pragma once
 
 #include "InterpreterBase.h"
-#include "parser/EventVisitorAdapter.h"
 #include "parser/CachingParser.h"
 #include "dlc/InterpreterDLC.h"
 #include "dlc/WithDLC.h"
@@ -9,7 +8,7 @@
 
 class Printer;
 
-class Interpreter : public InterpreterBase, public WithDLC<InterpreterDLC>, public EventVisitorAdapter {
+class Interpreter : public InterpreterBase, public WithDLC<InterpreterDLC> {
 public:
     Interpreter(ParserBase& parser, Printer& printer);
 
@@ -31,6 +30,7 @@ private:
     void visitParseError(ParseErrorEvent& event) override;
     void visitBeginWhileStmt(BeginWhileStmtEvent& event) override;
     void visitEndWhileStmt(EndWhileStmtEvent& event) override;
+    void visitInclude(IncludeEvent& event) override;
 
     bool _is_returning = false;
     std::shared_ptr<Scope> _scope;

@@ -10,6 +10,7 @@
 #include "dlc/lexers/ExactLexer.h"
 #include "dlc/lexers/LineCommentLexer.h"
 #include "dlc/lexers/BlockCommentLexer.h"
+#include "dlc/lexers/IncludeLexer.h"
 
 void ExpansionPack::install(Lexer& lexer, Parser& parser, Interpreter& interpreter) {
     lexer.add_dlc(std::make_shared<WhitespaceLexer>());
@@ -19,6 +20,7 @@ void ExpansionPack::install(Lexer& lexer, Parser& parser, Interpreter& interpret
     lexer.add_dlc(std::make_shared<StringLexer>());
     lexer.add_dlc(std::make_shared<LineCommentLexer>());
     lexer.add_dlc(std::make_shared<BlockCommentLexer>());
+    lexer.add_dlc(std::make_shared<IncludeLexer>());
 
     lexer.add_dlc(std::make_shared<ExactLexer>("WHILE", "while"));
     lexer.add_dlc(std::make_shared<ExactLexer>("IF", "if"));

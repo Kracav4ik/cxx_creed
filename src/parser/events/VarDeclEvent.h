@@ -1,7 +1,7 @@
 #pragma once
 
 #include "ASTEvent.h"
-#include "string"
+#include <string>
 
 
 struct VarDeclEvent : public ASTEvent {

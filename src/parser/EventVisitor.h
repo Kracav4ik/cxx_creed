@@ -15,6 +15,7 @@ struct BeginIfStmtEvent;
 struct EndIfStmtEvent;
 struct BeginWhileStmtEvent;
 struct EndWhileStmtEvent;
+struct IncludeEvent;
 
 class EventVisitor {
 public:
@@ -35,4 +36,5 @@ public:
     virtual void visitEndBlockStmt(EndBlockStmtEvent& event) = 0;
     virtual void visitBeginWhileStmt(BeginWhileStmtEvent& event) = 0;
     virtual void visitEndWhileStmt(EndWhileStmtEvent& event) = 0;
+    virtual void visitInclude(IncludeEvent& event) = 0;
 };

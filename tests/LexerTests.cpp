@@ -9,6 +9,7 @@
 #include "dlc/lexers/WhitespaceLexer.h"
 #include "dlc/lexers/LineCommentLexer.h"
 #include "dlc/lexers/BlockCommentLexer.h"
+#include "dlc/lexers/IncludeLexer.h"
 
 #define EXPECT_TOKEN(TOKEN, TEXT) EXPECT_EQ(std::string{(TOKEN).text}, (TEXT))
 
@@ -126,4 +127,12 @@ TEST(BlockCommentLexerTest, comment_lexer) {
 
     EXPECT_TOKEN(lexer.try_consume("// /*   */ \n"), "");
     EXPECT_TOKEN(lexer.try_consume("/* abc \n // ced \n def */ \n"), "/* abc \n // ced \n def */");
+}
+
+TEST(IncludeLexerTest, include_lexer) {
+    IncludeLexer lexer;
+    EXPECT_TOKEN(lexer.try_consume(""), "");
+    EXPECT_TOKEN(lexer.try_consume("#include"), "#include");
+    EXPECT_TOKEN(lexer.try_consume("# include"), "");
+    EXPECT_TOKEN(lexer.try_consume("#\ninclude"), "");
 }

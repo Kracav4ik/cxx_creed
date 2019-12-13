@@ -25,6 +25,7 @@ private:
     void visitEndBlockStmt(EndBlockStmtEvent& event) override;
     void visitBeginWhileStmt(BeginWhileStmtEvent& event) override;
     void visitEndWhileStmt(EndWhileStmtEvent& event) override;
+    void visitInclude(IncludeEvent& event) override;
 
     Strings _events;
 };

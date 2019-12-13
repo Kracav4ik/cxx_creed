@@ -10,6 +10,7 @@
 #include "parser/events/ReturnStmtEvent.h"
 #include "parser/events/BeginIfStmtEvent.h"
 #include "parser/events/BeginWhileStmtEvent.h"
+#include "parser/EventVisitorAdapter.h"
 #include "interpreter/types/ValueBase.h"
 #include "interpreter/types/IntegerType.h"
 #include "Printer.h"
@@ -154,6 +155,10 @@ void Interpreter::visitEndWhileStmt(EndWhileStmtEvent& event) {
         _states.back().revert();
     }
     _states.pop_back();
+}
+
+void Interpreter::visitInclude(IncludeEvent& event) {
+    // TODO: implement includes
 }
 
 ParserBase& Interpreter::get_parser() {
