@@ -3,6 +3,7 @@
 #include "dlc/lexers/ExactLexer.h"
 #include "dlc/lexers/IdentifierLexer.h"
 #include "dlc/lexers/IntegerLexer.h"
+#include "dlc/lexers/StringLexer.h"
 #include "dlc/lexers/NewlineLexer.h"
 #include "dlc/lexers/RegexpLexer.h"
 #include "dlc/lexers/WhitespaceLexer.h"
@@ -41,6 +42,37 @@ TEST(IntegerLexerTest, integer_lexer) {
     EXPECT_TOKEN(lexer.try_consume("test"), "");
     EXPECT_TOKEN(lexer.try_consume("234_test"), "234");
     EXPECT_TOKEN(lexer.try_consume("12+34"), "12");
+}
+
+TEST(StringLexerTest, string_lexer) {
+    StringLexer lexer;
+    EXPECT_TOKEN(lexer.try_consume(""), "");
+    EXPECT_TOKEN(lexer.try_consume(R"(")"), "");
+    EXPECT_TOKEN(lexer.try_consume(R"("")"), R"("")");
+    EXPECT_TOKEN(lexer.try_consume(R"(""")"), R"("")");
+    EXPECT_TOKEN(lexer.try_consume(R"("""")"), R"("")");
+    EXPECT_TOKEN(lexer.try_consume(R"("abc")"), R"("abc")");
+    EXPECT_TOKEN(lexer.try_consume(R"("\")"), "");
+    EXPECT_TOKEN(lexer.try_consume(R"("\\")"), R"("\\")");
+    EXPECT_TOKEN(lexer.try_consume(R"("\\\")"), "");
+    EXPECT_TOKEN(lexer.try_consume(R"("\\\\")"), R"("\\\\")");
+    EXPECT_TOKEN(lexer.try_consume(R"("\"")"), R"("\"")");
+    EXPECT_TOKEN(lexer.try_consume(R"("\0")"), R"("\0")");
+    EXPECT_TOKEN(lexer.try_consume(R"("\a")"), R"("\a")");
+    EXPECT_TOKEN(lexer.try_consume(R"("\b")"), R"("\b")");
+    EXPECT_TOKEN(lexer.try_consume(R"("\f")"), R"("\f")");
+    EXPECT_TOKEN(lexer.try_consume(R"("\n")"), R"("\n")");
+    EXPECT_TOKEN(lexer.try_consume(R"("\r")"), R"("\r")");
+    EXPECT_TOKEN(lexer.try_consume(R"("\t")"), R"("\t")");
+    EXPECT_TOKEN(lexer.try_consume(R"("\v")"), R"("\v")");
+
+    EXPECT_TOKEN(lexer.try_consume(R"(')"), "");
+    EXPECT_TOKEN(lexer.try_consume(R"('')"), "");
+    EXPECT_TOKEN(lexer.try_consume(R"("\1")"), "");
+    EXPECT_TOKEN(lexer.try_consume(R"("\x00")"), "");
+    EXPECT_TOKEN(lexer.try_consume("\" \n \""), "");
+    EXPECT_TOKEN(lexer.try_consume("\" \r \""), "");
+    EXPECT_TOKEN(lexer.try_consume("\" \a \b \f \t \v \""), "\" \a \b \f \t \v \"");
 }
 
 TEST(NewlineLexerTest, newline_lexer) {

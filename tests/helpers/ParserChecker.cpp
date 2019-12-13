@@ -3,6 +3,7 @@
 #include "dlc/lexers/WhitespaceLexer.h"
 #include "dlc/lexers/IdentifierLexer.h"
 #include "dlc/lexers/IntegerLexer.h"
+#include "dlc/lexers/StringLexer.h"
 #include "dlc/lexers/ExactLexer.h"
 
 ParserChecker::ParserChecker(std::string text) : _parser(_lexer), _recorder(_parser) {
@@ -10,6 +11,7 @@ ParserChecker::ParserChecker(std::string text) : _parser(_lexer), _recorder(_par
     _lexer.add_dlc(std::make_shared<WhitespaceLexer>());
     _lexer.add_dlc(std::make_shared<IdentifierLexer>());
     _lexer.add_dlc(std::make_shared<IntegerLexer>());
+    _lexer.add_dlc(std::make_shared<StringLexer>());
 
     _lexer.add_dlc(std::make_shared<ExactLexer>("WHILE", "while"));
     _lexer.add_dlc(std::make_shared<ExactLexer>("IF", "if"));

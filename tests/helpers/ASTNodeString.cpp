@@ -3,6 +3,7 @@
 #include "expression_parser/ast/BinaryOpNode.h"
 #include "expression_parser/ast/UnaryOpNode.h"
 #include "expression_parser/ast/IntegerNode.h"
+#include "expression_parser/ast/StringNode.h"
 #include "expression_parser/ast/AssignmentNode.h"
 #include "expression_parser/ast/VariableNode.h"
 
@@ -33,6 +34,10 @@ void ASTNodeString::visitUnaryOp(const UnaryOpNode& node) {
 
 void ASTNodeString::visitInteger(const IntegerNode& node) {
     _buf << "[Integer " << node.value << "]";
+}
+
+void ASTNodeString::visitString(const StringNode& node) {
+    _buf << "[String " << node.raw_value << "]";
 }
 
 void ASTNodeString::visitAssignment(const AssignmentNode& node) {

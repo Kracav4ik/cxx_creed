@@ -10,6 +10,12 @@ TEST(ParserTest, simple_main) {
     EXPECT_EQ(ParserChecker("int main() { return 123456; }").events(), Strings({
             "BeginMainDecl", "ReturnStmt [Integer 123456]", "EndMainDecl"
     }));
+    EXPECT_EQ(ParserChecker(R"(int main() { return ""; })").events(), Strings({
+            "BeginMainDecl", R"(ReturnStmt [String ""])", "EndMainDecl"
+    }));
+    EXPECT_EQ(ParserChecker(R"(int main() { return "abc\ndef"; })").events(), Strings({
+            "BeginMainDecl", R"(ReturnStmt [String "abc\ndef"])", "EndMainDecl"
+    }));
     EXPECT_EQ(ParserChecker("int main() { int x; }").events(), Strings({
             "BeginMainDecl", "VarDecl int x", "EndMainDecl"
     }));

@@ -28,6 +28,8 @@ set(LIB_SOURCES
         dlc/expression_parsers/IntegerParser.h
         dlc/expression_parsers/ParensParser.cpp
         dlc/expression_parsers/ParensParser.h
+        dlc/expression_parsers/StringParser.cpp
+        dlc/expression_parsers/StringParser.h
         dlc/expression_parsers/UnaryOpParser.cpp
         dlc/expression_parsers/UnaryOpParser.h
         dlc/expression_parsers/VariableParser.cpp
@@ -47,6 +49,8 @@ set(LIB_SOURCES
         dlc/lexers/NewlineLexer.h
         dlc/lexers/RegexpLexer.cpp
         dlc/lexers/RegexpLexer.h
+        dlc/lexers/StringLexer.cpp
+        dlc/lexers/StringLexer.h
         dlc/lexers/WhitespaceLexer.cpp
         dlc/lexers/WhitespaceLexer.h
 
@@ -64,6 +68,8 @@ set(LIB_SOURCES
         expression_parser/ast/BinaryOpNode.h
         expression_parser/ast/IntegerNode.cpp
         expression_parser/ast/IntegerNode.h
+        expression_parser/ast/StringNode.cpp
+        expression_parser/ast/StringNode.h
         expression_parser/ast/UnaryOpNode.cpp
         expression_parser/ast/UnaryOpNode.h
         expression_parser/ast/VariableNode.cpp

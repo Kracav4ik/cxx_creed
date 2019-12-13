@@ -2,6 +2,7 @@
 
 #include "dlc/expression_parsers/BinaryOpParser.h"
 #include "dlc/expression_parsers/IntegerParser.h"
+#include "dlc/expression_parsers/StringParser.h"
 #include "dlc/expression_parsers/ParensParser.h"
 #include "dlc/expression_parsers/UnaryOpParser.h"
 #include "dlc/expression_parsers/AssignmentParser.h"
@@ -23,6 +24,7 @@ ExpressionParser::ExpressionParser() {
     add_dlc(std::make_shared<BinaryOpParser>(Priority::MULTIPLICATIVE_EXPRESSION, TokenList({"MUL", "DIV", "MOD"})));
     add_dlc(std::make_shared<UnaryOpParser>(Priority::UNARY_EXPRESSION, TokenList({"ADD", "SUB", "COMPL", "NOT"})));
     add_dlc(std::make_shared<IntegerParser>(Priority::PRIMARY_EXPRESSION));
+    add_dlc(std::make_shared<StringParser>(Priority::PRIMARY_EXPRESSION));
     add_dlc(std::make_shared<ParensParser>(Priority::PRIMARY_EXPRESSION));
     add_dlc(std::make_shared<VariableParser>(Priority::PRIMARY_EXPRESSION));
 }

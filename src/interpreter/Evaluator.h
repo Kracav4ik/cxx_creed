@@ -18,6 +18,7 @@ private:
     void visitBinaryOp(const BinaryOpNode& node) override;
     void visitUnaryOp(const UnaryOpNode& node) override;
     void visitInteger(const IntegerNode& node) override;
+    void visitString(const StringNode& node) override;
     void visitAssignment(const AssignmentNode& node) override;
     void visitVariable(const VariableNode& node) override;
 

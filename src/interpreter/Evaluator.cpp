@@ -27,6 +27,7 @@ private:
     void visitBinaryOp(const BinaryOpNode& node) override {}
     void visitUnaryOp(const UnaryOpNode& node) override {}
     void visitInteger(const IntegerNode& node) override {}
+    void visitString(const StringNode& node) override {}
     void visitAssignment(const AssignmentNode& node) override {}
     void visitVariable(const VariableNode& node) override {
         _res = node.var_name;
@@ -87,6 +88,10 @@ void Evaluator::visitInteger(const IntegerNode& node) {
     // TODO: get type from scope?
     const auto& type = *IntegerType::get();
     _result = type.create_value(node.value);
+}
+
+void Evaluator::visitString(const StringNode& node) {
+    // TODO: not implemented yet
 }
 
 void Evaluator::visitAssignment(const AssignmentNode& node) {
