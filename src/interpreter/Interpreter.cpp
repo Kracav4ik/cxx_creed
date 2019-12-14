@@ -15,11 +15,14 @@
 #include "interpreter/types/ValueBase.h"
 #include "interpreter/types/StringType.h"
 #include "interpreter/types/IntegerType.h"
+#include "interpreter/types/special/CinType.h"
+#include "interpreter/types/special/CinValue.h"
 #include "interpreter/types/special/CoutType.h"
 #include "interpreter/types/special/CoutValue.h"
 #include "interpreter/types/special/EndlType.h"
 #include "interpreter/types/special/EndlValue.h"
 #include "interpreter/types/special/SpecialType.hpp"
+#include "interpreter/types/special/SpecialValue.hpp"
 #include "Printer.h"
 
 #include <sstream>
@@ -179,6 +182,7 @@ void Interpreter::visitEndWhileStmt(EndWhileStmtEvent& event) {
 void Interpreter::visitInclude(IncludeEvent& event) {
     if (event.include == "iostream") {
         _global_scope->force_set_value("std::cout", CoutType::get()->create_empty_value());
+        _global_scope->force_set_value("std::cin", CinType::get()->create_empty_value());
         _global_scope->force_set_value("std::endl", EndlType::get()->create_empty_value());
     }
     if (event.include == "string") {

@@ -3,15 +3,15 @@
 #include "SpecialValue.h"
 #include <memory>
 
-class CoutType;
+class CinType;
 template <typename TypeValue, typename TypeClass> class SpecialType;
 
-class CoutValue : public SpecialValue<CoutType>, public std::enable_shared_from_this<CoutValue> {
-friend class SpecialType<CoutValue, CoutType>;
+class CinValue : public SpecialValue<CinType>, public std::enable_shared_from_this<CinValue> {
+friend class SpecialType<CinValue, CinType>;
 public:
     ValuePtr binary_op(const std::string& op, const ValuePtr& right) const override;
     std::string printable_str() const override;
 
 private:
-    CoutValue() = default;
+    CinValue() = default;
 };

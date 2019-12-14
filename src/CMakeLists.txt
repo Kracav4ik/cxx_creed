@@ -86,6 +86,10 @@ set(LIB_SOURCES
         interpreter/exceptions/UnknownOpException.cpp
         interpreter/exceptions/UnknownOpException.h
 
+        interpreter/types/special/CinType.cpp
+        interpreter/types/special/CinType.h
+        interpreter/types/special/CinValue.cpp
+        interpreter/types/special/CinValue.h
         interpreter/types/special/CoutType.cpp
         interpreter/types/special/CoutType.h
         interpreter/types/special/CoutValue.cpp
@@ -96,6 +100,8 @@ set(LIB_SOURCES
         interpreter/types/special/EndlValue.h
         interpreter/types/special/SpecialType.h
         interpreter/types/special/SpecialType.hpp
+        interpreter/types/special/SpecialValue.h
+        interpreter/types/special/SpecialValue.hpp
 
         interpreter/types/IntegerType.cpp
         interpreter/types/IntegerType.h
@@ -114,6 +120,7 @@ set(LIB_SOURCES
         interpreter/types/TypeBase.h
         interpreter/types/ValueBase.h
         interpreter/types/ValueFwd.h
+        interpreter/types/ValueWithType.h
 
         interpreter/Evaluator.cpp
         interpreter/Evaluator.h

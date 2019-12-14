@@ -347,6 +347,15 @@ R"(Assigning to '[std::cout pseudotype]' from incompatible type 'int'
 R"(Assigning to '[std::endl pseudotype]' from incompatible type 'int'
 >>> return value `5`
 )"));
+    EXPECT_EQ(InterpreterChecker(R"(
+    #include <iostream>
+    int main() {
+        std::cin = 7;
+        return 5;
+    })").output(), (
+R"(Assigning to '[std::cin pseudotype]' from incompatible type 'int'
+>>> return value `5`
+)"));
 }
 
 TEST(InterpreterTests, with_errors) {

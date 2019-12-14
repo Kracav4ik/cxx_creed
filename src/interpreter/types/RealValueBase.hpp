@@ -19,8 +19,3 @@ template <typename ValueClass, typename TypeClass>
 bool RealValueBase<ValueClass, TypeClass>::is_true() const {
     return get_real_type()->is_true(*static_cast<const ValueClass*>(this));
 }
-
-template <typename ValueClass, typename TypeClass>
-TypePtr RealValueBase<ValueClass, TypeClass>::get_type() const {
-    return get_real_type();
-}

@@ -10,8 +10,6 @@ public:
 
     std::string printable_str() const override;
 
-    std::shared_ptr<IntegerType> get_real_type() const override;
-
 private:
     int _value;
 };

@@ -16,7 +16,3 @@ std::string StringValue::get_value() const {
 std::string StringValue::printable_str() const {
     return get_value();
 }
-
-std::shared_ptr<StringType> StringValue::get_real_type() const {
-    return StringType::get();
-}
