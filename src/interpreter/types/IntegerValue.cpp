@@ -10,10 +10,6 @@ int IntegerValue::get_value() const {
     return _value;
 }
 
-ValuePtr IntegerValue::copy() const {
-    return std::make_shared<IntegerValue>(*this);
-}
-
 std::string IntegerValue::printable_str() const {
     return std::to_string(_value);
 }

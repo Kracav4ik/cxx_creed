@@ -86,6 +86,14 @@ set(LIB_SOURCES
         interpreter/exceptions/UnknownOpException.cpp
         interpreter/exceptions/UnknownOpException.h
 
+        interpreter/types/CoutValue.cpp
+        interpreter/types/CoutValue.h
+        interpreter/types/CoutType.cpp
+        interpreter/types/CoutType.h
+        interpreter/types/EndlType.cpp
+        interpreter/types/EndlType.h
+        interpreter/types/EndlValue.cpp
+        interpreter/types/EndlValue.h
         interpreter/types/IntegerType.cpp
         interpreter/types/IntegerType.h
         interpreter/types/IntegerValue.cpp

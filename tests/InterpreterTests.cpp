@@ -280,6 +280,16 @@ TEST(InterpreterTests, returns) {
     })").output(), "Unknown variable name x\n>>> return value `5`\n");
 }
 
+TEST(InterpreterTests, cout_tests) {
+    EXPECT_EQ(InterpreterChecker(R"(
+        #include <iostream>
+
+        int main() {
+            std::cout << 5;
+            return 5;
+        })").output(), ">>> return value `5`\n");
+
+}
 TEST(InterpreterTests, with_errors) {
     EXPECT_EQ(InterpreterChecker(R"(int main() {
         // no return
@@ -376,6 +386,10 @@ Unknown variable name x
     })").output(), R"(Variable x already declared
 >>> return value `5`
 )");
+    EXPECT_EQ(InterpreterChecker(R"(int main() {
+        int x::y;
+        return 5;
+    })").output(), "Invalid name x::y for variable\n>>> return value `5`\n");
 
     EXPECT_EQ(InterpreterChecker(R"(int main() {
         if (1) {

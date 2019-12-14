@@ -35,6 +35,11 @@ TEST(IdentifierLexerTest, identifier_lexer) {
     EXPECT_TOKEN(lexer.try_consume("_tesT12 test"), "_tesT12");
     EXPECT_TOKEN(lexer.try_consume("test,test"), "test");
     EXPECT_TOKEN(lexer.try_consume("0test"), "");
+    EXPECT_TOKEN(lexer.try_consume("a::b"), "a::b");
+    EXPECT_TOKEN(lexer.try_consume("a::1"), "a");
+    EXPECT_TOKEN(lexer.try_consume("::a"), "");
+    EXPECT_TOKEN(lexer.try_consume("a::"), "a");
+    EXPECT_TOKEN(lexer.try_consume("a:b"), "a");
 }
 
 TEST(IntegerLexerTest, integer_lexer) {

@@ -10,9 +10,12 @@
 #include "parser/events/ReturnStmtEvent.h"
 #include "parser/events/BeginIfStmtEvent.h"
 #include "parser/events/BeginWhileStmtEvent.h"
+#include "parser/events/IncludeEvent.h"
 #include "parser/EventVisitorAdapter.h"
 #include "interpreter/types/ValueBase.h"
 #include "interpreter/types/IntegerType.h"
+#include "interpreter/types/CoutType.h"
+#include "interpreter/types/EndlType.h"
 #include "Printer.h"
 
 #include <sstream>
@@ -93,14 +96,18 @@ void Interpreter::visitVarDecl(VarDeclEvent& event) {
     if (_is_returning || !_scope) {
         return;
     }
+    if (event.var_name.find(':') != std::string::npos) {
+        _printer.print_error("Invalid name " + event.var_name + " for variable");
+        return;
+    }
     if (_scope->has_name_local(event.var_name)) {
         _printer.print_error("Variable " + event.var_name + " already declared");
+        return;
+    }
+    if (auto type = _scope->get_type(event.type_name)) {
+        _scope->create_value(event.var_name, *type);
     } else {
-        if (auto type = _scope->get_type(event.type_name)) {
-            _scope->create_value(event.var_name, *type);
-        } else {
-            _printer.print_error("Unknown type " + event.type_name);
-        }
+        _printer.print_error("Unknown type " + event.type_name);
     }
 }
 
@@ -166,7 +173,10 @@ void Interpreter::visitEndWhileStmt(EndWhileStmtEvent& event) {
 }
 
 void Interpreter::visitInclude(IncludeEvent& event) {
-    // TODO: implement includes
+    if (event.include == "iostream") {
+        _global_scope->force_set_value("std::cout", CoutType::get()->create_empty_value());
+        _global_scope->force_set_value("std::endl", EndlType::get()->create_empty_value());
+    }
 }
 
 ParserBase& Interpreter::get_parser() {
