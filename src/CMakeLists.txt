@@ -102,6 +102,11 @@ set(LIB_SOURCES
         interpreter/types/RealTypeBase.hpp
         interpreter/types/RealValueBase.h
         interpreter/types/RealValueBase.hpp
+        interpreter/types/StringType.cpp
+        interpreter/types/StringType.h
+        interpreter/types/StringValue.cpp
+        interpreter/types/StringValue.h
+        interpreter/types/TypeBase.cpp
         interpreter/types/TypeBase.h
         interpreter/types/ValueBase.h
         interpreter/types/ValueFwd.h

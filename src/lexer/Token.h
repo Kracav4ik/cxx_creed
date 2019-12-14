@@ -19,6 +19,7 @@ struct Token {
 
     static Token make_eof() { return {"EOF", ""}; }
     static Token make_unknown(std::string text) { return {"UNKNOWN", std::move(text)}; }
+    static Token make_invalid() { return {}; }
 
     std::string type;
     std::string text;

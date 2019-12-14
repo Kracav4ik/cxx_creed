@@ -14,3 +14,7 @@ std::shared_ptr<EndlType> EndlType::get() {
     static std::shared_ptr<EndlType> res(new EndlType());
     return res;
 }
+
+bool EndlType::can_assign(ValuePtr ptr) const {
+    return false;
+}

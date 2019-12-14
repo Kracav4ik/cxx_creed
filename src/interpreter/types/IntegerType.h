@@ -1,9 +1,7 @@
 #pragma once
 
 #include "RealTypeBase.h"
-#include <unordered_map>
 #include <string>
-#include <functional>
 
 class IntegerValue;
 class IntegerType : public RealTypeBase<IntegerValue, int> {

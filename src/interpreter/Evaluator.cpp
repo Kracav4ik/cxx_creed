@@ -2,9 +2,12 @@
 #include "expression_parser/ast/BinaryOpNode.h"
 #include "expression_parser/ast/UnaryOpNode.h"
 #include "expression_parser/ast/IntegerNode.h"
+#include "expression_parser/ast/StringNode.h"
 #include "expression_parser/ast/AssignmentNode.h"
 #include "expression_parser/ast/VariableNode.h"
 
+#include "interpreter/types/StringType.h"
+#include "interpreter/types/StringValue.h"
 #include "interpreter/types/IntegerType.h"
 #include "interpreter/types/IntegerValue.h"
 #include "interpreter/types/RealTypeBase.hpp"
@@ -85,13 +88,13 @@ void Evaluator::visitUnaryOp(const UnaryOpNode& node) {
 }
 
 void Evaluator::visitInteger(const IntegerNode& node) {
-    // TODO: get type from scope?
-    const auto& type = *IntegerType::get();
-    _result = type.create_value(node.value);
+    auto type = IntegerType::get();
+    _result = type->create_value(node.value);
 }
 
 void Evaluator::visitString(const StringNode& node) {
-    // TODO: not implemented yet
+    auto type = StringType::get();
+    _result = type->create_value(node.value());
 }
 
 void Evaluator::visitAssignment(const AssignmentNode& node) {
@@ -104,6 +107,11 @@ void Evaluator::visitAssignment(const AssignmentNode& node) {
         } else {
             _printer.print_error("Cannot assign to undeclared variable " + name);
         }
+        return;
+    }
+    auto value_type = _scope.get(name)->get_type();
+    if (!value_type->can_assign(value)) {
+        _printer.print_error("Assigning to '" + value_type->type_name() + "' from incompatible type '" + value->get_type()->type_name() + "'");
         return;
     }
     _scope.set_value(name, std::move(value));

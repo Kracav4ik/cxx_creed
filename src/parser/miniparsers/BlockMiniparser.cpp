@@ -148,19 +148,45 @@ std::shared_ptr<ASTEvent> BlockMiniparser::try_eat_var_decl(Lexer& lexer) {
     auto state = lexer.get_state();
     std::string type_name;
     std::string var_name;
-    for (auto token_type : {"INT", "IDENTIFIER", "SEMICOLON"}) {
-        auto token = lexer.next_token_with_type(token_type);
+    if (auto token = try_eat_typename(lexer)) {
         if (!token.valid()) {
             return nullptr;
         }
-        if (type_name.empty()) {
-            type_name = token.text;
-        } else if (var_name.empty()) {
-            var_name = token.text;
+        type_name = token.text;
+    } else {
+        return nullptr;
+    }
+    if (auto token = lexer.next_token_with_type("IDENTIFIER")) {
+        if (!token.valid()) {
+            return nullptr;
         }
+        var_name = token.text;
+    } else {
+        return nullptr;
+    }
+    if (!lexer.next_token_with_type("SEMICOLON").valid()) {
+        return nullptr;
     }
     state.drop();
     return std::make_shared<VarDeclEvent>(type_name, var_name);
+}
+
+Token BlockMiniparser::try_eat_typename(Lexer& lexer) const {
+    {
+        auto state = lexer.get_state();
+        if (auto token = lexer.next_token_with_type("INT")) {
+            state.drop();
+            return token;
+        }
+    }
+    {
+        auto state = lexer.get_state();
+        if(auto token = lexer.next_token_with_type("IDENTIFIER")) {
+            state.drop();
+            return token;
+        }
+    }
+    return {};
 }
 
 std::shared_ptr<ASTEvent> BlockMiniparser::try_eat_expr_stmt(Lexer& lexer) {

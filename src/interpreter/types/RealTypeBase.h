@@ -4,6 +4,7 @@
 
 #include <unordered_map>
 #include <functional>
+#include <string>
 #include <type_traits>
 
 template <typename ValueClass, typename UnderlyingType>
@@ -18,7 +19,7 @@ public:
     ValuePtr binary_op(const ValueClass& left, const std::string& op, const ValueBase& right) const;
     ValuePtr unary_op(const std::string& op, const ValueClass& value) const;
     virtual bool is_true(const ValueClass& value) const = 0;
-    virtual ValuePtr create_value(UnderlyingType value) const = 0;
+    virtual ValuePtr create_value(ArgType value) const = 0;
 
     void installBinaryOp(std::string op, BinaryOpFunc func);
     void installUnaryOp(std::string op, UnaryOpFunc func);

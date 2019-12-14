@@ -2,6 +2,7 @@
 
 #include "Miniparser.h"
 
+struct Token;
 class BlockMiniparser : public Miniparser {
 public:
     std::shared_ptr<ASTEvent> try_next_event(Lexer& lexer) override;
@@ -18,4 +19,5 @@ private:
     std::shared_ptr<ASTEvent> try_eat_var_decl(Lexer& lexer);
     std::shared_ptr<ASTEvent> try_eat_expr_stmt(Lexer& lexer);
     std::shared_ptr<ASTEvent> try_eat_begin_block(Lexer& lexer);
+    Token try_eat_typename(Lexer& lexer) const;
 };

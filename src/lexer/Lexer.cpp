@@ -54,7 +54,7 @@ Token Lexer::next_token_with_type(const std::string& expected_type) {
     if (token.type == expected_type) {
         return token;
     } else {
-        return {};
+        return Token::make_invalid();
     }
 }
 

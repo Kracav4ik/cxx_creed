@@ -14,3 +14,7 @@ std::shared_ptr<CoutType> CoutType::get() {
     static std::shared_ptr<CoutType> res(new CoutType());
     return res;
 }
+
+bool CoutType::can_assign(ValuePtr ptr) const {
+    return false;
+}

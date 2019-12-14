@@ -285,11 +285,70 @@ TEST(InterpreterTests, cout_tests) {
         #include <iostream>
 
         int main() {
-            std::cout << 5;
+            std::cout << "Hello, world!" << std::endl;
+            return 5;
+        })").output(), ">>> return value `5`\n");
+    EXPECT_EQ(InterpreterChecker(R"(
+        #include <iostream>
+
+        int main() {
+            std::cout << 7;
             return 5;
         })").output(), ">>> return value `5`\n");
 
+    EXPECT_EQ(InterpreterChecker(R"(
+        #include <iostream>
+        #include <string>
+
+        int main() {
+            std::string s;
+            s = "123";
+            std::cout << s << std::endl;
+            return 5;
+        })").output(), ">>> return value `5`\n");
 }
+
+TEST(InterpreterTests, type_check) {
+    EXPECT_EQ(InterpreterChecker(R"(
+    int main() {
+        int x;
+        x = "abc";
+        return 5;
+    })").output(), (
+R"(Assigning to 'int' from incompatible type 'std::string'
+>>> return value `5`
+)"));
+    EXPECT_EQ(InterpreterChecker(R"(
+    #include <string>
+    int main() {
+        std::string x;
+        x = 6;
+        return 5;
+    })").output(), (
+R"(Assigning to 'std::string' from incompatible type 'int'
+>>> return value `5`
+)"));
+
+    EXPECT_EQ(InterpreterChecker(R"(
+    #include <iostream>
+    int main() {
+        std::cout = 7;
+        return 5;
+    })").output(), (
+R"(Assigning to '[std::cout pseudotype]' from incompatible type 'int'
+>>> return value `5`
+)"));
+    EXPECT_EQ(InterpreterChecker(R"(
+    #include <iostream>
+    int main() {
+        std::endl = 7;
+        return 5;
+    })").output(), (
+R"(Assigning to '[std::endl pseudotype]' from incompatible type 'int'
+>>> return value `5`
+)"));
+}
+
 TEST(InterpreterTests, with_errors) {
     EXPECT_EQ(InterpreterChecker(R"(int main() {
         // no return

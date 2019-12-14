@@ -14,6 +14,8 @@
 
 #include "TestPrinter.h"
 
+#include <cassert>
+
 ExpressionChecker::ExpressionChecker(std::string expression) {
     ExpressionParser expression_parser;
     make_ast(std::move(expression), expression_parser);
@@ -71,6 +73,7 @@ int ExpressionChecker::value() const {
         if (auto int_value = std::dynamic_pointer_cast<IntegerValue>(value)) {
             return int_value->get_value();
         }
+        assert(false);  // TODO: support string values for tests
     }
     return 0;
 }

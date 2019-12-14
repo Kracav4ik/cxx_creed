@@ -13,6 +13,7 @@
 #include "parser/events/IncludeEvent.h"
 #include "parser/EventVisitorAdapter.h"
 #include "interpreter/types/ValueBase.h"
+#include "interpreter/types/StringType.h"
 #include "interpreter/types/IntegerType.h"
 #include "interpreter/types/CoutType.h"
 #include "interpreter/types/EndlType.h"
@@ -176,6 +177,9 @@ void Interpreter::visitInclude(IncludeEvent& event) {
     if (event.include == "iostream") {
         _global_scope->force_set_value("std::cout", CoutType::get()->create_empty_value());
         _global_scope->force_set_value("std::endl", EndlType::get()->create_empty_value());
+    }
+    if (event.include == "string") {
+        _global_scope->insert_type(StringType::get());
     }
 }
 
