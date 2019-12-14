@@ -17,6 +17,7 @@
 
 #include <sstream>
 #include <iostream>
+#include <cassert>
 
 
 struct IfBlockSkipper : public InterpreterBase, public EventVisitorAdapter {
@@ -48,6 +49,9 @@ struct WhileBlockSkipper : public InterpreterBase, public EventVisitorAdapter {
 Interpreter::Interpreter(ParserBase& parser, Printer& printer)
     : InterpreterBase(parser), _printer(printer), _cachingParser(parser)
 {
+    _global_scope = std::make_shared<GlobalScope>();
+    _scope = _global_scope;
+    _global_scope->insert_type(IntegerType::get());
 }
 
 void Interpreter::visitUnknownToken(UnknownTokenEvent& event) {
@@ -101,8 +105,7 @@ void Interpreter::visitVarDecl(VarDeclEvent& event) {
 }
 
 void Interpreter::visitBeginMainDecl(BeginMainDeclEvent& event) {
-    _scope = std::make_shared<Scope>();
-    _scope->insert_type(IntegerType::get());  // TODO: insert in global scope
+    push_scope();
 }
 
 void Interpreter::visitEndMainDecl(EndMainDeclEvent& event) {
@@ -113,20 +116,16 @@ void Interpreter::visitEndMainDecl(EndMainDeclEvent& event) {
 }
 
 void Interpreter::visitBeginBlockStmt(BeginBlockStmtEvent& event) {
-    auto new_scope = std::make_shared<Scope>();
-    new_scope->set_parent(_scope);
-    _scope = new_scope;
+    push_scope();
 }
 
 void Interpreter::visitEndBlockStmt(EndBlockStmtEvent& event) {
-    _scope = _scope->get_parent();
+    pop_scope();
 }
 
 void Interpreter::visitBeginIfStmt(BeginIfStmtEvent& event) {
     if (!_is_returning && Evaluator::evaluate(event.expr, *_scope, _printer)->is_true()) {
-        auto new_scope = std::make_shared<Scope>();
-        new_scope->set_parent(_scope);
-        _scope = new_scope;
+        push_scope();
     } else {
         IfBlockSkipper skipper(get_parser());
         skipper.run();
@@ -134,14 +133,23 @@ void Interpreter::visitBeginIfStmt(BeginIfStmtEvent& event) {
 }
 
 void Interpreter::visitEndIfStmt(EndIfStmtEvent& event) {
+    pop_scope();
+}
+
+void Interpreter::push_scope() {
+    auto new_scope = std::make_shared<Scope>();
+    new_scope->set_parent(_scope);
+    _scope = new_scope;
+}
+
+void Interpreter::pop_scope() {
     _scope = _scope->get_parent();
+    assert(_scope);
 }
 
 void Interpreter::visitBeginWhileStmt(BeginWhileStmtEvent& event) {
     if (!_is_returning && Evaluator::evaluate(event.expr, *_scope, _printer)->is_true()) {
-        auto new_scope = std::make_shared<Scope>();
-        new_scope->set_parent(_scope);
-        _scope = new_scope;
+        push_scope();
         _states.push_back(_cachingParser.state_before_event());
     } else {
         WhileBlockSkipper skipper(get_parser());
@@ -150,7 +158,7 @@ void Interpreter::visitBeginWhileStmt(BeginWhileStmtEvent& event) {
 }
 
 void Interpreter::visitEndWhileStmt(EndWhileStmtEvent& event) {
-    _scope = _scope->get_parent();
+    pop_scope();
     if (!_is_returning) {
         _states.back().revert();
     }

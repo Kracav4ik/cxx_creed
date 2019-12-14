@@ -100,6 +100,8 @@ set(LIB_SOURCES
 
         interpreter/Evaluator.cpp
         interpreter/Evaluator.h
+        interpreter/GlobalScope.cpp
+        interpreter/GlobalScope.h
         interpreter/Interpreter.cpp
         interpreter/Interpreter.h
         interpreter/InterpreterBase.cpp
