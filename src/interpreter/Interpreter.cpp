@@ -15,8 +15,11 @@
 #include "interpreter/types/ValueBase.h"
 #include "interpreter/types/StringType.h"
 #include "interpreter/types/IntegerType.h"
-#include "interpreter/types/CoutType.h"
-#include "interpreter/types/EndlType.h"
+#include "interpreter/types/special/CoutType.h"
+#include "interpreter/types/special/CoutValue.h"
+#include "interpreter/types/special/EndlType.h"
+#include "interpreter/types/special/EndlValue.h"
+#include "interpreter/types/special/SpecialType.hpp"
 #include "Printer.h"
 
 #include <sstream>

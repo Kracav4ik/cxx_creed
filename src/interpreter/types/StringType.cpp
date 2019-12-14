@@ -16,11 +16,6 @@ std::string StringType::type_name() const {
     return "std::string";
 }
 
-std::shared_ptr<StringType> StringType::get() {
-    static std::shared_ptr<StringType> res(new StringType());
-    return res;
-}
-
 StringType::StringType() {
     installBinaryOp("ADD", [](const std::string& a, const std::string& b) {
         return a + b;

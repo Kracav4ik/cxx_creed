@@ -86,14 +86,17 @@ set(LIB_SOURCES
         interpreter/exceptions/UnknownOpException.cpp
         interpreter/exceptions/UnknownOpException.h
 
-        interpreter/types/CoutValue.cpp
-        interpreter/types/CoutValue.h
-        interpreter/types/CoutType.cpp
-        interpreter/types/CoutType.h
-        interpreter/types/EndlType.cpp
-        interpreter/types/EndlType.h
-        interpreter/types/EndlValue.cpp
-        interpreter/types/EndlValue.h
+        interpreter/types/special/CoutType.cpp
+        interpreter/types/special/CoutType.h
+        interpreter/types/special/CoutValue.cpp
+        interpreter/types/special/CoutValue.h
+        interpreter/types/special/EndlType.cpp
+        interpreter/types/special/EndlType.h
+        interpreter/types/special/EndlValue.cpp
+        interpreter/types/special/EndlValue.h
+        interpreter/types/special/SpecialType.h
+        interpreter/types/special/SpecialType.hpp
+
         interpreter/types/IntegerType.cpp
         interpreter/types/IntegerType.h
         interpreter/types/IntegerValue.cpp
@@ -102,6 +105,7 @@ set(LIB_SOURCES
         interpreter/types/RealTypeBase.hpp
         interpreter/types/RealValueBase.h
         interpreter/types/RealValueBase.hpp
+        interpreter/types/SingletonType.h
         interpreter/types/StringType.cpp
         interpreter/types/StringType.h
         interpreter/types/StringValue.cpp

@@ -4,7 +4,8 @@
 #include <string>
 
 class IntegerValue;
-class IntegerType : public RealTypeBase<IntegerValue, int> {
+class IntegerType : public RealTypeBase<IntegerValue, IntegerType, int> {
+friend class SingletonType<IntegerType>;
 public:
     bool is_true(const IntegerValue& value) const override;
     ValuePtr create_value(int value) const override;
@@ -12,7 +13,6 @@ public:
 
     static ValuePtr create_false();
     static ValuePtr create_true();
-    static std::shared_ptr<IntegerType> get();
 
 private:
     static const int FALSE_VALUE = 0;

@@ -1,14 +1,14 @@
 #pragma once
 
-#include "TypeBase.h"
+#include "SingletonType.h"
 
 #include <unordered_map>
 #include <functional>
 #include <string>
 #include <type_traits>
 
-template <typename ValueClass, typename UnderlyingType>
-class RealTypeBase : public TypeBase {
+template <typename ValueClass, typename TypeClass, typename UnderlyingType>
+class RealTypeBase : public SingletonType<TypeClass> {
 public:
     using ArgType = std::conditional_t<std::is_arithmetic_v<UnderlyingType>, UnderlyingType, const UnderlyingType&>;
     using BinaryOpFunc = std::function<UnderlyingType(ArgType, ArgType)>;

@@ -1,4 +1,5 @@
 #include "EndlValue.h"
+#include "EndlType.h"
 #include "interpreter/exceptions/UnknownOpException.h"
 
 ValuePtr EndlValue::binary_op(const std::string& op, const ValuePtr& right) const {

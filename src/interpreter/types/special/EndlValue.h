@@ -1,12 +1,14 @@
 #pragma once
 #pragma once
 
-#include "ValueBase.h"
-#include "EndlType.h"
+#include "interpreter/types/ValueBase.h"
 #include <memory>
 
+class EndlType;
+template <typename TypeValue, typename TypeClass> class SpecialType;
+
 class EndlValue : public ValueBase, public std::enable_shared_from_this<EndlValue> {
-friend EndlType;
+friend class SpecialType<EndlValue, EndlType>;
 public:
     ValuePtr binary_op(const std::string& op, const ValuePtr& right) const override;
     ValuePtr unary_op(const std::string& op) const override;

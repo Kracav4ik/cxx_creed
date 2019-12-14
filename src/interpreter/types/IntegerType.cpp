@@ -24,11 +24,6 @@ ValuePtr IntegerType::create_true() {
     return get()->create_value(TRUE_VALUE);
 }
 
-std::shared_ptr<IntegerType> IntegerType::get() {
-    static std::shared_ptr<IntegerType> res(new IntegerType());
-    return res;
-}
-
 IntegerType::IntegerType() {
     installBinaryOp("ADD", [](int a, int b) {
         int64_t to_check = (int64_t)a + (int64_t)b;
