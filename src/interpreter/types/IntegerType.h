@@ -21,6 +21,5 @@ private:
     IntegerType();
 
     static void check_value(int64_t val);
-    static int bool_convert(bool val);
     static bool is_true_value(int val);
 };

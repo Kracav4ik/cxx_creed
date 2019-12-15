@@ -14,4 +14,7 @@ public:
     virtual ValuePtr create_empty_value() const = 0;
     virtual std::string type_name() const = 0;
     virtual bool can_assign(ValuePtr ptr) const;
+
+protected:
+    static ValuePtr bool_convert(bool val);
 };

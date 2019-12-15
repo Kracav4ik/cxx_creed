@@ -120,6 +120,7 @@ set(LIB_SOURCES
         interpreter/types/TypeBase.h
         interpreter/types/ValueBase.h
         interpreter/types/ValueFwd.h
+        interpreter/types/ValueVisitor.h
         interpreter/types/ValueWithType.h
 
         interpreter/Evaluator.cpp

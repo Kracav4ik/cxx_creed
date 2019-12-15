@@ -20,6 +20,7 @@ StringType::StringType() {
     installBinaryOp("ADD", [](const std::string& a, const std::string& b) {
         return a + b;
     });
+    installComparisonOps();
 }
 
 bool StringType::is_true_value(const std::string& val) {

@@ -62,12 +62,8 @@ IntegerType::IntegerType() {
     installBinaryOp("BITOR", [](int a, int b) { return a | b; });
     installBinaryOp("LSHIFT", [](int a, int b) { return a << b; });
     installBinaryOp("RSHIFT", [](int a, int b) { return a >> b; });
-    installBinaryOp("EQ", [](int a, int b) { return bool_convert(a == b); });
-    installBinaryOp("NOTEQ", [](int a, int b) { return bool_convert(a != b); });
-    installBinaryOp("LT", [](int a, int b) { return bool_convert(a < b); });
-    installBinaryOp("LTEQ", [](int a, int b) { return bool_convert(a <= b); });
-    installBinaryOp("GT", [](int a, int b) { return bool_convert(a > b); });
-    installBinaryOp("GTEQ", [](int a, int b) { return bool_convert(a >= b); });
+
+    installComparisonOps();
 
     installUnaryOp("ADD", [](int a) { return a; });
     installUnaryOp("SUB", [](int a) {
@@ -75,7 +71,7 @@ IntegerType::IntegerType() {
         check_value(to_check);
         return to_check;
     });
-    installUnaryOp("NOT", [](int a) { return bool_convert(!is_true_value(a)); });
+    installGeneralUnaryOp("NOT", [](int a) { return bool_convert(!is_true_value(a)); });
     installUnaryOp("COMPL", [](int a) { return ~a; });
 }
 
@@ -86,10 +82,6 @@ void IntegerType::check_value(int64_t val) {
     if (val < std::numeric_limits<int>::min()) {
         throw ArithmeticException("Integer underflow: " + std::to_string(val) + " < " + std::to_string(std::numeric_limits<int>::min()), val);
     }
-}
-
-int IntegerType::bool_convert(bool val) {
-    return val ? IntegerType::TRUE_VALUE : IntegerType::FALSE_VALUE;
 }
 
 bool IntegerType::is_true_value(int val) {

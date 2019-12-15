@@ -17,3 +17,8 @@ template <typename TypeClass>
 bool SpecialValue<TypeClass>::is_true() const {
     return true;
 }
+
+template <typename TypeClass>
+void SpecialValue<TypeClass>::visit(ValueVisitor& visitor) {
+    // special values are never visited
+}

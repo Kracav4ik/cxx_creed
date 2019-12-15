@@ -35,7 +35,6 @@ std::string StringNode::value() const {
                 result << it->second;
                 continue;
             }
-            assert(false);
         }
         result << raw_value[i];
     }

@@ -3,6 +3,8 @@
 #include "ValueFwd.h"
 
 class TypeBase;
+class ValueVisitor;
+
 class ValueBase {
 public:
     virtual ~ValueBase() = default;
@@ -13,4 +15,5 @@ public:
 
     virtual std::string printable_str() const = 0;
     virtual TypePtr get_type() const = 0;
+    virtual void visit(ValueVisitor& visitor) = 0;
 };
